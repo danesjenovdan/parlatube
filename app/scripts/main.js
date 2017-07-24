@@ -1,8 +1,8 @@
 // This code loads the IFrame Player API code asynchronously.
-var tag = document.createElement('script');
+const tag = document.createElement('script');
 
 tag.src = 'https://www.youtube.com/iframe_api';
-var firstScriptTag = document.getElementsByTagName('script')[0];
+const firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 // This code fires when the YouTube API is ready
@@ -10,7 +10,7 @@ function onYouTubeIframeAPIReady() {
     startApp();
 }
 
-var parlatube;
+let parlatube;
 
 function startApp() {
   parlatube = new Vue({
@@ -20,6 +20,7 @@ function startApp() {
         player: null,
         videoId: 'wXE4_es0cCI',
         subtitles: null,
+        timer: null,
     },
     methods: {
         onPlayerReady() {
@@ -27,7 +28,11 @@ function startApp() {
         },
         seekTo(miliseconds) {
             this.player.seekTo(miliseconds/1000);
+        },
+        scrollSubtitles() {
+            
         }
+
     },
     mounted() {
         // This code creates the <iframe> and instantiates the player.
@@ -43,6 +48,9 @@ function startApp() {
         });
 
         this.subtitles = parser.fromSrt(captions, true);
+        this.timer = window.setInterval(function() {
+            console.log(parlatube.player.getCurrentTime());
+        }, 500);
     }
   });
 }
