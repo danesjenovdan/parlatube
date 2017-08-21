@@ -1,0 +1,30 @@
+<template>
+  <div id="home">
+    <parla-video
+      videoId="wXE4_es0cCI"
+    ></parla-video>
+  </div>
+</template>
+
+<script>
+import ParlaVideo from './ParlaVideo';
+
+export default {
+  name: 'home',
+  data() {
+    return {
+    };
+  },
+  components: {
+    'parla-video': ParlaVideo,
+  },
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="scss" scoped>
+#home {
+  display: flex;
+  flex: 0 0 100%;
+}
+</style>
