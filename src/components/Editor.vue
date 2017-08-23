@@ -19,35 +19,47 @@
 <script>
 import 'element-ui/lib/theme-default/index.css';
 import { Slider } from 'element-ui';
-import store from '../store';
 
 export default {
   name: 'editor',
   data() {
     return {
       editorVisible: false,
+      startTime: this.$store.state.editor.startTime,
+      endTime: this.$store.state.editor.endTime,
+      currentTime: this.$store.state.editor.currentTime,
     };
   },
   components: {
     slider: Slider,
-    store,
   },
   computed: {
     duration() {
-      return store.state.editor.duration;
+      return this.$store.state.video.duration;
     },
     sliderValues() {
-      return [store.state.editor.currentTime, store.state.editor.duration];
+      return [this.startTime, this.endTime];
     },
+    // currentTime() {
+    //   return this.$store.state.video.currentTime;
+    // },
   },
   methods: {
     startDrag() {
-      store.commit('editor/TOGGLE_DRAG');
+      this.$store.commit('editor/TOGGLE_DRAG');
     },
     stopDrag() {
       console.log(this.sliderValues);
-      store.commit('editor/TOGGLE_DRAG');
+      this.$store.commit('editor/TOGGLE_DRAG');
     },
+  },
+  mounted() {
+    this.$store.watch(
+      state => state.video.currentTime,
+      (newCurrentTime) => {
+        this.currentTime = newCurrentTime;
+      },
+    );
   },
 };
 </script>

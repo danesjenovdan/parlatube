@@ -6,7 +6,6 @@
 
 <script>
 import YouTubeIframeLoader from 'youtube-iframe';
-import store from '../store';
 
 export default {
   name: 'parlavideo',
@@ -18,10 +17,10 @@ export default {
   },
   methods: {
     onPlayerReady() {
-      store.commit('editor/UPDATE_DURATION', this.player.getDuration());
+      this.$store.commit('video/UPDATE_DURATION', this.player.getDuration());
       this.timeCheckerId = setInterval(() => {
-        if (!store.state.editor.dragging) {
-          store.commit('editor/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
+        if (!this.$store.state.editor.dragging) {
+          this.$store.commit('video/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
         } else {
           console.log('dragging');
         }
@@ -37,7 +36,7 @@ export default {
       this.player = new YT.Player('player', {
         height: '390',
         width: '100%',
-        videoId: store.state.video.videoId,
+        videoId: this.$store.state.video.videoId,
         events: {
           onReady: this.onPlayerReady,
         },

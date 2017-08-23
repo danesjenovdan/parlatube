@@ -5,8 +5,7 @@ const namespaced = true;
 
 // initial state
 const state = {
-    duration: 0,
-    currentTime: 0,
+    startTime: 0,
     endTime: 0,
     looping: false,
     dragging: false,
@@ -14,11 +13,8 @@ const state = {
 
 // mutations
 const mutations = {
-    UPDATE_DURATION(state, newDuration) {
-        state.duration = newDuration;
-    },
-    UPDATE_CURRENT_TIME(state, newCurrentTime) {
-        state.currentTime = newCurrentTime;
+    UPDATE_START_TIME(state, newStartTime) {
+        state.currentTime = newStartTime;
     },
     UPDATE_END_TIME(state, newEndTime) {
         state.endTime = newEndTime;
