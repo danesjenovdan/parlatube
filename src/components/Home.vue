@@ -1,12 +1,16 @@
 <template>
   <div id="home">
-    <parla-video 
-    ></parla-video>
+    <parla-video></parla-video>
+    <editor></editor>
+    <div class="row feed-container">
+      <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="900356004453519360">#soocenje Tweets</a>
+    </div>
   </div>
 </template>
 
 <script>
 import ParlaVideo from './ParlaVideo';
+import Editor from './Editor';
 import store from '../store';
 
 export default {
@@ -17,10 +21,10 @@ export default {
   },
   components: {
     'parla-video': ParlaVideo,
+    editor: Editor,
     store,
   },
   mounted() {
-    console.log(store.state.editor.videoId);
     store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');
   },
 };
@@ -31,5 +35,11 @@ export default {
 #home {
   display: flex;
   flex: 0 0 100%;
+  flex-wrap: wrap;
+
+  .feed-container {
+    display: flex;
+    flex: 0 0 100%;
+  }
 }
 </style>

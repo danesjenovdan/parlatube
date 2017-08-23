@@ -9,6 +9,7 @@ const state = {
     currentTime: 0,
     endTime: 0,
     looping: false,
+    dragging: false,
 };
 
 // mutations
@@ -25,6 +26,9 @@ const mutations = {
     TOGGLE_LOOPING(state) {
         state.looping = !state.looping;
     },
+    TOGGLE_DRAG(state) {
+        state.dragging = !state.dragging;
+    }
 };
 
 // getters

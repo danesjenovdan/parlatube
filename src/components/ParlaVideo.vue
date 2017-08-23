@@ -6,7 +6,6 @@
 
 <script>
 import YouTubeIframeLoader from 'youtube-iframe';
-import 'element-ui/lib/theme-default/index.css';
 import store from '../store';
 
 export default {
@@ -21,7 +20,11 @@ export default {
     onPlayerReady() {
       store.commit('editor/UPDATE_DURATION', this.player.getDuration());
       this.timeCheckerId = setInterval(() => {
-        store.commit('editor/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
+        if (!store.state.editor.dragging) {
+          store.commit('editor/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
+        } else {
+          console.log('dragging');
+        }
       }, 1000);
       this.player.playVideo();
     },
