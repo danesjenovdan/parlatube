@@ -1,13 +1,13 @@
 <template>
   <div id="home">
-    <parla-video
-      videoId="wXE4_es0cCI"
+    <parla-video 
     ></parla-video>
   </div>
 </template>
 
 <script>
 import ParlaVideo from './ParlaVideo';
+import store from '../store';
 
 export default {
   name: 'home',
@@ -17,6 +17,11 @@ export default {
   },
   components: {
     'parla-video': ParlaVideo,
+    store,
+  },
+  mounted() {
+    console.log(store.state.editor.videoId);
+    store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');
   },
 };
 </script>

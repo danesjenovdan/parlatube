@@ -8,7 +8,6 @@ const state = {
     duration: 0,
     currentTime: 0,
     endTime: 0,
-    videoId: '',
     looping: false,
 };
 
@@ -23,9 +22,6 @@ const mutations = {
     UPDATE_END_TIME(state, newEndTime) {
         state.endTime = newEndTime;
     },
-    UPDATE_VIDEOID(state, newVideoId) {
-        state.videoId = newVideoId;
-    },
     TOGGLE_LOOPING(state) {
         state.looping = !state.looping;
     },
@@ -38,6 +34,7 @@ const mutations = {
 // const actions = {};
 
 export default {
+    namespaced,
     state,
     mutations,
 }
