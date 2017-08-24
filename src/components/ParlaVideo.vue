@@ -19,11 +19,7 @@ export default {
     onPlayerReady() {
       this.$store.commit('video/UPDATE_DURATION', this.player.getDuration());
       this.timeCheckerId = setInterval(() => {
-        if (!this.$store.state.editor.dragging) {
-          this.$store.commit('video/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
-        } else {
-          console.log('dragging');
-        }
+        this.$store.commit('video/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
       }, 1000);
       this.player.playVideo();
     },

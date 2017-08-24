@@ -19,30 +19,28 @@
 <script>
 import 'element-ui/lib/theme-default/index.css';
 import { Slider } from 'element-ui';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'editor',
   data() {
     return {
       editorVisible: false,
-      startTime: this.$store.state.editor.startTime,
       endTime: this.$store.state.editor.endTime,
-      currentTime: this.$store.state.editor.currentTime,
+      dragging: this.$store.state.editor.dragging,
+      duration: this.$store.state.video.duration,
     };
   },
   components: {
     slider: Slider,
   },
   computed: {
-    duration() {
-      return this.$store.state.video.duration;
-    },
     sliderValues() {
       return [this.startTime, this.endTime];
     },
-    // currentTime() {
-    //   return this.$store.state.video.currentTime;
-    // },
+    ...mapGetters('video', [
+      'currentTime',
+    ]),
   },
   methods: {
     startDrag() {
@@ -53,13 +51,10 @@ export default {
       this.$store.commit('editor/TOGGLE_DRAG');
     },
   },
+  watch: {
+
+  },
   mounted() {
-    this.$store.watch(
-      state => state.video.currentTime,
-      (newCurrentTime) => {
-        this.currentTime = newCurrentTime;
-      },
-    );
   },
 };
 </script>
