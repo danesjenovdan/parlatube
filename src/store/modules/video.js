@@ -24,9 +24,7 @@ const mutations = {
 };
 
 // getters
-const getters = {
-  currentTime: state => state.currentTime,
-};
+// const getters = {};
 
 // actions
 // const actions = {};
@@ -35,5 +33,4 @@ export default {
   namespaced,
   state,
   mutations,
-  getters,
 };

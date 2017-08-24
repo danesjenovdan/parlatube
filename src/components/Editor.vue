@@ -2,24 +2,15 @@
   <div id="editor">
     <button @click="editorVisible = !editorVisible">Pripravi svoj izsek</button>
     <div v-if="editorVisible" class="editor-controls-container">
-      <div class="slider-container">
-        <slider
-          v-model="sliderValues"
-          :min="0"
-          :max="duration"
-          :range="true"
-          @mousedown.native="startDrag()"
-          @mouseup.native="stopDrag()"
-        ></slider>
-      </div>
+      <slider></slider>
     </div>
   </div>
 </template>
 
 <script>
 import 'element-ui/lib/theme-default/index.css';
-import { Slider } from 'element-ui';
 import { mapState } from 'vuex';
+import Slider from './Slider';
 
 export default {
   name: 'editor',
@@ -28,18 +19,21 @@ export default {
       editorVisible: false,
       endTime: this.$store.state.editor.endTime,
       dragging: this.$store.state.editor.dragging,
-      duration: this.$store.state.video.duration,
     };
   },
   components: {
-    slider: Slider,
+    Slider,
   },
   computed: {
     sliderValues() {
-      return [this.startTime, this.endTime];
+      if (!this.dragging) {
+        return [this.currentTime, this.endTime];
+      }
+      return [0, this.endTime];
     },
     ...mapState({
-      'video/currentTime': state => state.video.currentTime,
+      currentTime: state => state.video.currentTime,
+      duration: state => state.video.duration,
     }),
   },
   methods: {
@@ -47,7 +41,6 @@ export default {
       this.$store.commit('editor/TOGGLE_DRAG');
     },
     stopDrag() {
-      console.log(this.sliderValues);
       this.$store.commit('editor/TOGGLE_DRAG');
     },
   },
@@ -55,6 +48,7 @@ export default {
 
   },
   mounted() {
+    this.$store.commit('editor/UPDATE_END_TIME', this.duration);
   },
 };
 </script>
@@ -64,6 +58,7 @@ export default {
   display: flex;
   flex: 0 0 100%;
   flex-wrap: wrap;
+  overflow: hidden;
 
   button {
     display: flex;
@@ -74,14 +69,6 @@ export default {
     display: flex;
     flex: 0 0 100%;
 
-    .slider-container {
-      display: flex;
-      flex: 0 0 100%;
-
-      .el-slider {
-        width: 100%;
-      }
-    }
   }
 }
 </style>
