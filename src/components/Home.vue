@@ -11,7 +11,6 @@
 <script>
 import ParlaVideo from './ParlaVideo';
 import Editor from './Editor';
-import store from '../store';
 
 export default {
   name: 'home',
@@ -22,10 +21,9 @@ export default {
   components: {
     'parla-video': ParlaVideo,
     editor: Editor,
-    store,
   },
   mounted() {
-    store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');
+    this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');
   },
 };
 </script>

@@ -19,7 +19,7 @@
 <script>
 import 'element-ui/lib/theme-default/index.css';
 import { Slider } from 'element-ui';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'editor',
@@ -38,9 +38,9 @@ export default {
     sliderValues() {
       return [this.startTime, this.endTime];
     },
-    ...mapGetters('video', [
-      'currentTime',
-    ]),
+    ...mapState({
+      'video/currentTime': state => state.video.currentTime,
+    }),
   },
   methods: {
     startDrag() {
