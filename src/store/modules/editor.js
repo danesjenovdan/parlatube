@@ -7,8 +7,10 @@ const namespaced = true;
 const state = {
   startTime: 0,
   endTime: 0,
-  looping: false,
+  looping: true,
   dragging: false,
+  sliderValues: [0, 0],
+  sealed: true,
 };
 
 // mutations
@@ -24,6 +26,15 @@ const mutations = {
   },
   TOGGLE_DRAG(state) {
     state.dragging = !state.dragging;
+  },
+  UPDATE_SLIDER_VALUES(state, newValues) {
+    state.sliderValues = newValues;
+  },
+  TOGGLE_SEAL(state) {
+    state.sealed = !state.sealed;
+  },
+  BREAK_SEAL(state) {
+    state.sealed = false;
   },
 };
 
