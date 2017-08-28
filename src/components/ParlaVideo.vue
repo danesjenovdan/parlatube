@@ -10,6 +10,7 @@ import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'parlavideo',
+
   data() {
     return {
       player: null,
@@ -17,40 +18,36 @@ export default {
       seekToTODO: 0,
     };
   },
+
   methods: {
     onPlayerReady() {
       this.$store.commit('video/UPDATE_DURATION', this.player.getDuration());
       this.timeCheckerId = setInterval(() => {
-        if (this.player.getCurrentTime() > this.$store.state.editor.sliderValues[1]) {
-          if (this.$store.state.editor.looping && !this.$store.state.editor.sealed) {
-            const newCurrentTime = this.$store.state.editor.sliderValues[0];
-            console.log(newCurrentTime, this.player.getCurrentTime());
-            this.player.seekTo(newCurrentTime);
-          } else {
-            this.player.pauseVideo();
-          }
-        } else {
-          this.$store.commit('video/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
-        }
-      }, 1000);
+        this.$store.commit('video/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
+      }, 200);
       this.player.playVideo();
     },
   },
+
   computed: {
     ...mapState({
       oldSeekTo: state => state.video.oldSeekTo,
     }),
+
     ...mapGetters({
       seekTo: 'video/seekToGetter',
     }),
   },
+
   watch: {
     seekTo(newSeekTo) {
       if (newSeekTo !== this.oldSeekTo) {
+        this.$store.commit('video/UPDATE_OLD_SEEK_TO', newSeekTo);
         this.player.seekTo(newSeekTo);
       }
     },
   },
+
   mounted() {
     YouTubeIframeLoader.load((YT) => {
       this.player = new YT.Player('player', {
@@ -66,6 +63,10 @@ export default {
         autohide: 0,
       });
     });
+  },
+
+  beforeDestroy() {
+    clearInterval(this.timeCheckerId);
   },
 };
 </script>

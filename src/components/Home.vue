@@ -34,6 +34,7 @@ export default {
   display: flex;
   flex: 0 0 100%;
   flex-wrap: wrap;
+  overflow: hidden;
 
   .feed-container {
     display: flex;

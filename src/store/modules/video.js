@@ -33,7 +33,7 @@ const mutations = {
 
 // getters
 const getters = {
-  currentVideoTime: state => state.currentTime,
+  currentTimeGetter: state => state.currentTime,
   seekToGetter: state => state.seekTo,
   durationGetter: state => state.duration,
 };

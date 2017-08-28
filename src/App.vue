@@ -16,8 +16,9 @@ export default {
 <style lang="scss" scoped>
 #parlatube {
   display: flex;
-  width: 100%;
   flex-wrap: wrap;
+  flex: 0 0 100%;
+  overflow: hidden;
 
   .header {
     display: flex;

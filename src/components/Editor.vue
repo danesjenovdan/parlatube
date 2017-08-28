@@ -1,14 +1,11 @@
 <template>
   <div id="editor">
     <button @click="editorVisible = !editorVisible">Pripravi svoj izsek</button>
-    <div :class="['editor-controls-container', { hidden: !editorVisible }]">
-      <slider
-        :max="duration"
-      ></slider>
-      <div class="row">
-        <input type="checkbox" id="checkbox" v-model="looping">
-        <label for="checkbox">Looping: {{ looping }}</label>
-      </div>
+    <div
+      v-if="editorVisible"
+      :class="['editor-controls-container', { hidden: !editorVisible }]"
+    >
+      <slider></slider>
       <div class="row">
         <button
           @click="createSnippet"
@@ -20,7 +17,7 @@
 
 <script>
 import 'element-ui/lib/theme-default/index.css';
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import Slider from './Slider';
 
 export default {
@@ -28,33 +25,18 @@ export default {
   data() {
     return {
       editorVisible: true,
-      endTime: this.$store.state.editor.endTime,
-      dragging: this.$store.state.editor.dragging,
-      looping: this.$store.state.editor.looping,
-      value: [0, this.duration || 0],
     };
   },
   components: {
     Slider,
   },
   computed: {
-    ...mapState({
-      currentTime: state => state.video.currentTime,
-    }),
     ...mapGetters({
       duration: 'video/durationGetter',
     }),
   },
   methods: {
-    startDrag() {
-      this.$store.commit('editor/TOGGLE_DRAG');
-    },
-    stopDrag() {
-      this.$store.commit('editor/TOGGLE_DRAG');
-    },
     createSnippet() {
-      console.log('creating snippet');
-      console.log(this);
       this.$http.post('http://snippet.knedl.si/setSnippet', {
         video_id: 1,
         start_time: this.$store.state.editor.sliderValues[0] * 1000,
@@ -74,9 +56,6 @@ export default {
     },
   },
   watch: {
-    looping() {
-      this.$store.commit('editor/TOGGLE_LOOPING');
-    },
   },
   mounted() {
     this.$store.commit('editor/UPDATE_END_TIME', this.duration);
@@ -98,9 +77,10 @@ export default {
 
   .editor-controls-container  {
     display: flex;
-    flex: 0 0 calc(100% - 30px);
+    flex: 0 0 100%;
     margin: auto;
     flex-wrap: wrap;
+    overflow: hidden;
 
     &.hidden {
       display: none;
