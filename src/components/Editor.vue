@@ -11,6 +11,13 @@
           @click="createSnippet"
         >Izreži!</button>
       </div>
+      <div class="text-stuff">
+        <h1>TU SO KONTROLE ZA TEXT OVERLAY</h1>
+        <p>Ko enkrat vpišeš tekst, ga lahko z miško premikaš.</p>
+        <input type="text" v-model="localDrawingText" placeholder="sem vpiši tekst"/>
+        <input type="number" v-model="localFontSize" />
+        <color-picker v-model="colorPickerProps" />
+      </div>
     </div>
   </div>
 </template>
@@ -18,6 +25,7 @@
 <script>
 import 'element-ui/lib/theme-default/index.css';
 import { mapGetters } from 'vuex';
+import { Chrome } from 'vue-color';
 import Slider from './Slider';
 
 export default {
@@ -25,14 +33,40 @@ export default {
   data() {
     return {
       editorVisible: true,
+      localDrawingText: '',
+      localFontSize: 40,
+      colorPickerProps: {
+        hex: '#ffffff',
+        hsl: {
+          h: 150,
+          s: 0.5,
+          l: 0.2,
+          a: 1,
+        },
+        hsv: {
+          h: 150,
+          s: 0.66,
+          v: 0.30,
+          a: 1,
+        },
+        rgba: {
+          r: 25,
+          g: 77,
+          b: 51,
+          a: 1,
+        },
+        a: 1,
+      },
     };
   },
   components: {
     Slider,
+    'color-picker': Chrome,
   },
   computed: {
     ...mapGetters({
       duration: 'video/durationGetter',
+      // drawingText: 'drawing/textGetter',
     }),
   },
   methods: {
@@ -56,6 +90,15 @@ export default {
     },
   },
   watch: {
+    localDrawingText(newLocalDrawingText) {
+      this.$store.commit('drawing/UPDATE_TEXT', newLocalDrawingText);
+    },
+    localFontSize(newLocalFontSize) {
+      this.$store.commit('drawing/UPDATE_FONT_SIZE', newLocalFontSize);
+    },
+    colorPickerProps(newColorPickerProps) {
+      this.$store.commit('drawing/UPDATE_COLOR', newColorPickerProps.hex);
+    },
   },
   mounted() {
     this.$store.commit('editor/UPDATE_END_TIME', this.duration);

@@ -101,7 +101,6 @@ export default {
     onDragEnd() {
       window.removeEventListener('mousemove', this.onDragging);
       window.removeEventListener('mouseup', this.onDragEnd);
-      window.removeEventListener('contextmenu', this.onDragEnd);
     },
 
     onStartMarkerDown(event) {
