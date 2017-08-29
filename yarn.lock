@@ -5955,6 +5955,27 @@ supports-color@^4.0.0, supports-color@^4.2.1:
   dependencies:
     has-flag "^2.0.0"
 
+svg.js@^2.2.5:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/svg.js/-/svg.js-2.6.3.tgz#ac07c61f54ada2745548800307bb45b4b3b519eb"
+
+svg.resize.js@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/svg.resize.js/-/svg.resize.js-1.4.1.tgz#e9b04d1d0d7da39296aa1f8eed1098608347f213"
+  dependencies:
+    svg.js "^2.2.5"
+    svg.select.js "^2.1.2"
+
+svg.select.js@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/svg.select.js/-/svg.select.js-2.1.2.tgz#e41ce13b1acff43a7441f9f8be87a2319c87be73"
+  dependencies:
+    svg.js "^2.2.5"
+
+svgjs@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/svgjs/-/svgjs-2.6.2.tgz#3b1ea8fbb55148bb227ec05747fc2bf89a465abe"
+
 svgo@^0.7.0:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/svgo/-/svgo-0.7.2.tgz#9f5772413952135c6fefbf40afe6a4faa88b4bb5"
