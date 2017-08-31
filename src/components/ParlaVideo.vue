@@ -6,6 +6,8 @@
           id="drawing"
           :style="{transform: `translate(${drawingX}px, ${drawingY}px)`, 'font-size': `${fontSize}px`, color: color}"
           @mousedown.prevent="onDrawingMouseDown"
+          @mousemove.prevent="onDrawingDragging"
+          @mouseup.prevent="drawingDragging = false"
         >{{ drawingText }}</div>
       </div>
     </div>
@@ -25,6 +27,7 @@ export default {
       seekToTODO: 0,
       currentX: null,
       currentY: null,
+      drawingDragging: false,
     };
   },
 
@@ -38,24 +41,20 @@ export default {
     },
 
     onDrawingMouseDown(event) {
+      this.drawingDragging = true;
       this.currentX = event.clientX;
       this.currentY = event.clientY;
-      window.addEventListener('mousemove', this.onDrawingDragging);
-      window.addEventListener('mouseup', this.onDrawingDragEnd);
     },
 
     onDrawingDragging(event) {
-      const diffX = (event.clientX - this.currentX);
-      const diffY = (event.clientY - this.currentY);
-      this.currentX = event.clientX;
-      this.currentY = event.clientY;
-      this.$store.commit('drawing/UPDATE_X', this.drawingX + diffX);
-      this.$store.commit('drawing/UPDATE_Y', this.drawingY + diffY);
-    },
-
-    onDrawingDragEnd() {
-      window.removeEventListener('mousemove', this.onDrawingDragging);
-      window.removeEventListener('mouseup', this.onDrawingDragEnd);
+      if (this.drawingDragging) {
+        const diffX = (event.clientX - this.currentX);
+        const diffY = (event.clientY - this.currentY);
+        this.currentX = event.clientX;
+        this.currentY = event.clientY;
+        this.$store.commit('drawing/UPDATE_X', this.drawingX + diffX);
+        this.$store.commit('drawing/UPDATE_Y', this.drawingY + diffY);
+      }
     },
   },
 
