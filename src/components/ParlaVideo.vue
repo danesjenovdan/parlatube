@@ -5,7 +5,7 @@
         <div
           id="drawing"
           :style="{transform: `translate(${drawingX}px, ${drawingY}px)`, 'font-size': `${fontSize}px`, color: color}"
-          @mousedown="onDrawingMouseDown"
+          @mousedown.prevent="onDrawingMouseDown"
         >{{ drawingText }}</div>
       </div>
     </div>
@@ -38,7 +38,6 @@ export default {
     },
 
     onDrawingMouseDown(event) {
-      event.preventDefault();
       this.currentX = event.clientX;
       this.currentY = event.clientY;
       window.addEventListener('mousemove', this.onDrawingDragging);
