@@ -24,12 +24,12 @@
 
 <script>
 import 'element-ui/lib/theme-default/index.css';
-import { mapGetters } from 'vuex';
-import { Chrome } from 'vue-color';
+import { mapState, mapGetters } from 'vuex';
+import { Compact } from 'vue-color';
 import Slider from './Slider';
 
 export default {
-  name: 'editor',
+  name: 'Editor',
   data() {
     return {
       editorVisible: true,
@@ -61,31 +61,44 @@ export default {
   },
   components: {
     Slider,
-    'color-picker': Chrome,
+    'color-picker': Compact,
   },
   computed: {
     ...mapGetters({
       duration: 'video/durationGetter',
-      // drawingText: 'drawing/textGetter',
+      loopStart: 'editor/startMarkerGetter',
+      loopEnd: 'editor/endMarkerGetter',
     }),
+
+    ...mapState({
+      drawing: state => state.drawing,
+    }),
+
+    // drawing() {
+    //   return {
+    //     text: this.localDrawingText,
+    //     fontSize: this.localFontSize,
+    //     color: this.colorPickerProps.hex,
+    //   };
+    // },
   },
   methods: {
     createSnippet() {
-      this.$http.post('http://snippet.knedl.si/setSnippet', {
+      const data = {
         video_id: 1,
-        start_time: this.$store.state.editor.sliderValues[0] * 1000,
-        end_time: this.$store.state.editor.sliderValues[1] * 1000,
-        extras: '',
+        start_time: this.loopStart * 1000,
+        end_time: this.loopEnd * 1000,
+        extras: JSON.stringify(this.drawing),
         published: 1,
         looping: 1,
-      }, {
+      };
+
+      this.$http.post('http://snippet.knedl.si/setSnippet', data, {
         emulateJSON: true,
       }).then((response) => {
-        console.log('bla');
-        console.log(response);
-      }, (response) => {
-        console.log('error');
-        console.log(response);
+        this.$router.push({ path: `/snippet/${response.data.id}` });
+      }, () => {
+        // something has gone wrong with saving your snippet
       });
     },
   },

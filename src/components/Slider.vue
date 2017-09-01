@@ -13,11 +13,11 @@
           v-bind:style="{width: `${duration}px`}"
         >
           <div class="marker start-marker"
-            v-bind:style="{left: `${startMarkerPosition}px`}"
+            v-bind:style="{left: `${localStartMarkerPosition}px`}"
             @mousedown="onStartMarkerDown"
           ></div>
           <div class="marker end-marker"
-            v-bind:style="{left: `${endMarkerPosition}px`}"
+            v-bind:style="{left: `${localEndMarkerPosition}px`}"
             @mousedown="onEndMarkerDown"
           ></div>
         </div>
@@ -29,17 +29,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import SliderButton from './SliderButton';
 
 export default {
   name: 'Slider',
-
-  props: {
-  },
-
-  components: {
-    SliderButton,
-  },
 
   data() {
     return {
@@ -47,8 +39,8 @@ export default {
       oldRulerOffset: null,
       manipulating: false,
       currentX: 0,
-      startMarkerPosition: 0,
-      endMarkerPosition: 100,
+      localStartMarkerPosition: 0,
+      localEndMarkerPosition: 0,
     };
   },
 
@@ -56,6 +48,8 @@ export default {
     ...mapGetters({
       duration: 'video/durationGetter',
       currentTime: 'video/currentTimeGetter',
+      startMarkerPosition: 'editor/startMarkerGetter',
+      endMarkerPosition: 'editor/endMarkerGetter',
     }),
   },
 
@@ -65,6 +59,19 @@ export default {
         this.timeMarkerPosition = newCurrentTime;
         this.$el.querySelector('.slider-viewport').scrollLeft = this.timeMarkerPosition;
         this.oldRulerOffset = this.timeMarkerPosition;
+      }
+    },
+
+    startMarkerPosition(newStartMarkerPosition) {
+      this.localStartMarkerPosition = newStartMarkerPosition;
+    },
+
+    endMarkerPosition(newEndMarkerPosition) {
+      this.localEndMarkerPosition = newEndMarkerPosition;
+      if (this.localEndMarkerPosition > this.localStartMarkerPosition) {
+        // make both editor and video know they can loop
+        this.$store.commit('editor/TURN_LOOPING_ON');
+        this.$store.commit('video/TURN_LOOPING_ON');
       }
     },
   },
@@ -114,14 +121,16 @@ export default {
       let diff = 0;
       diff = (event.clientX - this.currentX);
       this.currentX = event.clientX;
-      if (this.isMarkerInBounds(this.startMarkerPosition + diff)) {
-        this.startMarkerPosition = this.startMarkerPosition + diff;
+      if (this.isMarkerInBounds(this.localStartMarkerPosition + diff)) {
+        this.localStartMarkerPosition = this.localStartMarkerPosition + diff;
       }
     },
 
     onStartMarkerDragEnd() {
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition, this.localEndMarkerPosition]);
+      this.$store.commit('video/UPDATE_LOOP_START', this.localStartMarkerPosition);
       window.removeEventListener('mousemove', this.onStartMarkerDragging);
-      window.removeEventListener('mousemove', this.onStartMarkerDragEnd);
+      window.removeEventListener('mouseup', this.onStartMarkerDragEnd);
     },
 
     onEndMarkerDown(event) {
@@ -135,20 +144,25 @@ export default {
       let diff = 0;
       diff = (event.clientX - this.currentX);
       this.currentX = event.clientX;
-      if (this.isMarkerInBounds(this.endMarkerPosition + diff)) {
-        this.endMarkerPosition = this.endMarkerPosition + diff;
+      if (this.isMarkerInBounds(this.localEndMarkerPosition + diff)) {
+        this.localEndMarkerPosition = this.localEndMarkerPosition + diff;
       }
     },
 
     onEndMarkerDragEnd() {
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition, this.localEndMarkerPosition]);
+      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition);
       window.removeEventListener('mousemove', this.onEndMarkerDragging);
-      window.removeEventListener('mousemove', this.onEndMarkerDragEnd);
+      window.removeEventListener('mouseup', this.onEndMarkerDragEnd);
     },
 
     isMarkerInBounds(position) {
       return (position >= 0) && (position <= this.duration); // &&
-        // (this.startMarkerPosition <= this.endMarkerPosition - 7);
+        // (this.localStartMarkerPosition <= this.localEndMarkerPosition - 7);
     },
+  },
+
+  created() {
   },
 
   mounted() {
@@ -182,6 +196,7 @@ export default {
 
       .ruler {
         height: 100%;
+        background-color: blue;
         background: linear-gradient(left, #00ff00, #00aabb);
         cursor: pointer;
         position: relative;

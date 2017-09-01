@@ -29,6 +29,20 @@ const mutations = {
   UPDATE_COLOR(state, newColor) {
     state.color = newColor;
   },
+  UPDATE_STATE(state, newState) {
+    state.x = newState.x;
+    state.y = newState.y;
+    state.text = newState.text;
+    state.fontSize = newState.fontSize;
+    state.color = newState.color;
+  },
+  RESET_STATE(state) {
+    state.x = 0;
+    state.y = 0;
+    state.text = '';
+    state.fontSize = 40;
+    state.color = '#ffffff';
+  },
 };
 
 // getters

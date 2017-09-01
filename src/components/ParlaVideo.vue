@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import YouTubeIframeLoader from 'youtube-iframe';
+import YouTubePlayer from 'youtube-player';
 import { mapState, mapGetters } from 'vuex';
 
 export default {
@@ -20,7 +20,6 @@ export default {
 
   data() {
     return {
-      player: null,
       timeCheckerId: null,
       seekToTODO: 0,
       currentX: null,
@@ -29,14 +28,6 @@ export default {
   },
 
   methods: {
-    onPlayerReady() {
-      this.$store.commit('video/UPDATE_DURATION', this.player.getDuration());
-      this.timeCheckerId = setInterval(() => {
-        this.$store.commit('video/UPDATE_CURRENT_TIME', this.player.getCurrentTime());
-      }, 200);
-      this.player.playVideo();
-    },
-
     onDrawingMouseDown(event) {
       this.currentX = event.clientX;
       this.currentY = event.clientY;
@@ -57,11 +48,21 @@ export default {
       window.removeEventListener('mousemove', this.onDrawingDragging);
       window.removeEventListener('mouseup', this.onDrawingDragEnd);
     },
+
+    updateVideoId(newVideoId) {
+      this.player.loadVideoById(newVideoId);
+      this.player.playVideo();
+    },
   },
 
   computed: {
     ...mapState({
       oldSeekTo: state => state.video.oldSeekTo,
+      videoId: state => state.video.videoId,
+      duration: state => state.video.duration,
+      loopStart: state => state.video.loopStart,
+      loopEnd: state => state.video.loopEnd,
+      looping: state => state.video.looping,
     }),
 
     ...mapGetters({
@@ -72,6 +73,11 @@ export default {
       fontSize: 'drawing/fontSizeGetter',
       color: 'drawing/colorGetter',
     }),
+
+    player: () => YouTubePlayer('player', {
+      width: null,
+      height: null,
+    }),
   },
 
   watch: {
@@ -81,23 +87,36 @@ export default {
         this.player.seekTo(newSeekTo);
       }
     },
+    videoId(newVideoId) {
+      if (this.player) {
+        this.updateVideoId(newVideoId);
+      }
+    },
   },
 
   mounted() {
-    YouTubeIframeLoader.load((YT) => {
-      this.player = new YT.Player('player', {
-        height: '390',
-        width: '100%',
-        videoId: this.$store.state.video.videoId,
-        events: {
-          onReady: this.onPlayerReady,
-        },
-        playerVars: {
-          controls: 1,
-        },
-        autohide: 0,
+    this.player.loadVideoById(this.videoId);
+    this.player.playVideo();
+    this.player.unMute();
+    this.timeCheckerId = setInterval(() => {
+      // update duration if needed
+      this.player.getDuration().then((duration) => {
+        if (this.duration !== duration) {
+          this.$store.commit('video/UPDATE_DURATION', duration);
+        }
       });
-    });
+
+      // check if player out of bounds and update current time
+      this.player.getCurrentTime().then((currentTime) => {
+        if (this.looping) {
+          if (currentTime > this.loopEnd) {
+            this.player.seekTo(this.loopStart);
+          }
+        }
+
+        this.$store.commit('video/UPDATE_CURRENT_TIME', currentTime);
+      });
+    }, 200);
   },
 
   beforeDestroy() {
@@ -114,11 +133,6 @@ export default {
   flex: 0 0 100%;
   flex-wrap: wrap;
   position: relative;
-
-  #player {
-    display: flex;
-    flex: 0 0 100%;
-  }
 
   #drawing-container {
     width: 100%;
@@ -138,5 +152,17 @@ export default {
       color: #ffffff;
     }
   }
+}
+</style>
+
+<style lang="scss">
+#player {
+  display: flex;
+  flex: 0 0 100%;
+
+  margin: auto;
+  position: relative;
+
+  min-height: 300px;
 }
 </style>

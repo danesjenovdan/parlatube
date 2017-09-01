@@ -7,10 +7,9 @@ const namespaced = true;
 const state = {
   startTime: 0,
   endTime: 0,
-  looping: true,
+  looping: false,
   dragging: false,
   sliderValues: [0, 0],
-  sealed: true,
 };
 
 // mutations
@@ -24,22 +23,32 @@ const mutations = {
   TOGGLE_LOOPING(state) {
     state.looping = !state.looping;
   },
+  TURN_LOOPING_ON(state) {
+    state.looping = true;
+  },
+  TURN_LOOPING_OFF(state) {
+    state.looping = false;
+  },
   TOGGLE_DRAG(state) {
     state.dragging = !state.dragging;
   },
   UPDATE_SLIDER_VALUES(state, newValues) {
     state.sliderValues = newValues;
   },
-  TOGGLE_SEAL(state) {
-    state.sealed = !state.sealed;
-  },
-  BREAK_SEAL(state) {
-    state.sealed = false;
+  RESET_STATE(state) {
+    state.startTime = 0;
+    state.endTime = 0;
+    state.looping = false;
+    state.dragging = false;
+    state.sliderValues = [0, 0];
   },
 };
 
 // getters
-// const getters = {};
+const getters = {
+  startMarkerGetter: state => state.sliderValues[0],
+  endMarkerGetter: state => state.sliderValues[1],
+};
 
 // actions
 // const actions = {};
@@ -48,4 +57,5 @@ export default {
   namespaced,
   state,
   mutations,
+  getters,
 };

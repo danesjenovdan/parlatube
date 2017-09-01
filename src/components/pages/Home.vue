@@ -1,6 +1,13 @@
 <template>
   <div id="home">
-    <parla-video></parla-video>
+    <div class="video-and-transcripts-container">
+      <div class="video-container">
+        <parla-video></parla-video>
+      </div>
+      <div class="transcripts-container">
+        <transcripts></transcripts>
+      </div>
+    </div>
     <editor></editor>
     <div class="row feed-container">
       <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="900356004453519360">#soocenje Tweets</a>
@@ -11,18 +18,26 @@
 <script>
 import ParlaVideo from 'components/ParlaVideo';
 import Editor from 'components/Editor';
+import Transcripts from 'components/Transcripts';
 
 export default {
   name: 'home',
+
   data() {
     return {
     };
   },
+
   components: {
-    'parla-video': ParlaVideo,
-    editor: Editor,
+    ParlaVideo,
+    Editor,
+    Transcripts,
   },
-  mounted() {
+
+  created() {
+    this.$store.commit('editor/RESET_STATE');
+    this.$store.commit('video/RESET_STATE');
+    this.$store.commit('drawing/RESET_STATE');
     this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');
   },
 };
@@ -35,6 +50,25 @@ export default {
   flex: 0 0 100%;
   flex-wrap: wrap;
   overflow: hidden;
+
+  .video-and-transcripts-container {
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: nowrap;
+    overflow: hidden;
+
+    .video-container {
+      display: flex;
+      flex: 1 1 100%;
+      overflow: hidden;
+    }
+
+    .transcripts-container {
+      display: flex;
+      flex: 1 1 100%;
+      overflow: hidden;
+    }
+  }
 
   .feed-container {
     display: flex;
