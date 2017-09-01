@@ -6,6 +6,7 @@
           id="drawing"
           :style="{transform: `translate(${drawingX}px, ${drawingY}px)`, 'font-size': `${fontSize}px`, color: color}"
           @mousedown.prevent="onDrawingMouseDown"
+          @touchstart.prevent="onDrawingTouchStart"
         >{{ drawingText }}</div>
       </div>
     </div>
@@ -47,6 +48,27 @@ export default {
     onDrawingDragEnd() {
       window.removeEventListener('mousemove', this.onDrawingDragging);
       window.removeEventListener('mouseup', this.onDrawingDragEnd);
+    },
+
+    onDrawingTouchStart(event) {
+      this.currentX = event.targetTouches[0].clientX;
+      this.currentY = event.targetTouches[0].clientY;
+      window.addEventListener('touchmove', this.onDrawingTouchDragging);
+      window.addEventListener('touchend', this.onDrawingTouchDragEnd);
+    },
+
+    onDrawingTouchDragging(event) {
+      const diffX = (event.targetTouches[0].clientX - this.currentX);
+      const diffY = (event.targetTouches[0].clientY - this.currentY);
+      this.currentX = event.targetTouches[0].clientX;
+      this.currentY = event.targetTouches[0].clientY;
+      this.$store.commit('drawing/UPDATE_X', this.drawingX + diffX);
+      this.$store.commit('drawing/UPDATE_Y', this.drawingY + diffY);
+    },
+
+    onDrawingTouchDragEnd() {
+      window.removeEventListener('touchmove', this.onDrawingTouchDragging);
+      window.removeEventListener('touchend', this.onDrawingTouchDragEnd);
     },
 
     updateVideoId(newVideoId) {
