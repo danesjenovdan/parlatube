@@ -10,7 +10,7 @@
       <div class="ruler-container">
         <div
           class="ruler"
-          v-bind:style="{width: `${duration}px`}"
+          v-bind:style="{width: `${duration * stepSize}px`}"
         >
           <div class="marker start-marker"
             v-bind:style="{left: `${localStartMarkerPosition}px`}"
@@ -20,6 +20,7 @@
             v-bind:style="{left: `${localEndMarkerPosition}px`}"
             @mousedown="onEndMarkerDown"
           ></div>
+          <div class="seconds"></div>
         </div>
       </div>
     </div>
@@ -33,6 +34,14 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'Slider',
 
+  props: {
+    stepSize: {
+      type: Number,
+      default: 20,
+      validator: value => value > 0,
+    },
+  },
+
   data() {
     return {
       timeMarkerPosition: 0,
@@ -41,6 +50,7 @@ export default {
       currentX: 0,
       localStartMarkerPosition: 0,
       localEndMarkerPosition: 0,
+      numberOfSeconds: 0,
     };
   },
 
@@ -56,23 +66,27 @@ export default {
   watch: {
     currentTime(newCurrentTime) {
       if (!this.manipulating) {
-        this.timeMarkerPosition = newCurrentTime;
+        this.timeMarkerPosition = newCurrentTime * this.stepSize;
         this.$el.querySelector('.slider-viewport').scrollLeft = this.timeMarkerPosition;
         this.oldRulerOffset = this.timeMarkerPosition;
       }
     },
 
     startMarkerPosition(newStartMarkerPosition) {
-      this.localStartMarkerPosition = newStartMarkerPosition;
+      this.localStartMarkerPosition = newStartMarkerPosition * this.stepSize;
     },
 
     endMarkerPosition(newEndMarkerPosition) {
-      this.localEndMarkerPosition = newEndMarkerPosition;
+      this.localEndMarkerPosition = newEndMarkerPosition * this.stepSize;
       if (this.localEndMarkerPosition > this.localStartMarkerPosition) {
         // make both editor and video know they can loop
         this.$store.commit('editor/TURN_LOOPING_ON');
         this.$store.commit('video/TURN_LOOPING_ON');
       }
+    },
+
+    duration(newDuration) {
+      this.numberOfSeconds = Math.floor(newDuration);
     },
   },
 
@@ -85,7 +99,7 @@ export default {
           (newRulerOffset - this.oldRulerOffset);
         this.oldRulerOffset = newRulerOffset;
 
-        this.$store.commit('video/UPDATE_SEEK_TO', Math.abs(this.timeMarkerPosition));
+        this.$store.commit('video/UPDATE_SEEK_TO', Math.abs(this.timeMarkerPosition / this.stepSize));
       }
     },
 
@@ -127,8 +141,8 @@ export default {
     },
 
     onStartMarkerDragEnd() {
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition, this.localEndMarkerPosition]);
-      this.$store.commit('video/UPDATE_LOOP_START', this.localStartMarkerPosition);
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.stepSize, this.localEndMarkerPosition / this.stepSize]);
+      this.$store.commit('video/UPDATE_LOOP_START', this.localStartMarkerPosition / this.stepSize);
       window.removeEventListener('mousemove', this.onStartMarkerDragging);
       window.removeEventListener('mouseup', this.onStartMarkerDragEnd);
     },
@@ -150,14 +164,14 @@ export default {
     },
 
     onEndMarkerDragEnd() {
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition, this.localEndMarkerPosition]);
-      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition);
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.stepSize, this.localEndMarkerPosition / this.stepSize]);
+      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.stepSize);
       window.removeEventListener('mousemove', this.onEndMarkerDragging);
       window.removeEventListener('mouseup', this.onEndMarkerDragEnd);
     },
 
     isMarkerInBounds(position) {
-      return (position >= 0) && (position <= this.duration); // &&
+      return (position >= 0) && (position <= this.duration * this.stepSize); // &&
         // (this.localStartMarkerPosition <= this.localEndMarkerPosition - 7);
     },
   },
@@ -200,6 +214,14 @@ export default {
         background: linear-gradient(left, #00ff00, #00aabb);
         cursor: pointer;
         position: relative;
+
+        .seconds {
+          width: 100%;
+          background-image: url('../assets/marker.png');
+          height: 20px;
+          top: 65px;
+          position: relative;
+        }
       }
 
       .marker {
@@ -208,6 +230,8 @@ export default {
         top: 0;
         width: 5px;
         background: black;
+
+        z-index: 2;
 
         &:hover {
           background: red;
