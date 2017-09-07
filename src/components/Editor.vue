@@ -73,14 +73,6 @@ export default {
     ...mapState({
       drawing: state => state.drawing,
     }),
-
-    // drawing() {
-    //   return {
-    //     text: this.localDrawingText,
-    //     fontSize: this.localFontSize,
-    //     color: this.colorPickerProps.hex,
-    //   };
-    // },
   },
   methods: {
     createSnippet() {

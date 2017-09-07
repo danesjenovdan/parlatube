@@ -25,6 +25,7 @@ export default {
       seekToTODO: 0,
       currentX: null,
       currentY: null,
+      oldCurrentTime: 0,
     };
   },
 
@@ -130,13 +131,23 @@ export default {
 
       // check if player out of bounds and update current time
       this.player.getCurrentTime().then((currentTime) => {
+        // return if currentTime didn't change or is undefined or duration is 0
+        if ((currentTime === this.oldCurrentTime) || !currentTime || (this.duration === 0)) {
+          return false;
+        }
+
+        // update old currentTime
+        this.oldCurrentTime = currentTime;
         if (this.looping) {
           if (currentTime > this.loopEnd) {
             this.player.seekTo(this.loopStart);
+            this.$store.commit('video/UPDATE_CURRENT_TIME', this.loopStart);
+            return true;
           }
         }
 
         this.$store.commit('video/UPDATE_CURRENT_TIME', currentTime);
+        return true;
       });
     }, 200);
   },
