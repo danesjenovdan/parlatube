@@ -26,7 +26,7 @@ export default {
       currentX: null,
       currentY: null,
       oldCurrentTime: 0,
-      drawingContainerEvents: true,
+      drawingContainerEvents: false,
     };
   },
 
