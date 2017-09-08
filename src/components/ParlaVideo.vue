@@ -1,7 +1,7 @@
 <template>
     <div id="video">
       <div id="player"></div>
-      <div id="drawing-container">
+      <div id="drawing-container" :class="{ events: drawingContainerEvents }">
         <div
           id="drawing"
           :style="{transform: `translate(${drawingX}px, ${drawingY}px)`, 'font-size': `${fontSize}px`, color: color}"
@@ -26,6 +26,7 @@ export default {
       currentX: null,
       currentY: null,
       oldCurrentTime: 0,
+      drawingContainerEvents: true,
     };
   },
 
@@ -33,6 +34,7 @@ export default {
     onDrawingMouseDown(event) {
       this.currentX = event.clientX;
       this.currentY = event.clientY;
+      this.drawingContainerEvents = true;
       window.addEventListener('mousemove', this.onDrawingDragging);
       window.addEventListener('mouseup', this.onDrawingDragEnd);
     },
@@ -47,6 +49,7 @@ export default {
     },
 
     onDrawingDragEnd() {
+      this.drawingContainerEvents = false;
       window.removeEventListener('mousemove', this.onDrawingDragging);
       window.removeEventListener('mouseup', this.onDrawingDragEnd);
     },
@@ -171,6 +174,11 @@ export default {
     width: 100%;
     height: 100%;
     position: absolute;
+    pointer-events: none;
+
+    &.events {
+      pointer-events: all;
+    }
 
     #drawing {
       background: transparent;
@@ -183,6 +191,7 @@ export default {
       top: 45%;
       left: 45%;
       color: #ffffff;
+      pointer-events: all;
     }
   }
 }
