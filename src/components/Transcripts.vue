@@ -5,6 +5,7 @@
         type="text"
         id="search-input"
         placeholder="išči ..."
+        v-model="searchTerm"
       >
     </div>
     <div
@@ -27,7 +28,7 @@
           <div class="speaker-name">{{ speech.name }}</div>
         </div>
         <div class="speech-content">
-          {{ speech.content }}
+          <p v-html="speech.content"></p>
         </div>
       </div>
     </div>
@@ -43,8 +44,10 @@ export default {
   data() {
     return {
       transcripts: [],
+      allSpeeches: [],
       currentSpeechId: 0,
       scrollTranscripts: true,
+      searchTerm: '',
     };
   },
 
@@ -70,6 +73,28 @@ export default {
         this.$refs.speechesContainer.scrollTop = this.$refs.speechesContainer.scrollTop + topPos;
       }
     },
+    searchQuery(term) {
+      this.scrollTranscripts = false;
+      this.$refs.speechesContainer.scrollTop = 0;
+
+      const highlightingRegex = new RegExp(term); // TODO highlighting hack
+      this.$http.get(`http://speeches.knedl.si/q/${term}`).then((result) => {
+        if (result.data.length > 0) {
+          this.transcripts = result.data
+          .sort((a, b) => a.start_time_stamp - b.start_time_stamp)
+          .map(speech => ({
+            content: speech.content.replace(highlightingRegex, `<span class="highlight">${term}</span>`), // TODO highlighting hack
+            end_time_stamp: speech.timestamp_start,
+            start_time_stamp: speech.timestamp_start,
+            image_url: speech.speaker_url,
+            id: speech.id,
+            name: speech.speaker_name,
+          }));
+        } else {
+          this.transcripts = this.allSpeeches;
+        }
+      });
+    },
   },
 
   watch: {
@@ -81,6 +106,14 @@ export default {
         this.scrollToSpeech(topPos - 60);
       }
     },
+
+    searchTerm(newSearchTerm) {
+      if (newSearchTerm.length > 0) {
+        this.searchQuery(newSearchTerm);
+      } else {
+        this.scrollTranscripts = true;
+      }
+    },
   },
 
   beforeMount() {
@@ -88,6 +121,7 @@ export default {
       emulateJSON: true,
     }).then((result) => {
       this.transcripts = result.data.sort((a, b) => a.start_time_stamp - b.start_time_stamp);
+      this.allSpeeches = this.transcripts;
     });
   },
 
@@ -162,7 +196,19 @@ export default {
         display: flex;
         flex: 1 0 calc(100% - 5px);
         padding: 5px;
+
+        p {
+          margin: 0;
+          padding: 0;
+        }
       }
     }
   }
+</style>
+
+<style lang="scss">
+.highlight {
+  font-weight: bold;
+  background-color: yellow;
+}
 </style>
