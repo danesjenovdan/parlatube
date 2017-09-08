@@ -7,7 +7,12 @@
         placeholder="išči ..."
       >
     </div>
-    <div class="speeches-container" ref="speechesContainer">
+    <div
+      class="speeches-container"
+      ref="speechesContainer"
+      @mouseover="scrollTranscripts = false"
+      @mouseout="scrollTranscripts = true"
+    >
       <div
         class="speech"
         v-for="speech in transcripts"
@@ -39,6 +44,7 @@ export default {
     return {
       transcripts: [],
       currentSpeechId: 0,
+      scrollTranscripts: true,
     };
   },
 
@@ -46,26 +52,32 @@ export default {
     ...mapState({
       currentTime: state => state.video.currentTime,
     }),
+    theSpeech() {
+      const filteredSpeeches = this.transcripts.filter(speech =>
+        ((speech.start_time_stamp / 1000) < this.currentTime) &&
+        ((speech.end_time_stamp / 1000) > this.currentTime));
+
+      return filteredSpeeches[0];
+    },
   },
 
   methods: {
     scrollTo(timestamp) {
-      this.$store.commit('video/UPDATE_SEEK_TO', (timestamp / 1000));
+      this.$store.commit('video/UPDATE_SEEK_TO', Math.ceil(timestamp / 1000));
     },
     scrollToSpeech(topPos) {
-      this.$refs.speechesContainer.scrollTop = this.$refs.speechesContainer.scrollTop + topPos;
+      if (this.scrollTranscripts) {
+        this.$refs.speechesContainer.scrollTop = this.$refs.speechesContainer.scrollTop + topPos;
+      }
     },
   },
 
   watch: {
-    currentTime() {
-      const theSpeech = this.transcripts.filter(speech =>
-        ((speech.start_time_stamp / 1000) < this.currentTime) &&
-        ((speech.end_time_stamp / 1000) > this.currentTime))[0];
-
-      if (theSpeech && (theSpeech.id !== this.currentSpeechId)) {
-        this.currentSpeechId = theSpeech.id;
-        const topPos = this.$refs[`speech${theSpeech.id}`][0].getBoundingClientRect().top;
+    theSpeech(newTheSpeech, oldTheSpeech) {
+      if (newTheSpeech &&
+        oldTheSpeech &&
+        (newTheSpeech.id !== oldTheSpeech.id)) {
+        const topPos = this.$refs[`speech${newTheSpeech.id}`][0].getBoundingClientRect().top;
         this.scrollToSpeech(topPos - 60);
       }
     },
