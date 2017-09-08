@@ -73,11 +73,11 @@ export default {
   },
 
   watch: {
-    theSpeech(newTheSpeech, oldTheSpeech) {
-      if (newTheSpeech &&
-        oldTheSpeech &&
-        (newTheSpeech.id !== oldTheSpeech.id)) {
-        const topPos = this.$refs[`speech${newTheSpeech.id}`][0].getBoundingClientRect().top;
+    currentTime(newCurrentTime) {
+      if (this.theSpeech &&
+        (newCurrentTime > this.theSpeech.start_time_stamp / 1000) &&
+        (newCurrentTime < this.theSpeech.end_time_stamp / 1000)) {
+        const topPos = this.$refs[`speech${this.theSpeech.id}`][0].getBoundingClientRect().top;
         this.scrollToSpeech(topPos - 60);
       }
     },
