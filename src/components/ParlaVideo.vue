@@ -149,7 +149,7 @@ export default {
         this.$store.commit('video/UPDATE_CURRENT_TIME', currentTime);
         return true;
       });
-    }, 100);
+    }, 50);
   },
 
   beforeDestroy() {

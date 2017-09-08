@@ -7,11 +7,12 @@
         placeholder="išči ..."
       >
     </div>
-    <div class="speeches-container">
+    <div class="speeches-container" ref="speechesContainer">
       <div
         class="speech"
         v-for="speech in transcripts"
         @click.prevent="scrollTo(speech.start_time_stamp)"
+        :ref="`speech${speech.id}`"
       >
         <div class="speaker-info">
           <div
@@ -37,6 +38,7 @@ export default {
   data() {
     return {
       transcripts: [],
+      currentSpeechId: 0,
     };
   },
 
@@ -50,10 +52,22 @@ export default {
     scrollTo(timestamp) {
       this.$store.commit('video/UPDATE_SEEK_TO', (timestamp / 1000));
     },
+    scrollToSpeech(topPos) {
+      this.$refs.speechesContainer.scrollTop = this.$refs.speechesContainer.scrollTop + topPos;
+    },
   },
 
   watch: {
     currentTime() {
+      const theSpeech = this.transcripts.filter(speech =>
+        ((speech.start_time_stamp / 1000) < this.currentTime) &&
+        ((speech.end_time_stamp / 1000) > this.currentTime))[0];
+
+      if (theSpeech && (theSpeech.id !== this.currentSpeechId)) {
+        this.currentSpeechId = theSpeech.id;
+        const topPos = this.$refs[`speech${theSpeech.id}`][0].getBoundingClientRect().top;
+        this.scrollToSpeech(topPos - 60);
+      }
     },
   },
 
@@ -61,7 +75,7 @@ export default {
     this.$http.get('http://speeches.knedl.si/getSpeeches/1', {
       emulateJSON: true,
     }).then((result) => {
-      this.transcripts = result.data;
+      this.transcripts = result.data.sort((a, b) => a.start_time_stamp - b.start_time_stamp);
     });
   },
 
