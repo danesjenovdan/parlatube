@@ -111,6 +111,7 @@ export default {
       if (newSearchTerm.length > 0) {
         this.searchQuery(newSearchTerm);
       } else {
+        this.transcripts = this.allSpeeches;
         this.scrollTranscripts = true;
       }
     },
