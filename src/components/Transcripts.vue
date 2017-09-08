@@ -77,7 +77,7 @@ export default {
       this.scrollTranscripts = false;
       this.$refs.speechesContainer.scrollTop = 0;
 
-      const highlightingRegex = new RegExp(term); // TODO highlighting hack
+      const highlightingRegex = new RegExp(term, 'g'); // TODO highlighting hack
       this.$http.get(`http://speeches.knedl.si/q/${term}`).then((result) => {
         if (result.data.length > 0) {
           this.transcripts = result.data
