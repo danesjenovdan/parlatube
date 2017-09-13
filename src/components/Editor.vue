@@ -30,6 +30,7 @@ import Slider from './Slider';
 
 export default {
   name: 'Editor',
+
   data() {
     return {
       editorVisible: true,
@@ -59,10 +60,12 @@ export default {
       },
     };
   },
+
   components: {
     Slider,
     'color-picker': Compact,
   },
+
   computed: {
     ...mapGetters({
       duration: 'video/durationGetter',
@@ -74,6 +77,7 @@ export default {
       drawing: state => state.drawing,
     }),
   },
+
   methods: {
     createSnippet() {
       const data = {
@@ -94,6 +98,7 @@ export default {
       });
     },
   },
+
   watch: {
     localDrawingText(newLocalDrawingText) {
       this.$store.commit('drawing/UPDATE_TEXT', newLocalDrawingText);
@@ -105,6 +110,7 @@ export default {
       this.$store.commit('drawing/UPDATE_COLOR', newColorPickerProps.hex);
     },
   },
+
   mounted() {
     this.$store.commit('editor/UPDATE_END_TIME', this.duration);
   },
