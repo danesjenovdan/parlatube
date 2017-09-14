@@ -106,8 +106,8 @@ export default {
   methods: {
     onStartMarkerDown(event) {
       event.stopPropagation();
-      this.currentX = event.screenX;
-      this.currentY = event.screenY;
+      this.currentX = event.clientX;
+      this.currentY = event.clientY;
 
       window.addEventListener('mousemove', this.onStartMarkerDragging);
       window.addEventListener('mouseup', this.onStartMarkerDragEnd);
@@ -117,11 +117,11 @@ export default {
       let diffX = 0;
       let diffY = 0;
 
-      diffX = (event.screenX - this.currentX);
-      diffY = (event.screenY - this.currentY);
+      diffX = (event.clientX - this.currentX);
+      diffY = (event.clientY - this.currentY);
 
-      this.currentX = event.screenX;
-      this.currentY = event.screenY;
+      this.currentX = event.clientX;
+      this.currentY = event.clientY;
 
       this.localStartMarkerPosition = (this.localStartMarkerPosition + diffX);
 
@@ -157,8 +157,8 @@ export default {
 
     onEndMarkerDown(event) {
       event.stopPropagation();
-      this.currentX = event.screenX;
-      this.currentY = event.screenY;
+      this.currentX = event.clientX;
+      this.currentY = event.clientY;
 
       window.addEventListener('mousemove', this.onEndMarkerDragging);
       window.addEventListener('mouseup', this.onEndMarkerDragEnd);
@@ -168,11 +168,11 @@ export default {
       let diffX = 0;
       let diffY = 0;
 
-      diffX = (event.screenX - this.currentX);
-      diffY = (event.screenY - this.currentY);
+      diffX = (event.clientX - this.currentX);
+      diffY = (event.clientY - this.currentY);
 
-      this.currentX = event.screenX;
-      this.currentY = event.screenY;
+      this.currentX = event.clientX;
+      this.currentY = event.clientY;
 
       this.localEndMarkerPosition = (this.localEndMarkerPosition + diffX);
 
