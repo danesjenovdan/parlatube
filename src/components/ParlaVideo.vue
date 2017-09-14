@@ -142,7 +142,7 @@ export default {
         // update old currentTime
         this.oldCurrentTime = currentTime;
         if (this.looping) {
-          if (currentTime > this.loopEnd) {
+          if ((currentTime > this.loopEnd) || (currentTime < this.loopStart)) {
             this.player.seekTo(this.loopStart);
             this.$store.commit('video/UPDATE_CURRENT_TIME', this.loopStart);
             return true;
