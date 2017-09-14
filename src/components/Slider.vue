@@ -50,7 +50,7 @@ export default {
       currentX: 0,
       currentY: 0,
       localStartMarkerPosition: 0,
-      localEndMarkerPosition: 200,
+      localEndMarkerPosition: 0,
       numberOfSeconds: 0,
       localStepSize: 0,
       baseLocalStepSize: 0,
@@ -69,7 +69,11 @@ export default {
 
   watch: {
     startMarkerPosition(newStartMarkerPosition) {
-      this.localStartMarkerPosition = newStartMarkerPosition * this.localStepSize;
+      if (newStartMarkerPosition) {
+        this.localStartMarkerPosition = newStartMarkerPosition * this.localStepSize;
+      } else {
+        this.localStartMarkerPosition = 0;
+      }
     },
 
     endMarkerPosition(newEndMarkerPosition) {
@@ -87,7 +91,10 @@ export default {
         this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / newDuration;
         this.baseLocalStepSize = this.localStepSize;
       }
+
       this.localEndMarkerPosition = newDuration * this.localStepSize;
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
     },
 
     localStepSize(newLocalStepSize) {
@@ -270,8 +277,9 @@ export default {
           background: blue;
         }
         &.end-marker {
-          left: 20%;
+          left: 100%;
           background: red;
+          margin-left: -5px;
         }
       }
     }
