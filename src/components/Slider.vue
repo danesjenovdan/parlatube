@@ -13,16 +13,16 @@
           class="ruler"
           v-bind:style="{width: `${duration * localStepSize}px`}"
         >
+          <div class="marker start-marker"
+            v-bind:style="{left: `${localStartMarkerPosition}px`}"
+            @mousedown.prevent="onStartMarkerDown"
+          ></div>
+          <div class="marker end-marker"
+            v-bind:style="{left: `${localEndMarkerPosition}px`}"
+            @mousedown="onEndMarkerDown"
+          ></div>
           <div class="seconds" :style="{'background-size': `${localStepSize}px ${localStepSize}px`}"></div>
         </div>
-        <div class="marker start-marker"
-          v-bind:style="{left: `${localStartMarkerPosition}px`}"
-          @mousedown.prevent="onStartMarkerDown"
-        ></div>
-        <div class="marker end-marker"
-          v-bind:style="{left: `${localEndMarkerPosition}px`}"
-          @mousedown="onEndMarkerDown"
-        ></div>
       </div>
     </div>
   </div>
@@ -93,12 +93,6 @@ export default {
     localStepSize(newLocalStepSize) {
       this.localStartMarkerPosition = this.startMarkerPosition * newLocalStepSize;
       this.localEndMarkerPosition = this.endMarkerPosition * newLocalStepSize;
-      if (this.localStepSize !== this.baseLocalStepSize) {
-        this.rulerOffset = (-this.localEndMarkerPosition + this.currentX) -
-          this.$refs.viewport.getBoundingClientRect().x;
-      } else {
-        this.rulerOffset = 0;
-      }
     },
   },
 
@@ -133,6 +127,15 @@ export default {
       } else {
         this.localStepSize = this.baseLocalStepSize;
       }
+
+      this.$nextTick(() => {
+        if (this.localStepSize !== this.baseLocalStepSize) {
+          this.rulerOffset = (-this.localStartMarkerPosition + this.currentX) -
+            this.$refs.viewport.getBoundingClientRect().x;
+        } else {
+          this.rulerOffset = 0;
+        }
+      });
     },
 
     onStartMarkerDragEnd() {
@@ -142,6 +145,7 @@ export default {
       window.removeEventListener('mouseup', this.onStartMarkerDragEnd);
 
       this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
+      this.rulerOffset = 0;
     },
 
     onEndMarkerDown(event) {
@@ -174,6 +178,15 @@ export default {
       } else {
         this.localStepSize = this.baseLocalStepSize;
       }
+
+      this.$nextTick(() => {
+        if (this.localStepSize !== this.baseLocalStepSize) {
+          this.rulerOffset = (-this.localEndMarkerPosition + this.currentX) -
+            this.$refs.viewport.getBoundingClientRect().x;
+        } else {
+          this.rulerOffset = 0;
+        }
+      });
     },
 
     onEndMarkerDragEnd() {
@@ -183,6 +196,7 @@ export default {
       window.removeEventListener('mouseup', this.onEndMarkerDragEnd);
 
       this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
+      this.rulerOffset = 0;
     },
   },
 
@@ -243,18 +257,21 @@ export default {
         top: 0;
         width: 5px;
         background: black;
+        opacity: 0.6;
 
         z-index: 2;
 
         &:hover {
-          background: red;
+          opacity: 1;
         }
 
         &.start-marker {
           left: 0;
+          background: blue;
         }
         &.end-marker {
           left: 20%;
+          background: red;
         }
       }
     }
