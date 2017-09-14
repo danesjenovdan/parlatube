@@ -228,7 +228,7 @@ export default {
 
   .slider-viewport {
     width: 100%;
-    height: 100px;
+    height: 20px;
     background: gray;
     padding-top: 1%;
 
@@ -252,7 +252,7 @@ export default {
           background-image: url('../assets/marker.png');
           background-position: bottom;
           height: 20px;
-          top: 65px;
+          top: 0;
           position: relative;
           // transition: all 0.5s linear;
         }
