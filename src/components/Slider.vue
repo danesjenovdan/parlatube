@@ -13,16 +13,16 @@
           class="ruler"
           v-bind:style="{width: `${duration * localStepSize}px`}"
         >
-          <div class="marker start-marker"
-            v-bind:style="{left: `${localStartMarkerPosition}px`}"
-            @mousedown.prevent="onStartMarkerDown"
-          ></div>
-          <div class="marker end-marker"
-            v-bind:style="{left: `${localEndMarkerPosition}px`}"
-            @mousedown="onEndMarkerDown"
-          ></div>
           <div class="seconds" :style="{'background-size': `${localStepSize}px ${localStepSize}px`}"></div>
         </div>
+        <div class="marker start-marker"
+          v-bind:style="{left: `${localStartMarkerPosition}px`}"
+          @mousedown.prevent="onStartMarkerDown"
+        ></div>
+        <div class="marker end-marker"
+          v-bind:style="{left: `${localEndMarkerPosition}px`}"
+          @mousedown="onEndMarkerDown"
+        ></div>
       </div>
     </div>
   </div>
@@ -53,7 +53,8 @@ export default {
       localEndMarkerPosition: 200,
       numberOfSeconds: 0,
       localStepSize: 0,
-      ySensitivity: 5,
+      baseLocalStepSize: 0,
+      ySensitivity: 20,
     };
   },
 
@@ -83,24 +84,20 @@ export default {
     duration(newDuration) {
       this.numberOfSeconds = Math.floor(newDuration);
       if (newDuration && (newDuration > 0)) {
-        // this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / newDuration;
-        this.localStepSize = 20;
+        this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / newDuration;
+        this.baseLocalStepSize = this.localStepSize;
       }
+      this.localEndMarkerPosition = newDuration * this.localStepSize;
     },
 
-    // manipulating(newManipulating) {
-    //   console.log('manipulating', newManipulating);
-    //   if (newManipulating) {
-    //     this.localStepSize = 20;
-    //   } else {
-    //     this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
-    //   }
-    // },
-
-    localStepSize(newLocalStepSize, oldLocalStepsize) {
-      if (newLocalStepSize !== oldLocalStepsize) {
-        this.localStartMarkerPosition = this.startMarkerPosition * newLocalStepSize;
-        this.localEndMarkerPosition = this.endMarkerPosition * newLocalStepSize;
+    localStepSize(newLocalStepSize) {
+      this.localStartMarkerPosition = this.startMarkerPosition * newLocalStepSize;
+      this.localEndMarkerPosition = this.endMarkerPosition * newLocalStepSize;
+      if (this.localStepSize !== this.baseLocalStepSize) {
+        this.rulerOffset = (-this.localEndMarkerPosition + this.currentX) -
+          this.$refs.viewport.getBoundingClientRect().x;
+      } else {
+        this.rulerOffset = 0;
       }
     },
   },
@@ -125,16 +122,17 @@ export default {
       this.currentX = event.screenX;
       this.currentY = event.screenY;
 
+      this.localStartMarkerPosition = (this.localStartMarkerPosition + diffX);
+
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
+
       if ((this.localStepSize + (diffY / this.ySensitivity)) >=
-        this.$refs.viewport.getBoundingClientRect().width / this.duration) {
+        this.$refs.viewport.getBoundingClientRect().width / (this.duration)) {
         this.localStepSize = this.localStepSize + (diffY / this.ySensitivity);
+      } else {
+        this.localStepSize = this.baseLocalStepSize;
       }
-
-      if (diffY !== 0) {
-        this.rulerOffset = this.currentX - (this.startMarkerPosition * this.localStepSize) - 10;
-      }
-
-      this.localStartMarkerPosition = this.localStartMarkerPosition + diffX;
     },
 
     onStartMarkerDragEnd() {
@@ -144,7 +142,6 @@ export default {
       window.removeEventListener('mouseup', this.onStartMarkerDragEnd);
 
       this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
-      this.rulerOffset = 0;
     },
 
     onEndMarkerDown(event) {
@@ -166,33 +163,26 @@ export default {
       this.currentX = event.screenX;
       this.currentY = event.screenY;
 
+      this.localEndMarkerPosition = (this.localEndMarkerPosition + diffX);
+
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
+
       if ((this.localStepSize + (diffY / this.ySensitivity)) >=
-        this.$refs.viewport.getBoundingClientRect().width / this.duration) {
+        this.$refs.viewport.getBoundingClientRect().width / (this.duration)) {
         this.localStepSize = this.localStepSize + (diffY / this.ySensitivity);
+      } else {
+        this.localStepSize = this.baseLocalStepSize;
       }
-
-      if (diffY !== 0) {
-        this.rulerOffset = this.currentX - (this.endMarkerPosition * this.localStepSize) - 10;
-      }
-
-      this.localEndMarkerPosition = this.localEndMarkerPosition + diffX;
-
-      // event.stopPropagation();
-      // let diff = 0;
-      // diff = (event.screenX - this.currentX);
-      // this.currentX = event.screenX;
-      // this.localEndMarkerPosition = this.localEndMarkerPosition + diff;
     },
 
     onEndMarkerDragEnd() {
       event.stopPropagation();
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
-      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
+
       window.removeEventListener('mousemove', this.onEndMarkerDragging);
       window.removeEventListener('mouseup', this.onEndMarkerDragEnd);
 
       this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
-      this.rulerOffset = 0;
     },
   },
 
