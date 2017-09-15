@@ -46,10 +46,20 @@
         </div>
       </div>
     </div>
-    <div
-      class="slider-zoom"
-      @mousedown="zoomDown"
-    >V</div>
+    <div class="slider-zoom-container">
+      <div
+        class="slider-zoom-plus"
+        @click="zoomIn"
+      >+</div>
+      <div
+        class="slider-zoom"
+        @mousedown="zoomDown"
+      >V</div>
+      <div
+        class="slider-zoom-minus"
+        @click="zoomOut"
+      >-</div>
+    </div>
   </div>
 </template>
 
@@ -242,9 +252,27 @@ export default {
       window.removeEventListener('mouseup', this.zoomUp);
     },
 
+    zoomIn() {
+      this.localStepSize = this.localStepSize + 5;
+    },
+
+    zoomOut() {
+      if ((this.localStepSize - 5) > this.baseLocalStepSize) {
+        this.localStepSize = this.localStepSize - 5;
+      } else {
+        this.localStepSize = this.baseLocalStepSize;
+      }
+    },
+
     seekHere(event) {
+      // console.log(event.clientX,
+      //   this.rulerOffset,
+      //   this.$refs.viewport.getBoundingClientRect().x,
+      //   this.localStepsize);
       const whereToSeek = ((event.clientX + this.rulerOffset) -
         this.$refs.viewport.getBoundingClientRect().x) / this.localStepSize;
+
+      // console.log(whereToSeek);
 
       this.$store.commit('video/UPDATE_SEEK_TO', whereToSeek);
     },
@@ -275,9 +303,9 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(() => {
-      this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
-    });
+    // this.$nextTick(() => {
+    //   this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
+    // });
   },
 };
 </script>
@@ -357,23 +385,48 @@ export default {
 
   }
 
-  .slider-zoom {
+  .slider-zoom-container {
     position: relative;
     left: 50%;
-    margin-left: -20px;
+    margin-left: -60px;
+    width: 120px;
     margin-bottom: 10px;
-    width: 40px;
-    height: 30px;
-    background: red;
-    border-bottom-left-radius: 50%;
-    border-bottom-right-radius: 50%;
 
-    cursor: pointer;
-    
-    text-align: center;
-    color: #ffffff;
-    line-height: 30px;
-    font-family: Arial, Helvetica, sans-serif;
+    .slider-zoom {
+      float: left;
+
+      width: 40px;
+      height: 30px;
+      background: red;
+
+      cursor: pointer;
+      
+      text-align: center;
+      color: #ffffff;
+      line-height: 30px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .slider-zoom-plus, .slider-zoom-minus {
+      float: left;
+      width: 40px;
+      height: 30px;
+      background: blue;
+      color: #ffffff;
+      line-height: 30px;
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+    .slider-zoom-plus {
+      border-bottom-left-radius: 50%;
+    }
+    .slider-zoom-minus {
+      border-bottom-right-radius: 50%;
+    }
   }
 }
 </style>
