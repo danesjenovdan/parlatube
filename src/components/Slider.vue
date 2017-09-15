@@ -8,6 +8,7 @@
       @mouseout="manipulating = false"
       ref="viewport"
       :style="{height: `${sliderHeight}px`}"
+      @scroll="rulerScroll"
     >
       <div class="ruler-container">
         <div
@@ -242,8 +243,8 @@ export default {
     },
 
     seekHere(event) {
-      const whereToSeek = (event.clientX - this.$refs.viewport.getBoundingClientRect().x - 2) /
-        this.localStepSize;
+      const whereToSeek = ((event.clientX + this.rulerOffset) -
+        this.$refs.viewport.getBoundingClientRect().x) / this.localStepSize;
 
       this.$store.commit('video/UPDATE_SEEK_TO', whereToSeek);
     },
@@ -262,6 +263,11 @@ export default {
     rulerUp() {
       window.removeEventListener('mousemove', this.rulerMove);
       window.removeEventListener('mouseup', this.rulerUp);
+    },
+
+    rulerScroll() {
+      console.log(this.$refs.viewport.scrollLeft);
+      this.rulerOffset = this.$refs.viewport.scrollLeft;
     },
   },
 
