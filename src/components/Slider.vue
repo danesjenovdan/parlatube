@@ -17,6 +17,8 @@
             v-bind:style="{left: `${localStartMarkerPosition}px`}"
             @mousedown.prevent="onStartMarkerDown"
           ></div>
+          <div class="marked" v-bind:style="{left: `${localStartMarkerPosition}px`, width: `${localEndMarkerPosition - localStartMarkerPosition}px`}">
+          </div>
           <div class="marker end-marker"
             v-bind:style="{left: `${localEndMarkerPosition}px`}"
             @mousedown="onEndMarkerDown"
@@ -229,7 +231,7 @@ export default {
   .slider-viewport {
     width: 100%;
     height: 20px;
-    background: gray;
+    background: black;
     padding-top: 1%;
 
     .ruler-container {
@@ -256,6 +258,12 @@ export default {
           position: relative;
           // transition: all 0.5s linear;
         }
+      }
+
+      .marked {
+        background: gray;
+        height: 100%;
+        position: absolute;
       }
 
       .marker {
