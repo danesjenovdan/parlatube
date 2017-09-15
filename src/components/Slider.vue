@@ -13,6 +13,7 @@
         <div
           class="ruler"
           :style="{width: `${duration * localStepSize}px`}"
+          @mousedown="rulerDown"
         >
           <div
             class="marker start-marker"
@@ -238,6 +239,29 @@ export default {
 
       window.removeEventListener('mousemove', this.zoomDrag);
       window.removeEventListener('mouseup', this.zoomUp);
+    },
+
+    seekHere(event) {
+      const whereToSeek = (event.clientX - this.$refs.viewport.getBoundingClientRect().x - 2) /
+        this.localStepSize;
+
+      this.$store.commit('video/UPDATE_SEEK_TO', whereToSeek);
+    },
+
+    rulerDown(event) {
+      this.seekHere(event);
+
+      window.addEventListener('mousemove', this.rulerMove);
+      window.addEventListener('mouseup', this.rulerUp);
+    },
+
+    rulerMove(event) {
+      this.seekHere(event);
+    },
+
+    rulerUp() {
+      window.removeEventListener('mousemove', this.rulerMove);
+      window.removeEventListener('mouseup', this.rulerUp);
     },
   },
 
