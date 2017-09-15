@@ -242,7 +242,7 @@ export default {
 
       .ruler {
         height: 100%;
-        background-color: yellow;
+        background-color: gray;
         background: linear-gradient(left, #00ff00, #00aabb);
         cursor: pointer;
         position: relative;
@@ -261,7 +261,7 @@ export default {
       }
 
       .marked {
-        background: gray;
+        background: yellow;
         height: 100%;
         position: absolute;
       }
