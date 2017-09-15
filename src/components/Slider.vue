@@ -124,12 +124,10 @@ export default {
     localStepSize(newLocalStepSize) {
       this.localStartMarkerPosition = this.startMarkerPosition * newLocalStepSize;
       this.localEndMarkerPosition = this.endMarkerPosition * newLocalStepSize;
-    },
+      this.localTimeMarkerPosition = this.currentTime * newLocalStepSize;
 
-    currentTime(newCurrentTime) {
-      this.localTimeMarkerPosition = newCurrentTime * this.localStepSize;
-
-      if ((this.zooming)) {
+      // if ((this.zooming)) {
+      this.$nextTick(() => {
         const perfectRulerOffset = (this.localTimeMarkerPosition) -
           ((this.$refs.viewport.getBoundingClientRect().width / 2));
 
@@ -143,7 +141,11 @@ export default {
         } else {
           this.rulerOffset = 0;
         }
-      }
+      });
+    },
+
+    currentTime(newCurrentTime) {
+      this.localTimeMarkerPosition = newCurrentTime * this.localStepSize;
     },
 
     rulerOffset(newRulerOffset) {
