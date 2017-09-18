@@ -4,22 +4,20 @@
   >
     <div
       class="slider-viewport"
-      @mouseover="manipulating = true"
-      @mouseout="manipulating = false"
       ref="viewport"
-      :style="{height: `${sliderHeight}px`}"
       @scroll="rulerScroll"
     >
       <div class="ruler-container">
         <div
           class="ruler"
-          :style="{width: `${duration * localStepSize}px`}"
+          v-bind:style="{width: `${duration * localStepSize}px`}"
           @mousedown="rulerDown"
         >
           <div
             class="marker start-marker"
             :style="{left: `${localStartMarkerPosition}px`}"
             @mousedown.prevent="onStartMarkerDown"
+            @click.prevent="seekHere"
           ></div>
 
           <div
@@ -31,7 +29,8 @@
           <div
             class="marker end-marker"
             :style="{left: `${localEndMarkerPosition}px`}"
-            @mousedown="onEndMarkerDown"
+            @mousedown.prevent="onEndMarkerDown"
+            @click.prevent="seekHere"
           ></div>
 
           <div
@@ -80,7 +79,6 @@ export default {
   data() {
     return {
       rulerOffset: 0,
-      manipulating: false,
       currentX: 0,
       currentY: 0,
       localStartMarkerPosition: 0,
@@ -138,17 +136,15 @@ export default {
       this.localEndMarkerPosition = this.endMarkerPosition * newLocalStepSize;
       this.localTimeMarkerPosition = this.currentTime * newLocalStepSize;
 
-      // if ((this.zooming)) {
       this.$nextTick(() => {
         const perfectRulerOffset = (this.localTimeMarkerPosition) -
           ((this.$refs.viewport.getBoundingClientRect().width / 2));
-
         if ((this.$refs.viewport.getBoundingClientRect().width +
-          perfectRulerOffset) <= (this.duration * this.localStepSize)) {
+          perfectRulerOffset) <= (this.duration * newLocalStepSize)) {
           this.rulerOffset = perfectRulerOffset;
         } else if (this.localTimeMarkerPosition >
           (this.$refs.viewport.getBoundingClientRect().width / 2)) {
-          this.rulerOffset = (this.duration * this.localStepSize) -
+          this.rulerOffset = (this.duration * newLocalStepSize) -
             this.$refs.viewport.getBoundingClientRect().width;
         } else {
           this.rulerOffset = 0;
@@ -253,12 +249,12 @@ export default {
     },
 
     zoomIn() {
-      this.localStepSize = this.localStepSize + 5;
+      this.localStepSize = this.localStepSize + 10;
     },
 
     zoomOut() {
-      if ((this.localStepSize - 5) > this.baseLocalStepSize) {
-        this.localStepSize = this.localStepSize - 5;
+      if ((this.localStepSize - 10) > this.baseLocalStepSize) {
+        this.localStepSize = this.localStepSize - 10;
       } else {
         this.localStepSize = this.baseLocalStepSize;
       }
@@ -294,7 +290,6 @@ export default {
     },
 
     rulerScroll() {
-      console.log(this.$refs.viewport.scrollLeft);
       this.rulerOffset = this.$refs.viewport.scrollLeft;
     },
   },
@@ -303,9 +298,7 @@ export default {
   },
 
   mounted() {
-    // this.$nextTick(() => {
-    //   this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
-    // });
+    this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
   },
 };
 </script>
@@ -361,7 +354,7 @@ export default {
         height: 100%;
         position: absolute;
         top: 0;
-        width: 5px;
+        width: 1px;
         background: black;
         opacity: 0.6;
 
@@ -374,11 +367,13 @@ export default {
         &.start-marker {
           left: 0;
           background: blue;
+          width: 5px;
         }
         &.end-marker {
           left: 100%;
           background: red;
           margin-left: -5px;
+          width: 5px;
         }
       }
     }
