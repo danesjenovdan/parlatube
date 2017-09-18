@@ -246,6 +246,7 @@ export default {
 
   methods: {
     onStartMarkerDown(event) {
+      console.log(event);
       event.stopPropagation();
       this.currentX = event.clientX;
       this.currentY = event.clientY;
@@ -311,9 +312,11 @@ export default {
       //   this.$refs.viewport.getBoundingClientRect().x,
       //   this.localStepsize);
       const whereToSeek = ((event.clientX + this.rulerOffset) -
-        this.$refs.viewport.getBoundingClientRect().x) / this.localStepSize;
+        this.$refs.viewport.getBoundingClientRect().left) / this.localStepSize;
 
-      // console.log(whereToSeek);
+      console.log(whereToSeek);
+      console.log(this.rulerOffset);
+      console.log(this.$refs.viewport.getBoundingClientRect());
 
       this.$store.commit('video/UPDATE_SEEK_TO', whereToSeek);
     },
@@ -328,6 +331,7 @@ export default {
 
     rulerDown(event) {
       this.seekHere(event);
+      console.log(event);
 
       window.addEventListener('mousemove', this.rulerMove);
       window.addEventListener('mouseup', this.rulerUp);
@@ -357,6 +361,7 @@ export default {
   mounted() {
     this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
     this.baseLocalStepSize = this.localStepSize;
+    this.rulerOffset = 0;
   },
 };
 </script>
