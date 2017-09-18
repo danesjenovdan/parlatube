@@ -47,15 +47,16 @@
     </div>
     <div class="slider-zoom-container">
       <div
-        class="slider-zoom-plus"
+        class="slider-zoom-plus slider-button"
         @click="zoomIn"
       >+</div>
       <div
-        class="slider-zoom"
-        @mousedown="zoomDown"
-      >V</div>
+        :class="['slider-button', {play: !videoPlaying, pause: videoPlaying}]"
+        @click.prevent="togglePause"
+      >
+      </div>
       <div
-        class="slider-zoom-minus"
+        class="slider-zoom-minus slider-button"
         @click="zoomOut"
       >-</div>
     </div>
@@ -63,7 +64,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'Slider',
@@ -98,6 +99,11 @@ export default {
       currentTime: 'video/currentTimeGetter',
       startMarkerPosition: 'editor/startMarkerGetter',
       endMarkerPosition: 'editor/endMarkerGetter',
+    }),
+
+    ...mapState({
+      videoPlaying: state => state.video.playing,
+      shouldIPause: state => state.video.shouldIPause,
     }),
   },
 
@@ -139,13 +145,18 @@ export default {
       this.$nextTick(() => {
         const perfectRulerOffset = (this.localTimeMarkerPosition) -
           ((this.$refs.viewport.getBoundingClientRect().width / 2));
+
+        // console.log(perfectRulerOffset);
+
         if ((this.$refs.viewport.getBoundingClientRect().width +
           perfectRulerOffset) <= (this.duration * newLocalStepSize)) {
           this.rulerOffset = perfectRulerOffset;
+          // console.log(this.duration * newLocalStepSize);
         } else if (this.localTimeMarkerPosition >
           (this.$refs.viewport.getBoundingClientRect().width / 2)) {
           this.rulerOffset = (this.duration * newLocalStepSize) -
             this.$refs.viewport.getBoundingClientRect().width;
+          // console.log(this.duration * newLocalStepSize);
         } else {
           this.rulerOffset = 0;
         }
@@ -218,36 +229,6 @@ export default {
       window.removeEventListener('mouseup', this.onEndMarkerDragEnd);
     },
 
-    zoomDown(event) {
-      this.zooming = true;
-      this.currentY = event.clientY;
-
-      window.addEventListener('mousemove', this.zoomDrag);
-      window.addEventListener('mouseup', this.zoomUp);
-    },
-
-    zoomDrag(event) {
-      if (this.zooming) {
-        const diffY = (event.clientY - this.currentY);
-
-        if ((this.localStepSize + (diffY / this.ySensitivity)) > this.baseLocalStepSize) {
-          this.localStepSize = this.localStepSize + (diffY / this.ySensitivity);
-          this.sliderHeight = this.sliderHeight + diffY;
-        } else {
-          this.localStepSize = this.baseLocalStepSize;
-        }
-
-        this.currentY = event.clientY;
-      }
-    },
-
-    zoomUp() {
-      this.zooming = false;
-
-      window.removeEventListener('mousemove', this.zoomDrag);
-      window.removeEventListener('mouseup', this.zoomUp);
-    },
-
     zoomIn() {
       this.localStepSize = this.localStepSize + 10;
     },
@@ -291,6 +272,10 @@ export default {
 
     rulerScroll() {
       this.rulerOffset = this.$refs.viewport.scrollLeft;
+    },
+
+    togglePause() {
+      this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
     },
   },
 
@@ -402,7 +387,7 @@ export default {
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .slider-zoom-plus, .slider-zoom-minus {
+    .slider-button {
       float: left;
       width: 40px;
       height: 30px;
@@ -415,12 +400,27 @@ export default {
       font-weight: bold;
 
       cursor: pointer;
-    }
-    .slider-zoom-plus {
-      border-bottom-left-radius: 50%;
-    }
-    .slider-zoom-minus {
-      border-bottom-right-radius: 50%;
+
+      &.slider-zoom-plus {
+        border-bottom-left-radius: 30%;
+      }
+      &.slider-zoom-minus {
+        border-bottom-right-radius: 30%;
+      }
+      &.play:before {
+        content: '▶';
+        display: block;
+        position: relative;
+        margin: auto;
+        color: white;
+      }
+      &.pause:before {
+        content: '⏸';
+        display: block;
+        position: relative;
+        margin: auto;
+        color: white;
+      }
     }
   }
 }

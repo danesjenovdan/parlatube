@@ -1,7 +1,7 @@
 <template>
     <div id="video">
       <div id="player"></div>
-      <div id="drawing-container" :class="{ events: drawingContainerEvents }">
+      <div id="drawing-container">
         <div
           id="drawing"
           :style="{transform: `translate(${drawingX}px, ${drawingY}px)`, 'font-size': `${fontSize}px`, color: color}"
@@ -26,7 +26,6 @@ export default {
       currentX: null,
       currentY: null,
       oldCurrentTime: 0,
-      drawingContainerEvents: false,
     };
   },
 
@@ -34,7 +33,6 @@ export default {
     onDrawingMouseDown(event) {
       this.currentX = event.clientX;
       this.currentY = event.clientY;
-      this.drawingContainerEvents = true;
       window.addEventListener('mousemove', this.onDrawingDragging);
       window.addEventListener('mouseup', this.onDrawingDragEnd);
     },
@@ -49,7 +47,6 @@ export default {
     },
 
     onDrawingDragEnd() {
-      this.drawingContainerEvents = false;
       window.removeEventListener('mousemove', this.onDrawingDragging);
       window.removeEventListener('mouseup', this.onDrawingDragEnd);
     },
@@ -89,6 +86,7 @@ export default {
       loopStart: state => state.video.loopStart,
       loopEnd: state => state.video.loopEnd,
       looping: state => state.video.looping,
+      shouldIPause: state => state.video.shouldIPause,
     }),
 
     ...mapGetters({
@@ -118,6 +116,15 @@ export default {
         this.updateVideoId(newVideoId);
       }
     },
+    shouldIPause(newShouldIPause) {
+      this.player.getPlayerState().then((playerState) => {
+        if (((playerState === 1) || (playerState === 3)) && (newShouldIPause === true)) {
+          this.player.pauseVideo();
+        } else if (((playerState !== 1) || (playerState !== 3)) && (newShouldIPause === false)) {
+          this.player.playVideo();
+        }
+      });
+    },
   },
 
   mounted() {
@@ -125,6 +132,15 @@ export default {
     this.player.playVideo();
     this.player.unMute();
     this.timeCheckerId = setInterval(() => {
+      // update player playing state
+      this.player.getPlayerState().then((playerState) => {
+        if ((playerState === 1) || (playerState === 3)) {
+          this.$store.commit('video/UPDATE_PLAYING', true);
+        } else {
+          this.$store.commit('video/UPDATE_PLAYING', false);
+        }
+      });
+
       // update duration if needed
       this.player.getDuration().then((duration) => {
         if (this.duration !== duration) {
@@ -174,11 +190,6 @@ export default {
     width: 100%;
     height: 100%;
     position: absolute;
-    pointer-events: none;
-
-    &.events {
-      pointer-events: all;
-    }
 
     #drawing {
       background: transparent;
@@ -191,7 +202,6 @@ export default {
       top: 45%;
       left: 45%;
       color: #ffffff;
-      pointer-events: all;
     }
   }
 }
