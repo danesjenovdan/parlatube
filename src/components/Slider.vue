@@ -73,23 +73,19 @@
         <input
           class="slider-input"
           type="text"
-          v-bind:value="processedStartTime"
-          @focus="manipulatingCurrentTime = true"
-          @blur="manipulatingCurrentTime = false"
+          v-model:value="processedStartTime"
+          @focus="manipulatingInput = true"
+          @blur="manipulatingInput = false"
         >
         <input
           class="slider-input"
           type="text"
-          v-bind:value="processedCurrentTime"
-          @focus="manipulatingCurrentTime = true"
-          @blur="manipulatingCurrentTime = false"
+          v-model:value="processedCurrentTime"
         >
         <input
           class="slider-input"
           type="text"
-          v-bind:value="processedEndTime"
-          @focus="manipulatingCurrentTime = true"
-          @blur="manipulatingCurrentTime = false"
+          v-model:value="processedEndTime"
         >
       </div>
     </div>
@@ -123,7 +119,7 @@ export default {
       baseLocalStepSize: 0,
       ySensitivity: 5,
       sliderHeight: 30,
-      manipulatingCurrentTime: false,
+      manipulatingInput: false,
     };
   },
 
@@ -140,22 +136,31 @@ export default {
       shouldIPause: state => state.video.shouldIPause,
     }),
 
-    processedCurrentTime() {
-      if (!this.manipulatingCurrentTime) {
+    processedCurrentTime: {
+      get() {
         const minutes = Math.floor(this.currentTime / 60);
         const seconds = this.currentTime % 60;
 
         return `${minutes}:${String(seconds).split('.')[0]}`;
-      }
+      },
 
-      return false;
+      set: newValue => newValue,
     },
 
-    processedStartTime() {
-      const minutes = Math.floor(this.startMarkerPosition / 60);
-      const seconds = this.startMarkerPosition % 60;
+    processedStartTime: {
+      get() {
+        const minutes = Math.floor(this.startMarkerPosition / 60);
+        const seconds = this.startMarkerPosition % 60;
 
-      return `${minutes}:${String(seconds).split('.')[0]}`;
+        return `${minutes}:${String(seconds).split('.')[0]}`;
+      },
+
+      set(newValue) {
+        if (!this.manipulatingInput) {
+          const seconds = (parseInt(newValue.split(':')[0], 10) * 60) + parseInt(newValue.split(':')[1], 10);
+          this.localStartMarkerPosition = seconds * this.localStepSize;
+        }
+      },
     },
 
     processedEndTime() {
@@ -184,6 +189,16 @@ export default {
       }
     },
 
+    localStartMarkerPosition(newLocalStartMarkerPosition) {
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [newLocalStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_START', newLocalStartMarkerPosition / this.localStepSize);
+    },
+
+    localEndMarkerPosition(newLocalEndMarkerPosition) {
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, newLocalEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_END', newLocalEndMarkerPosition / this.localStepSize);
+    },
+
     duration(newDuration) {
       this.numberOfSeconds = Math.floor(newDuration);
       if (newDuration && (newDuration > 0)) {
@@ -192,8 +207,6 @@ export default {
       }
 
       this.localEndMarkerPosition = newDuration * this.localStepSize;
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
-      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
     },
 
     localStepSize(newLocalStepSize) {
@@ -248,14 +261,9 @@ export default {
       this.currentY = event.clientY;
 
       this.localStartMarkerPosition = (this.localStartMarkerPosition + diffX);
-
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
-      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
     },
 
     onStartMarkerDragEnd() {
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
-      this.$store.commit('video/UPDATE_LOOP_START', this.localStartMarkerPosition / this.localStepSize);
       window.removeEventListener('mousemove', this.onStartMarkerDragging);
       window.removeEventListener('mouseup', this.onStartMarkerDragEnd);
     },
@@ -276,9 +284,6 @@ export default {
       this.currentY = event.clientY;
 
       this.localEndMarkerPosition = (this.localEndMarkerPosition + diffX);
-
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
-      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
     },
 
     onEndMarkerDragEnd() {
@@ -315,14 +320,10 @@ export default {
 
     startHere() {
       this.localStartMarkerPosition = (this.currentTime * this.localStepSize);
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
-      this.$store.commit('video/UPDATE_LOOP_START', this.localStartMarkerPosition / this.localStepSize);
     },
 
     endHere() {
       this.localEndMarkerPosition = (this.currentTime * this.localStepSize);
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
-      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
     },
 
     rulerDown(event) {
@@ -355,6 +356,7 @@ export default {
 
   mounted() {
     this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
+    this.baseLocalStepSize = this.localStepSize;
   },
 };
 </script>
