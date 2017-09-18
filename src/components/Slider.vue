@@ -45,20 +45,53 @@
         </div>
       </div>
     </div>
-    <div class="slider-zoom-container">
-      <div
-        class="slider-zoom-plus slider-button"
-        @click="zoomIn"
-      >+</div>
-      <div
-        :class="['slider-button', {play: !videoPlaying, pause: videoPlaying}]"
-        @click.prevent="togglePause"
-      >
+    <div class="slider-buttons-container">
+      <div class="slider-zoom-row">
+        <div
+          class="slider-zoom-plus slider-button"
+          @click="zoomIn"
+        >+</div>
+        <div
+          class="start-here slider-button"
+          @click.prevent="startHere"
+        ></div>
+        <div
+          :class="['slider-button', {play: !videoPlaying, pause: videoPlaying}]"
+          @click.prevent="togglePause"
+        >
+        </div>
+        <div
+          class="end-here slider-button"
+          @click.prevent="endHere"
+        ></div>
+        <div
+          class="slider-zoom-minus slider-button"
+          @click="zoomOut"
+        >-</div>
       </div>
-      <div
-        class="slider-zoom-minus slider-button"
-        @click="zoomOut"
-      >-</div>
+      <div class="slider-zoom-row">
+        <input
+          class="slider-input"
+          type="text"
+          v-bind:value="processedStartTime"
+          @focus="manipulatingCurrentTime = true"
+          @blur="manipulatingCurrentTime = false"
+        >
+        <input
+          class="slider-input"
+          type="text"
+          v-bind:value="processedCurrentTime"
+          @focus="manipulatingCurrentTime = true"
+          @blur="manipulatingCurrentTime = false"
+        >
+        <input
+          class="slider-input"
+          type="text"
+          v-bind:value="processedEndTime"
+          @focus="manipulatingCurrentTime = true"
+          @blur="manipulatingCurrentTime = false"
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -90,6 +123,7 @@ export default {
       baseLocalStepSize: 0,
       ySensitivity: 5,
       sliderHeight: 30,
+      manipulatingCurrentTime: false,
     };
   },
 
@@ -105,6 +139,31 @@ export default {
       videoPlaying: state => state.video.playing,
       shouldIPause: state => state.video.shouldIPause,
     }),
+
+    processedCurrentTime() {
+      if (!this.manipulatingCurrentTime) {
+        const minutes = Math.floor(this.currentTime / 60);
+        const seconds = this.currentTime % 60;
+
+        return `${minutes}:${String(seconds).split('.')[0]}`;
+      }
+
+      return false;
+    },
+
+    processedStartTime() {
+      const minutes = Math.floor(this.startMarkerPosition / 60);
+      const seconds = this.startMarkerPosition % 60;
+
+      return `${minutes}:${String(seconds).split('.')[0]}`;
+    },
+
+    processedEndTime() {
+      const minutes = Math.floor(this.endMarkerPosition / 60);
+      const seconds = this.endMarkerPosition % 60;
+
+      return `${minutes}:${String(seconds).split('.')[0]}`;
+    },
   },
 
   watch: {
@@ -254,6 +313,18 @@ export default {
       this.$store.commit('video/UPDATE_SEEK_TO', whereToSeek);
     },
 
+    startHere() {
+      this.localStartMarkerPosition = (this.currentTime * this.localStepSize);
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_START', this.localStartMarkerPosition / this.localStepSize);
+    },
+
+    endHere() {
+      this.localEndMarkerPosition = (this.currentTime * this.localStepSize);
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.localStepSize);
+    },
+
     rulerDown(event) {
       this.seekHere(event);
 
@@ -365,30 +436,34 @@ export default {
 
   }
 
-  .slider-zoom-container {
+  .slider-buttons-container {
     position: relative;
-    left: 50%;
-    margin-left: -60px;
-    width: 120px;
-    margin-bottom: 10px;
+    margin: auto;
+    margin-bottom: 20px;
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: wrap;
 
-    .slider-zoom {
-      float: left;
+    .slider-zoom-row {
+      position: relative;
+      display: flex;
+      overflow: hidden;
+      flex: 0 0 100%;
+      justify-content: center;
+    }
 
-      width: 40px;
-      height: 30px;
-      background: red;
-
-      cursor: pointer;
-      
+    .slider-input {
+      width: 38px;
+      height: 38px;
+      display: flex;
       text-align: center;
-      color: #ffffff;
-      line-height: 30px;
-      font-family: Arial, Helvetica, sans-serif;
+      padding: 0;
+      border: 1px solid #000000;
+      margin: 1px;
     }
 
     .slider-button {
-      float: left;
+      border: 1px solid #ffffff;
       width: 40px;
       height: 30px;
       background: blue;
@@ -401,12 +476,13 @@ export default {
 
       cursor: pointer;
 
-      &.slider-zoom-plus {
-        border-bottom-left-radius: 30%;
+      &:hover {
+        background-color: rgba(0, 0, 255, 0.5);
       }
-      &.slider-zoom-minus {
-        border-bottom-right-radius: 30%;
+      &:active {
+        background-color: rgba(0, 0, 255, 0.8);
       }
+
       &.play:before {
         content: '▶';
         display: block;
@@ -416,6 +492,20 @@ export default {
       }
       &.pause:before {
         content: '⏸';
+        display: block;
+        position: relative;
+        margin: auto;
+        color: white;
+      }
+      &.start-here:before {
+        content: '┣';
+        display: block;
+        position: relative;
+        margin: auto;
+        color: white;
+      }
+      &.end-here:before {
+        content: '┫';
         display: block;
         position: relative;
         margin: auto;
