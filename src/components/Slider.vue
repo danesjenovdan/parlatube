@@ -158,10 +158,10 @@ export default {
     currentTime(newCurrentTime) {
       this.localTimeMarkerPosition = newCurrentTime * this.localStepSize;
 
-      const minutes = Math.floor(newCurrentTime / 60);
-      const seconds = newCurrentTime % 60;
+      const minutes = String(Math.floor(newCurrentTime / 60));
+      const seconds = String(newCurrentTime % 60);
 
-      this.processedCurrentTime = `${minutes}:${String(seconds).split('.')[0]}`;
+      this.processedCurrentTime = `${this.padZeroes(minutes)}:${this.padZeroes(seconds.split('.')[0])}`;
     },
 
     startMarkerPosition(newStartMarkerPosition) {
@@ -171,10 +171,10 @@ export default {
         this.localStartMarkerPosition = 0;
       }
 
-      const minutes = Math.floor(newStartMarkerPosition / 60);
-      const seconds = newStartMarkerPosition % 60;
+      const minutes = String(Math.floor(newStartMarkerPosition / 60));
+      const seconds = String(newStartMarkerPosition % 60);
 
-      this.processedStartTime = `${minutes}:${String(seconds).split('.')[0]}`;
+      this.processedStartTime = `${this.padZeroes(minutes)}:${this.padZeroes(seconds.split('.')[0])}`;
     },
 
     endMarkerPosition(newEndMarkerPosition) {
@@ -185,24 +185,20 @@ export default {
         this.$store.commit('video/TURN_LOOPING_ON');
       }
 
-      const minutes = Math.floor(newEndMarkerPosition / 60);
-      const seconds = newEndMarkerPosition % 60;
+      const minutes = String(Math.floor(newEndMarkerPosition / 60));
+      const seconds = String(newEndMarkerPosition % 60);
 
-      this.processedEndTime = `${minutes}:${String(seconds).split('.')[0]}`;
+      this.processedEndTime = `${this.padZeroes(minutes)}:${this.padZeroes(seconds.split('.')[0])}`;
     },
 
     processedStartTime(newProcessedStartTime) {
       if (this.manipulatingInput) {
-        const thing = ((parseInt(newProcessedStartTime.split(':')[0], 10) * 60) + parseInt(newProcessedStartTime.split(':')[1], 10)) * this.localStepSize;
-        console.log(thing);
         this.localStartMarkerPosition = ((parseInt(newProcessedStartTime.split(':')[0], 10) * 60) + parseInt(newProcessedStartTime.split(':')[1], 10)) * this.localStepSize;
       }
     },
 
     processedEndTime(newProcessedEndTime) {
       if (this.manipulatingInput) {
-        const thing = ((parseInt(newProcessedEndTime.split(':')[0], 10) * 60) + parseInt(newProcessedEndTime.split(':')[1], 10)) * this.localStepSize;
-        console.log(thing);
         this.localEndMarkerPosition = ((parseInt(newProcessedEndTime.split(':')[0], 10) * 60) + parseInt(newProcessedEndTime.split(':')[1], 10)) * this.localStepSize;
       }
     },
@@ -236,17 +232,13 @@ export default {
         const perfectRulerOffset = (this.localTimeMarkerPosition) -
           ((this.$refs.viewport.getBoundingClientRect().width / 2));
 
-        // console.log(perfectRulerOffset);
-
         if ((this.$refs.viewport.getBoundingClientRect().width +
           perfectRulerOffset) <= (this.duration * newLocalStepSize)) {
           this.rulerOffset = perfectRulerOffset;
-          // console.log(this.duration * newLocalStepSize);
         } else if (this.localTimeMarkerPosition >
           (this.$refs.viewport.getBoundingClientRect().width / 2)) {
           this.rulerOffset = (this.duration * newLocalStepSize) -
             this.$refs.viewport.getBoundingClientRect().width;
-          // console.log(this.duration * newLocalStepSize);
         } else {
           this.rulerOffset = 0;
         }
@@ -260,7 +252,6 @@ export default {
 
   methods: {
     onStartMarkerDown(event) {
-      console.log(event);
       event.stopPropagation();
       this.currentX = event.clientX;
 
@@ -321,16 +312,8 @@ export default {
     },
 
     seekHere(event) {
-      // console.log(event.clientX,
-      //   this.rulerOffset,
-      //   this.$refs.viewport.getBoundingClientRect().x,
-      //   this.localStepsize);
       const whereToSeek = ((event.clientX + this.rulerOffset) -
         this.$refs.viewport.getBoundingClientRect().left) / this.localStepSize;
-
-      console.log(whereToSeek);
-      console.log(this.rulerOffset);
-      console.log(this.$refs.viewport.getBoundingClientRect());
 
       this.$store.commit('video/UPDATE_SEEK_TO', whereToSeek);
     },
@@ -345,7 +328,6 @@ export default {
 
     rulerDown(event) {
       this.seekHere(event);
-      console.log(event);
 
       window.addEventListener('mousemove', this.rulerMove);
       window.addEventListener('mouseup', this.rulerUp);
@@ -371,6 +353,8 @@ export default {
     updateBaseLocalStepSize() {
       this.baseLocalStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
     },
+
+    padZeroes: text => (text.length < 2 ? `0${text}` : text),
   },
 
   created() {
