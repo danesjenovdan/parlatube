@@ -1,5 +1,6 @@
 <template>
   <div id="snippet">
+    asdf
     <parla-video></parla-video>
     <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
   </div>
