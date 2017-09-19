@@ -1,6 +1,20 @@
 <template>
   <div id="playlist">
-    <parla-video></parla-video>
+    <div class="video-and-playlist-container">
+      <div class="video-container">
+        <parla-video></parla-video>
+      </div>
+      <div class="playlist-container">
+        <div
+          :class="['playlist-item', {current: playlist.indexOf(snippet) === currentSnippet}]"
+          v-for="snippet in playlist"
+          @click="updateSnippet(playlist.indexOf(snippet))"
+        >
+          <div class="snippet-title">{{ snippet.title || 'Brez naslova' }}</div>
+          <a class="snippet-outlink" target="_blank" :href="`http://parlatube.knedl.si/#/snippet/${snippet.id}`">Link</a>
+        </div>
+      </div>
+    </div>
     <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
   </div>
 </template>
@@ -51,12 +65,12 @@ export default {
         (this.currentSnippet < (this.playlist.length - 1)) &&
         (this.videoLoaded)) {
         this.videoLoaded = false;
-        this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+        this.$store.commit('video/PAUSE_VIDEO');
         this.currentSnippet = this.currentSnippet + 1;
       } else if ((newCurrentTime > (this.playlist[this.currentSnippet].end_time / 1000)) &&
         (this.currentSnippet === (this.playlist.length - 1)) &&
         this.videoLoaded) {
-        this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+        this.$store.commit('video/PAUSE_VIDEO');
         this.videoLoaded = false;
       }
     },
@@ -71,10 +85,26 @@ export default {
         this.$store.commit('video/UPDATE_SEEK_TO', this.playlist[this.currentSnippet].start_time / 1000);
 
         // tell video to play
-        this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+        this.$store.commit('video/PLAY_VIDEO');
+
+        // update drawing
+        if (this.playlist[this.currentSnippet].extras.length > 0) {
+          const processedExtras = JSON.parse(this.playlist[this.currentSnippet].extras.replace(/&#34;/g, '"'));
+          this.$store.commit('drawing/UPDATE_STATE', processedExtras);
+        } else {
+          this.$store.commit('drawing/UPDATE_STATE', {});
+        }
       }, () => {
         // an error occured with getting the video
       });
+    },
+  },
+
+  methods: {
+    updateSnippet(snippetIndex) {
+      this.videoLoaded = false;
+      this.$store.commit('video/PAUSE_VIDEO');
+      this.currentSnippet = snippetIndex;
     },
   },
 
@@ -83,6 +113,14 @@ export default {
     this.$http.get(`http://snippet.knedl.si/getPlaylist?id=${this.$route.params.playlistId}`, { emulateJSON: true }).then((playlistSuccess) => {
       // set snippets
       this.snippets = playlistSuccess.data.snippets;
+
+      // update drawing
+      if (this.playlist[this.currentSnippet].extras.length > 0) {
+        const processedExtras = JSON.parse(this.playlist[this.currentSnippet].extras.replace(/&#34;/g, '"'));
+        this.$store.commit('drawing/UPDATE_STATE', processedExtras);
+      } else {
+        this.$store.commit('drawing/UPDATE_STATE', {});
+      }
 
       // set first snippet
       this.$http.get(`http://snippet.knedl.si/getVideo?id=${this.playlist[this.currentSnippet].video_id}`, { emulateJSON: true }).then((videoSuccess) => {
@@ -110,6 +148,51 @@ export default {
   flex: 0 0 100%;
   flex-wrap: wrap;
   overflow: hidden;
+
+  .video-and-playlist-container {
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: nowrap;
+    overflow: hidden;
+
+    .video-container {
+      display: flex;
+      flex: 1 1 100%;
+      overflow: hidden;
+    }
+
+    .playlist-container {
+      display: flex;
+      flex: 1 1 100%;
+      overflow: hidden;
+      flex-wrap: wrap;
+      overflow-y: auto;
+      align-content: flex-start; 
+
+      .playlist-item {
+        display: flex;
+        flex: 1 1 100%;
+        justify-content: space-between;
+
+        height: 30px;
+        line-height: 30px;
+
+        cursor: pointer;
+
+        border-bottom: 1px solid #000000;
+
+        padding: 0 10px 0 10px;
+
+        &.current {
+          background: rgba(0, 0, 0, 0.2);
+        }
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+  }
 }
 </style>
 
@@ -121,7 +204,8 @@ export default {
   width: 100% !important;
 }
 
-#drawing-container {
-  display: none;
-}
+/* TODO */
+// #drawing-container {
+//   display: none;
+// }
 </style>

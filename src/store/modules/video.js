@@ -62,6 +62,12 @@ const mutations = {
   UPDATE_PLAYING(state, newPlaying) {
     state.playing = newPlaying;
   },
+  PLAY_VIDEO(state) {
+    state.shouldIPause = false;
+  },
+  PAUSE_VIDEO(state) {
+    state.shouldIPause = true;
+  },
   TOGGLE_SHOULD_I_PAUSE(state) {
     state.shouldIPause = !state.shouldIPause;
   },
