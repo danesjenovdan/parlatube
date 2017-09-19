@@ -82,11 +82,14 @@
           class="slider-input"
           type="text"
           v-model:value="processedCurrentTime"
+          disabled
         >
         <input
           class="slider-input"
           type="text"
           v-model:value="processedEndTime"
+          @focus="manipulatingInput = true"
+          @blur="manipulatingInput = false"
         >
       </div>
     </div>
@@ -126,6 +129,9 @@ export default {
       ySensitivity: 5,
       sliderHeight: 30,
       manipulatingInput: false,
+      processedCurrentTime: '00:00',
+      processedStartTime: '00:00',
+      processedEndTime: '00:00',
     };
   },
 
@@ -141,49 +147,34 @@ export default {
       videoPlaying: state => state.video.playing,
       shouldIPause: state => state.video.shouldIPause,
     }),
-
-    processedCurrentTime: {
-      get() {
-        const minutes = Math.floor(this.currentTime / 60);
-        const seconds = this.currentTime % 60;
-
-        return `${minutes}:${String(seconds).split('.')[0]}`;
-      },
-
-      set: newValue => newValue,
-    },
-
-    processedStartTime: {
-      get() {
-        const minutes = Math.floor(this.startMarkerPosition / 60);
-        const seconds = this.startMarkerPosition % 60;
-
-        return `${minutes}:${String(seconds).split('.')[0]}`;
-      },
-
-      set(newValue) {
-        if (!this.manipulatingInput) {
-          const seconds = (parseInt(newValue.split(':')[0], 10) * 60) + parseInt(newValue.split(':')[1], 10);
-          this.localStartMarkerPosition = seconds * this.localStepSize;
-        }
-      },
-    },
-
-    processedEndTime() {
-      const minutes = Math.floor(this.endMarkerPosition / 60);
-      const seconds = this.endMarkerPosition % 60;
-
-      return `${minutes}:${String(seconds).split('.')[0]}`;
-    },
   },
 
   watch: {
+    baseLocalStepSize(newBaseLocalStepSize) {
+      this.localStepSize = newBaseLocalStepSize;
+      this.rulerOffset = 0;
+    },
+
+    currentTime(newCurrentTime) {
+      this.localTimeMarkerPosition = newCurrentTime * this.localStepSize;
+
+      const minutes = Math.floor(newCurrentTime / 60);
+      const seconds = newCurrentTime % 60;
+
+      this.processedCurrentTime = `${minutes}:${String(seconds).split('.')[0]}`;
+    },
+
     startMarkerPosition(newStartMarkerPosition) {
       if (newStartMarkerPosition) {
         this.localStartMarkerPosition = newStartMarkerPosition * this.localStepSize;
       } else {
         this.localStartMarkerPosition = 0;
       }
+
+      const minutes = Math.floor(newStartMarkerPosition / 60);
+      const seconds = newStartMarkerPosition % 60;
+
+      this.processedStartTime = `${minutes}:${String(seconds).split('.')[0]}`;
     },
 
     endMarkerPosition(newEndMarkerPosition) {
@@ -192,6 +183,27 @@ export default {
         // make both editor and video know they can loop
         this.$store.commit('editor/TURN_LOOPING_ON');
         this.$store.commit('video/TURN_LOOPING_ON');
+      }
+
+      const minutes = Math.floor(newEndMarkerPosition / 60);
+      const seconds = newEndMarkerPosition % 60;
+
+      this.processedEndTime = `${minutes}:${String(seconds).split('.')[0]}`;
+    },
+
+    processedStartTime(newProcessedStartTime) {
+      if (this.manipulatingInput) {
+        const thing = ((parseInt(newProcessedStartTime.split(':')[0], 10) * 60) + parseInt(newProcessedStartTime.split(':')[1], 10)) * this.localStepSize;
+        console.log(thing);
+        this.localStartMarkerPosition = ((parseInt(newProcessedStartTime.split(':')[0], 10) * 60) + parseInt(newProcessedStartTime.split(':')[1], 10)) * this.localStepSize;
+      }
+    },
+
+    processedEndTime(newProcessedEndTime) {
+      if (this.manipulatingInput) {
+        const thing = ((parseInt(newProcessedEndTime.split(':')[0], 10) * 60) + parseInt(newProcessedEndTime.split(':')[1], 10)) * this.localStepSize;
+        console.log(thing);
+        this.localEndMarkerPosition = ((parseInt(newProcessedEndTime.split(':')[0], 10) * 60) + parseInt(newProcessedEndTime.split(':')[1], 10)) * this.localStepSize;
       }
     },
 
@@ -241,10 +253,6 @@ export default {
       });
     },
 
-    currentTime(newCurrentTime) {
-      this.localTimeMarkerPosition = newCurrentTime * this.localStepSize;
-    },
-
     rulerOffset(newRulerOffset) {
       this.$refs.viewport.scrollLeft = newRulerOffset;
     },
@@ -255,7 +263,6 @@ export default {
       console.log(event);
       event.stopPropagation();
       this.currentX = event.clientX;
-      this.currentY = event.clientY;
 
       window.addEventListener('mousemove', this.onStartMarkerDragging);
       window.addEventListener('mouseup', this.onStartMarkerDragEnd);
@@ -265,9 +272,10 @@ export default {
       const diffX = (event.clientX - this.currentX);
 
       this.currentX = event.clientX;
-      this.currentY = event.clientY;
 
-      this.localStartMarkerPosition = (this.localStartMarkerPosition + diffX);
+      if ((this.localStartMarkerPosition + diffX) >= 0) {
+        this.localStartMarkerPosition = (this.localStartMarkerPosition + diffX);
+      }
     },
 
     onStartMarkerDragEnd() {
@@ -278,7 +286,6 @@ export default {
     onEndMarkerDown(event) {
       event.stopPropagation();
       this.currentX = event.clientX;
-      this.currentY = event.clientY;
 
       window.addEventListener('mousemove', this.onEndMarkerDragging);
       window.addEventListener('mouseup', this.onEndMarkerDragEnd);
@@ -288,9 +295,10 @@ export default {
       const diffX = (event.clientX - this.currentX);
 
       this.currentX = event.clientX;
-      this.currentY = event.clientY;
 
-      this.localEndMarkerPosition = (this.localEndMarkerPosition + diffX);
+      if ((this.localEndMarkerPosition + diffX) <= ((this.duration * this.localStepSize))) {
+        this.localEndMarkerPosition = this.localEndMarkerPosition + diffX;
+      }
     },
 
     onEndMarkerDragEnd() {
@@ -358,6 +366,10 @@ export default {
 
     togglePause() {
       this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+    },
+
+    updateBaseLocalStepSize() {
+      this.baseLocalStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
     },
   },
 
