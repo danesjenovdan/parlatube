@@ -13,6 +13,8 @@ const state = {
   looping: false,
   loopStart: 0,
   loopEnd: 0,
+  playing: false,
+  shouldIPause: false,
 };
 
 // mutations
@@ -56,6 +58,12 @@ const mutations = {
     state.looping = false;
     state.loopStart = 0;
     state.loopEnd = 0;
+  },
+  UPDATE_PLAYING(state, newPlaying) {
+    state.playing = newPlaying;
+  },
+  TOGGLE_SHOULD_I_PAUSE(state) {
+    state.shouldIPause = !state.shouldIPause;
   },
 };
 

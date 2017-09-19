@@ -1,6 +1,7 @@
 <template>
   <div id="snippet">
     <parla-video></parla-video>
+    <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
   </div>
 </template>
 
@@ -64,5 +65,14 @@ export default {
   flex: 0 0 100%;
   flex-wrap: wrap;
   overflow: hidden;
+}
+</style>
+
+<style lang="scss">
+.fb_iframe_widget,
+.fb_iframe_widget span,
+.fb_iframe_widget span iframe[style] {
+  min-width: 100% !important;
+  width: 100% !important;
 }
 </style>

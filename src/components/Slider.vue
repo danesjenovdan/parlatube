@@ -1,38 +1,111 @@
 <template>
-  <div class="slider-container">
+  <div
+    class="slider-container"
+    v-resize="updateBaseLocalStepSize"
+  >
     <div
       class="slider-viewport"
-      @scroll="onScroll"
-      @mouseover="manipulating = true"
-      @mouseout="manipulating = false"
-      @mousedown="onMouseDown"
+      ref="viewport"
+      @scroll="rulerScroll"
     >
       <div class="ruler-container">
         <div
           class="ruler"
-          v-bind:style="{width: `${duration * stepSize}px`}"
+          v-bind:style="{width: `${duration * localStepSize}px`}"
+          @mousedown="rulerDown"
         >
-          <div class="marker start-marker"
-            v-bind:style="{left: `${localStartMarkerPosition}px`}"
-            @mousedown="onStartMarkerDown"
+          <div
+            class="marker start-marker"
+            :style="{left: `${localStartMarkerPosition}px`}"
+            @mousedown.prevent="onStartMarkerDown"
+            @click.prevent="seekHere"
           ></div>
-          <div class="marker end-marker"
-            v-bind:style="{left: `${localEndMarkerPosition}px`}"
-            @mousedown="onEndMarkerDown"
+
+          <div
+            class="marked"
+            :style="{left: `${localStartMarkerPosition}px`, width: `${localEndMarkerPosition - localStartMarkerPosition}px`}"
+          >
+          </div>
+          
+          <div
+            class="marker end-marker"
+            :style="{left: `${localEndMarkerPosition}px`}"
+            @mousedown.prevent="onEndMarkerDown"
+            @click.prevent="seekHere"
           ></div>
-          <div class="seconds"></div>
+
+          <div
+            class="marker time-marker"
+            :style="{left: `${localTimeMarkerPosition}px`}"
+          ></div>
+
+          <div
+            class="seconds"
+            :style="{'background-size': `${localStepSize}px ${localStepSize}px`}">
+          </div>
         </div>
       </div>
     </div>
-    <div class="timemarker"></div>
+    <div class="slider-buttons-container">
+      <div class="slider-zoom-row">
+        <div
+          class="slider-zoom-plus slider-button"
+          @click="zoomIn"
+        >+</div>
+        <div
+          class="start-here slider-button"
+          @click.prevent="startHere"
+        ></div>
+        <div
+          :class="['slider-button', {play: !videoPlaying, pause: videoPlaying}]"
+          @click.prevent="togglePause"
+        >
+        </div>
+        <div
+          class="end-here slider-button"
+          @click.prevent="endHere"
+        ></div>
+        <div
+          class="slider-zoom-minus slider-button"
+          @click="zoomOut"
+        >-</div>
+      </div>
+      <div class="slider-zoom-row">
+        <input
+          class="slider-input"
+          type="text"
+          v-model:value="processedStartTime"
+          @focus="manipulatingInput = true"
+          @blur="manipulatingInput = false"
+        >
+        <input
+          class="slider-input"
+          type="text"
+          v-model:value="processedCurrentTime"
+          disabled
+        >
+        <input
+          class="slider-input"
+          type="text"
+          v-model:value="processedEndTime"
+          @focus="manipulatingInput = true"
+          @blur="manipulatingInput = false"
+        >
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
+import resize from 'vue-resize-directive';
 
 export default {
   name: 'Slider',
+
+  directives: {
+    resize,
+  },
 
   props: {
     stepSize: {
@@ -44,13 +117,21 @@ export default {
 
   data() {
     return {
-      timeMarkerPosition: 0,
-      oldRulerOffset: null,
-      manipulating: false,
+      rulerOffset: 0,
       currentX: 0,
+      currentY: 0,
       localStartMarkerPosition: 0,
       localEndMarkerPosition: 0,
+      localTimeMarkerPosition: 0,
       numberOfSeconds: 0,
+      localStepSize: 0,
+      baseLocalStepSize: 0,
+      ySensitivity: 5,
+      sliderHeight: 30,
+      manipulatingInput: false,
+      processedCurrentTime: '00:00',
+      processedStartTime: '00:00',
+      processedEndTime: '00:00',
     };
   },
 
@@ -61,88 +142,134 @@ export default {
       startMarkerPosition: 'editor/startMarkerGetter',
       endMarkerPosition: 'editor/endMarkerGetter',
     }),
+
+    ...mapState({
+      videoPlaying: state => state.video.playing,
+      shouldIPause: state => state.video.shouldIPause,
+    }),
   },
 
   watch: {
+    baseLocalStepSize(newBaseLocalStepSize) {
+      this.localStepSize = newBaseLocalStepSize;
+      this.rulerOffset = 0;
+    },
+
     currentTime(newCurrentTime) {
-      if (!this.manipulating) {
-        this.timeMarkerPosition = newCurrentTime * this.stepSize;
-        this.$el.querySelector('.slider-viewport').scrollLeft = this.timeMarkerPosition;
-        this.oldRulerOffset = this.timeMarkerPosition;
-      }
+      this.localTimeMarkerPosition = newCurrentTime * this.localStepSize;
+
+      const minutes = String(Math.floor(newCurrentTime / 60));
+      const seconds = String(newCurrentTime % 60);
+
+      this.processedCurrentTime = `${this.padZeroes(minutes)}:${this.padZeroes(seconds.split('.')[0])}`;
     },
 
     startMarkerPosition(newStartMarkerPosition) {
-      this.localStartMarkerPosition = newStartMarkerPosition * this.stepSize;
+      if (newStartMarkerPosition) {
+        this.localStartMarkerPosition = newStartMarkerPosition * this.localStepSize;
+      } else {
+        this.localStartMarkerPosition = 0;
+      }
+
+      const minutes = String(Math.floor(newStartMarkerPosition / 60));
+      const seconds = String(newStartMarkerPosition % 60);
+
+      this.processedStartTime = `${this.padZeroes(minutes)}:${this.padZeroes(seconds.split('.')[0])}`;
     },
 
     endMarkerPosition(newEndMarkerPosition) {
-      this.localEndMarkerPosition = newEndMarkerPosition * this.stepSize;
+      this.localEndMarkerPosition = newEndMarkerPosition * this.localStepSize;
       if (this.localEndMarkerPosition > this.localStartMarkerPosition) {
         // make both editor and video know they can loop
         this.$store.commit('editor/TURN_LOOPING_ON');
         this.$store.commit('video/TURN_LOOPING_ON');
       }
+
+      const minutes = String(Math.floor(newEndMarkerPosition / 60));
+      const seconds = String(newEndMarkerPosition % 60);
+
+      this.processedEndTime = `${this.padZeroes(minutes)}:${this.padZeroes(seconds.split('.')[0])}`;
+    },
+
+    processedStartTime(newProcessedStartTime) {
+      if (this.manipulatingInput) {
+        this.localStartMarkerPosition = ((parseInt(newProcessedStartTime.split(':')[0], 10) * 60) + parseInt(newProcessedStartTime.split(':')[1], 10)) * this.localStepSize;
+      }
+    },
+
+    processedEndTime(newProcessedEndTime) {
+      if (this.manipulatingInput) {
+        this.localEndMarkerPosition = ((parseInt(newProcessedEndTime.split(':')[0], 10) * 60) + parseInt(newProcessedEndTime.split(':')[1], 10)) * this.localStepSize;
+      }
+    },
+
+    localStartMarkerPosition(newLocalStartMarkerPosition) {
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [newLocalStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_START', newLocalStartMarkerPosition / this.localStepSize);
+    },
+
+    localEndMarkerPosition(newLocalEndMarkerPosition) {
+      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, newLocalEndMarkerPosition / this.localStepSize]);
+      this.$store.commit('video/UPDATE_LOOP_END', newLocalEndMarkerPosition / this.localStepSize);
     },
 
     duration(newDuration) {
       this.numberOfSeconds = Math.floor(newDuration);
+      if (newDuration && (newDuration > 0)) {
+        this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / newDuration;
+        this.baseLocalStepSize = this.localStepSize;
+      }
+
+      this.localEndMarkerPosition = newDuration * this.localStepSize;
+    },
+
+    localStepSize(newLocalStepSize) {
+      this.localStartMarkerPosition = this.startMarkerPosition * newLocalStepSize;
+      this.localEndMarkerPosition = this.endMarkerPosition * newLocalStepSize;
+      this.localTimeMarkerPosition = this.currentTime * newLocalStepSize;
+
+      this.$nextTick(() => {
+        const perfectRulerOffset = (this.localTimeMarkerPosition) -
+          ((this.$refs.viewport.getBoundingClientRect().width / 2));
+
+        if ((this.$refs.viewport.getBoundingClientRect().width +
+          perfectRulerOffset) <= (this.duration * newLocalStepSize)) {
+          this.rulerOffset = perfectRulerOffset;
+        } else if (this.localTimeMarkerPosition >
+          (this.$refs.viewport.getBoundingClientRect().width / 2)) {
+          this.rulerOffset = (this.duration * newLocalStepSize) -
+            this.$refs.viewport.getBoundingClientRect().width;
+        } else {
+          this.rulerOffset = 0;
+        }
+      });
+    },
+
+    rulerOffset(newRulerOffset) {
+      this.$refs.viewport.scrollLeft = newRulerOffset;
     },
   },
 
   methods: {
-    onScroll() {
-      if (this.manipulating) {
-        this.$store.commit('editor/TOGGLE_DRAG');
-        const newRulerOffset = this.$el.querySelector('.slider-viewport').scrollLeft;
-        this.timeMarkerPosition = this.timeMarkerPosition +
-          (newRulerOffset - this.oldRulerOffset);
-        this.oldRulerOffset = newRulerOffset;
-
-        this.$store.commit('video/UPDATE_SEEK_TO', Math.abs(this.timeMarkerPosition / this.stepSize));
-      }
-    },
-
-    onMouseDown(event) {
-      event.preventDefault();
-      this.currentX = event.clientX;
-      window.addEventListener('mousemove', this.onDragging);
-      window.addEventListener('mouseup', this.onDragEnd);
-    },
-
-    onDragging(event) {
-      let diff = 0;
-      diff = (event.clientX - this.currentX);
-      this.currentX = event.clientX;
-      this.timeMarkerPosition = this.timeMarkerPosition - diff;
-      this.$el.querySelector('.slider-viewport').scrollLeft = this.timeMarkerPosition;
-      this.oldRulerOffset = this.timeMarkerPosition;
-    },
-
-    onDragEnd() {
-      window.removeEventListener('mousemove', this.onDragging);
-      window.removeEventListener('mouseup', this.onDragEnd);
-    },
-
     onStartMarkerDown(event) {
       event.stopPropagation();
       this.currentX = event.clientX;
+
       window.addEventListener('mousemove', this.onStartMarkerDragging);
       window.addEventListener('mouseup', this.onStartMarkerDragEnd);
     },
 
     onStartMarkerDragging(event) {
-      let diff = 0;
-      diff = (event.clientX - this.currentX);
+      const diffX = (event.clientX - this.currentX);
+
       this.currentX = event.clientX;
-      if (this.isMarkerInBounds(this.localStartMarkerPosition + diff)) {
-        this.localStartMarkerPosition = this.localStartMarkerPosition + diff;
+
+      if ((this.localStartMarkerPosition + diffX) >= 0) {
+        this.localStartMarkerPosition = (this.localStartMarkerPosition + diffX);
       }
     },
 
     onStartMarkerDragEnd() {
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.stepSize, this.localEndMarkerPosition / this.stepSize]);
-      this.$store.commit('video/UPDATE_LOOP_START', this.localStartMarkerPosition / this.stepSize);
       window.removeEventListener('mousemove', this.onStartMarkerDragging);
       window.removeEventListener('mouseup', this.onStartMarkerDragEnd);
     },
@@ -150,37 +277,93 @@ export default {
     onEndMarkerDown(event) {
       event.stopPropagation();
       this.currentX = event.clientX;
+
       window.addEventListener('mousemove', this.onEndMarkerDragging);
       window.addEventListener('mouseup', this.onEndMarkerDragEnd);
     },
 
     onEndMarkerDragging(event) {
-      let diff = 0;
-      diff = (event.clientX - this.currentX);
+      const diffX = (event.clientX - this.currentX);
+
       this.currentX = event.clientX;
-      if (this.isMarkerInBounds(this.localEndMarkerPosition + diff)) {
-        this.localEndMarkerPosition = this.localEndMarkerPosition + diff;
+
+      if ((this.localEndMarkerPosition + diffX) <= ((this.duration * this.localStepSize))) {
+        this.localEndMarkerPosition = this.localEndMarkerPosition + diffX;
       }
     },
 
     onEndMarkerDragEnd() {
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.stepSize, this.localEndMarkerPosition / this.stepSize]);
-      this.$store.commit('video/UPDATE_LOOP_END', this.localEndMarkerPosition / this.stepSize);
+      event.stopPropagation();
+
       window.removeEventListener('mousemove', this.onEndMarkerDragging);
       window.removeEventListener('mouseup', this.onEndMarkerDragEnd);
     },
 
-    isMarkerInBounds(position) {
-      return (position >= 0) && (position <= this.duration * this.stepSize); // &&
-        // (this.localStartMarkerPosition <= this.localEndMarkerPosition - 7);
+    zoomIn() {
+      this.localStepSize = this.localStepSize + 10;
     },
+
+    zoomOut() {
+      if ((this.localStepSize - 10) > this.baseLocalStepSize) {
+        this.localStepSize = this.localStepSize - 10;
+      } else {
+        this.localStepSize = this.baseLocalStepSize;
+      }
+    },
+
+    seekHere(event) {
+      const whereToSeek = ((event.clientX + this.rulerOffset) -
+        this.$refs.viewport.getBoundingClientRect().left) / this.localStepSize;
+
+      this.$store.commit('video/UPDATE_SEEK_TO', whereToSeek);
+    },
+
+    startHere() {
+      this.localStartMarkerPosition = (this.currentTime * this.localStepSize);
+    },
+
+    endHere() {
+      this.localEndMarkerPosition = (this.currentTime * this.localStepSize);
+    },
+
+    rulerDown(event) {
+      this.seekHere(event);
+
+      window.addEventListener('mousemove', this.rulerMove);
+      window.addEventListener('mouseup', this.rulerUp);
+    },
+
+    rulerMove(event) {
+      this.seekHere(event);
+    },
+
+    rulerUp() {
+      window.removeEventListener('mousemove', this.rulerMove);
+      window.removeEventListener('mouseup', this.rulerUp);
+    },
+
+    rulerScroll() {
+      this.rulerOffset = this.$refs.viewport.scrollLeft;
+    },
+
+    togglePause() {
+      this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+    },
+
+    updateBaseLocalStepSize() {
+      this.baseLocalStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
+    },
+
+    padZeroes: text => (text.length < 2 ? `0${text}` : text),
   },
 
   created() {
   },
 
   mounted() {
-    this.oldRulerOffset = this.$el.querySelector('.slider-viewport').scrollLeft;
+    this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
+    this.baseLocalStepSize = this.localStepSize;
+    this.rulerOffset = 0;
   },
 };
 </script>
@@ -195,66 +378,149 @@ export default {
 
   .slider-viewport {
     width: 100%;
-    height: 100px;
-    background: gray;
+    height: 40px;
+
     overflow-x: scroll;
-    padding-top: 1%;
+    overflow-y: hidden;
 
     .ruler-container {
       height: 100%;
       position: relative;
-      padding-left: 50%;
-      padding-right: 50%;
       display: block;
       float: left;
 
       .ruler {
         height: 100%;
-        background-color: blue;
+        background-color: gray;
         background: linear-gradient(left, #00ff00, #00aabb);
         cursor: pointer;
         position: relative;
 
+        // transition: all 0.5s linear;
+
         .seconds {
           width: 100%;
           background-image: url('../assets/marker.png');
+          background-position: bottom;
           height: 20px;
-          top: 65px;
+          top: calc(100% - 20px);
           position: relative;
+          // transition: all 0.5s linear;
         }
+      }
+
+      .marked {
+        background: yellow;
+        height: 100%;
+        position: absolute;
       }
 
       .marker {
         height: 100%;
         position: absolute;
         top: 0;
-        width: 5px;
+        width: 1px;
         background: black;
+        opacity: 0.6;
 
         z-index: 2;
 
         &:hover {
-          background: red;
+          opacity: 1;
         }
 
         &.start-marker {
           left: 0;
+          background: blue;
+          width: 5px;
         }
         &.end-marker {
-          left: 20%;
+          left: 100%;
+          background: red;
+          margin-left: -5px;
+          width: 5px;
         }
       }
     }
 
   }
 
-  .timemarker {
-    position: absolute;
-    left: 50%;
-    top: -10px;
-    width: 2px;
-    height: 120px;
-    background: red;
+  .slider-buttons-container {
+    position: relative;
+    margin: auto;
+    margin-bottom: 20px;
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: wrap;
+
+    .slider-zoom-row {
+      position: relative;
+      display: flex;
+      overflow: hidden;
+      flex: 0 0 100%;
+      justify-content: center;
+    }
+
+    .slider-input {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      text-align: center;
+      padding: 0;
+      border: 1px solid #000000;
+      margin: 1px;
+    }
+
+    .slider-button {
+      border: 1px solid #ffffff;
+      width: 40px;
+      height: 30px;
+      background: blue;
+      color: #ffffff;
+      line-height: 30px;
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0, 0, 255, 0.5);
+      }
+      &:active {
+        background-color: rgba(0, 0, 255, 0.8);
+      }
+
+      &.play:before {
+        content: '▶';
+        display: block;
+        position: relative;
+        margin: auto;
+        color: white;
+      }
+      &.pause:before {
+        content: '⏸';
+        display: block;
+        position: relative;
+        margin: auto;
+        color: white;
+      }
+      &.start-here:before {
+        content: '┣';
+        display: block;
+        position: relative;
+        margin: auto;
+        color: white;
+      }
+      &.end-here:before {
+        content: '┫';
+        display: block;
+        position: relative;
+        margin: auto;
+        color: white;
+      }
+    }
   }
 }
 </style>
