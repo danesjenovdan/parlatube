@@ -10,7 +10,7 @@
     </div>
     <editor></editor>
     <div class="row feed-container">
-      <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="900356004453519360">#soocenje Tweets</a>
+      <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="910050625081286656" data-width="100%">#soocenje Tweets</a>
     </div>
   </div>
 </template>
@@ -39,6 +39,12 @@ export default {
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
     this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');
+  },
+
+  mounted() {
+    // Twitter embed thing
+    // eslint-disable-next-line
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
   },
 };
 </script>
@@ -74,5 +80,11 @@ export default {
     display: flex;
     flex: 0 0 100%;
   }
+}
+</style>
+
+<style lang="scss">
+#twitter-widget-0 {
+  width:100%;
 }
 </style>
