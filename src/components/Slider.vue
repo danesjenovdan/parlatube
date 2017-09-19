@@ -1,6 +1,7 @@
 <template>
   <div
     class="slider-container"
+    v-resize="updateBaseLocalStepSize"
   >
     <div
       class="slider-viewport"
@@ -94,9 +95,14 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import resize from 'vue-resize-directive';
 
 export default {
   name: 'Slider',
+
+  directives: {
+    resize,
+  },
 
   props: {
     stepSize: {
