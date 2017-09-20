@@ -102,8 +102,8 @@ export default {
       if (this.theSpeech &&
         (newCurrentTime > this.theSpeech.start_time_stamp / 1000) &&
         (newCurrentTime < this.theSpeech.end_time_stamp / 1000)) {
-        const topPos = this.$refs[`speech${this.theSpeech.id}`][0].getBoundingClientRect().top;
-        this.scrollToSpeech(topPos - 60);
+        const topPos = this.$refs[`speech${this.theSpeech.id}`][0].getBoundingClientRect().top - this.$refs.speechesContainer.getBoundingClientRect().top;
+        this.scrollToSpeech(topPos);
       }
     },
 
