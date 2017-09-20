@@ -7,10 +7,13 @@ import Router from 'vue-router';
 import Home from 'pages/Home';
 import Snippet from 'pages/Snippet';
 import Playlist from 'pages/Playlist';
+import Collections from 'pages/Collections';
 
 Vue.use(Router);
 
 export default new Router({
+  linkExactActiveClass: 'active',
+
   routes: [
     {
       path: '/',
@@ -26,6 +29,11 @@ export default new Router({
       path: '/playlist/:playlistId',
       name: 'Playlist',
       component: Playlist,
+    },
+    {
+      path: '/collections',
+      name: 'Collections',
+      component: Collections,
     },
   ],
 });

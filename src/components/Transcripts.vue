@@ -132,84 +132,137 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  #transcripts {
+@import '../styles/colors';
+
+#transcripts {
+  display: flex;
+  flex: 0 1 100%;
+  flex-wrap: wrap;
+  overflow: hidden;
+  max-width: 100%;
+  padding: 5px 5px 5px 0;
+
+  background-color: $gray;
+
+  .input-container {
     display: flex;
-    flex-wrap: wrap;
+    flex: 1 1 100%;
     overflow: hidden;
-    max-height: 300px;
-    max-width: 100%;
+    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.2);
+    height: 54px;
+    background-color: $white;
+    align-items: center;
 
-    .input-container {
+    &::after {
+      content: '';
       display: flex;
-      flex: 0 0 100%;
-      overflow: hidden;
+      flex: 0 0 35px;
+      height: 35px;
+      background-image: url('../assets/icons/search.svg');
+      background-size: contain;
+      background-color: $white;
+      margin-right: 10px;
+    }
 
-      #search-input {
+    #search-input {
+      display: flex;
+      flex-grow: 1;
+      border: none;
+      color: $black;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      line-height: 54px;
+
+      padding-left: 14px;
+    }
+  }
+
+  .speeches-container {
+    display: flex;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+
+    height: calc(100% - 54px);
+
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .speech {
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: wrap;
+    cursor: pointer;
+    position: relative;
+    background-color: $white;
+
+    &:hover::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+
+      background-color: $red;
+      opacity: 0.15;
+    }
+
+    .speaker-info {
+      display: flex;
+      flex: 1 0 calc(100% - 5px);
+      flex-wrap: nowrap;
+
+      padding: 17px 13px 11px 13px;
+
+      .speaker-image {
         display: flex;
-        flex-grow: 1;
+        flex: 0 1 30px;
         height: 30px;
+
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        border-radius: 50%;
+      }
+
+      .speaker-name {
+        line-height: 30px;
+        padding-left: 10px;
+        font-family: 'Space Mono', monospace;
+        text-transform: uppercase;
+        font-size: 14px;
+        font-weight: 700;
       }
     }
 
-    .speeches-container {
+    .speech-content {
       display: flex;
-      flex: 1 0 100%;
-      max-height: 270px;
-      flex-wrap: wrap;
+      flex: 1 1 calc(100% - 5px);
+      padding: 0 13px 19px 13px;
 
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-    .speech {
-      display: flex;
-      flex: 0 0 100%;
-      flex-wrap: wrap;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #f0f0f0;
-      }
-
-      .speaker-info {
-        display: flex;
-        flex: 1 0 calc(100% - 5px);
-        flex-wrap: nowrap;
-
-        padding: 5px;
-
-        .speaker-image {
-          display: flex;
-          flex: 0 1 30px;
-          height: 30px;
-
-          background-size: contain;
-          background-position: center;
-          background-repeat: no-repeat;
-        }
-
-        .speaker-name {
-          line-height: 30px;
-          padding-left: 10px;
-        }
-      }
-
-      .speech-content {
-        display: flex;
-        flex: 1 0 calc(100% - 5px);
-        padding: 5px;
-
-        p {
-          margin: 0;
-          padding: 0;
-        }
+      p {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 13px;
+        color: $black;
       }
     }
   }
+}
 </style>
 
 <style lang="scss">
+@import '../styles/colors';
+@import '../styles/scroller';
+
 .highlight {
   font-weight: bold;
   background-color: yellow;
+}
+
+.speeches-container {
+  @extend %scroller;
 }
 </style>

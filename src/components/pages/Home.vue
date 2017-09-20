@@ -1,16 +1,18 @@
 <template>
   <div id="home">
-    <div class="video-and-transcripts-container">
-      <div class="video-container">
-        <parla-video></parla-video>
+    <div class="container">
+      <div class="video-and-transcripts-container">
+        <div class="video-container">
+          <parla-video></parla-video>
+        </div>
+        <div class="transcripts-container">
+          <transcripts></transcripts>
+        </div>
       </div>
-      <div class="transcripts-container">
-        <transcripts></transcripts>
+      <editor></editor>
+      <div class="row feed-container">
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="910050625081286656" data-width="100%" data-height="802">#soocenje Tweets</a>
       </div>
-    </div>
-    <editor></editor>
-    <div class="row feed-container">
-      <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="910050625081286656" data-width="100%">#soocenje Tweets</a>
     </div>
   </div>
 </template>
@@ -21,7 +23,7 @@ import Editor from 'components/Editor';
 import Transcripts from 'components/Transcripts';
 
 export default {
-  name: 'home',
+  name: 'Home',
 
   data() {
     return {
@@ -51,17 +53,29 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import '../../styles/colors';
+
 #home {
   display: flex;
   flex: 0 0 100%;
   flex-wrap: wrap;
   overflow: hidden;
+  justify-content: center;
+
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eaeaea+0,eaeaea+50,ffffff+51,ffffff+100 */
+  background: #eaeaea; /* Old browsers */
+  background: -moz-linear-gradient(top, #eaeaea 0%, #eaeaea 17%, #ffffff 17%, #ffffff 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 
   .video-and-transcripts-container {
     display: flex;
-    flex: 0 0 100%;
+    flex: 1 0 100%;
     flex-wrap: nowrap;
     overflow: hidden;
+    max-height: 371px;
+    margin-bottom: 50px; // TODO
 
     .video-container {
       display: flex;
@@ -71,14 +85,17 @@ export default {
 
     .transcripts-container {
       display: flex;
-      flex: 1 1 100%;
+      flex: 1 2 100%;
       overflow: hidden;
     }
   }
 
   .feed-container {
     display: flex;
-    flex: 0 0 100%;
+    flex: 0 0 738px;
+    position: relative;
+    margin: auto;
+    margin-top: 84px;
   }
 }
 </style>

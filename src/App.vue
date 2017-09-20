@@ -1,15 +1,19 @@
 <template>
   <div id="parlatube">
-    <div class="header">
-      I AM A HEADER
-    </div>
+    <parlatube-header></parlatube-header>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import ParlatubeHeader from 'components/ParlatubeHeader';
+
 export default {
-  name: 'app',
+  name: 'App',
+
+  components: {
+    ParlatubeHeader,
+  },
 };
 </script>
 
@@ -25,4 +29,13 @@ export default {
     flex: 0 0 100%;
   }
 }
+</style>
+<style>
+body {
+  margin: 0;
+}
+</style>
+<style lang="scss">
+@import 'styles/scaffolding';
+@import 'styles/fonts';
 </style>

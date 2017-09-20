@@ -24,7 +24,7 @@ import ParlaVideo from 'components/ParlaVideo';
 import { mapState } from 'vuex';
 
 export default {
-  name: 'playlist',
+  name: 'Playlist',
 
   components: {
     ParlaVideo,

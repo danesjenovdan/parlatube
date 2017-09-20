@@ -10,7 +10,7 @@
 import ParlaVideo from 'components/ParlaVideo';
 
 export default {
-  name: 'snippet',
+  name: 'Snippet',
   data() {
     return {
       videoId: '',

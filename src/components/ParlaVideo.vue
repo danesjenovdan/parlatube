@@ -17,7 +17,7 @@ import YouTubePlayer from 'youtube-player';
 import { mapState, mapGetters } from 'vuex';
 
 export default {
-  name: 'parlavideo',
+  name: 'ParlaVideo',
 
   data() {
     return {
@@ -100,7 +100,7 @@ export default {
 
     player: () => YouTubePlayer('player', {
       width: null,
-      height: null,
+      height: '371px',
     }),
   },
 
@@ -179,6 +179,7 @@ export default {
 
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css?family=Anton&subset=latin-ext');
+@import '../styles/colors';
 
 #video {
   display: flex;
