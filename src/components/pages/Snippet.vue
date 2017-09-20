@@ -1,7 +1,8 @@
 <template>
   <div id="snippet">
-    asdf
-    <parla-video></parla-video>
+    <div class="container">
+      <parla-video height="552"></parla-video>
+    </div>
     <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
   </div>
 </template>
@@ -66,6 +67,14 @@ export default {
   flex: 0 0 100%;
   flex-wrap: wrap;
   overflow: hidden;
+  justify-content: center;
+
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eaeaea+0,eaeaea+50,ffffff+51,ffffff+100 */
+  background: #eaeaea; /* Old browsers */
+  background: -moz-linear-gradient(top, #eaeaea 0%, #eaeaea 17%, #ffffff 17%, #ffffff 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 }
 </style>
 

@@ -19,6 +19,13 @@ import { mapState, mapGetters } from 'vuex';
 export default {
   name: 'ParlaVideo',
 
+  props: {
+    height: {
+      type: Number,
+      default: 371,
+    },
+  },
+
   data() {
     return {
       timeCheckerId: null,
@@ -100,11 +107,18 @@ export default {
 
     player: () => YouTubePlayer('player', {
       width: null,
-      height: '371px',
+      height: `${this.height}px`,
     }),
   },
 
   watch: {
+    height(newHeight) {
+      console.log(newHeight);
+      if (newHeight) {
+        this.player.setSize(null, this.height);
+      }
+    },
+
     seekTo(newSeekTo) {
       if (newSeekTo !== this.oldSeekTo) {
         this.$store.commit('video/UPDATE_OLD_SEEK_TO', newSeekTo);
@@ -169,6 +183,8 @@ export default {
         return true;
       });
     }, 50);
+
+    this.player.setSize(null, this.height);
   },
 
   beforeDestroy() {
