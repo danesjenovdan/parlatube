@@ -1,10 +1,6 @@
 <template>
   <div id="editor">
-    <button @click="editorVisible = !editorVisible">Pripravi svoj izsek</button>
-    <div
-      v-if="editorVisible"
-      :class="['editor-controls-container', { hidden: !editorVisible }]"
-    >
+    <div class="editor-controls-container">
       <slider></slider>
       <div class="row">
         <button
@@ -33,7 +29,6 @@ export default {
 
   data() {
     return {
-      editorVisible: true,
       localDrawingText: '',
       localFontSize: 40,
       colorPickerProps: {
@@ -118,11 +113,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/colors';
+
 #editor {
   display: flex;
   flex: 0 0 100%;
   flex-wrap: wrap;
   overflow: hidden;
+
+  padding-top: 16px;
+  background-color: $gray;
 
   button {
     display: flex;
@@ -131,10 +131,13 @@ export default {
 
   .editor-controls-container  {
     display: flex;
-    flex: 0 0 100%;
+    flex: 1 1 100%;
     margin: auto;
     flex-wrap: wrap;
     overflow: hidden;
+
+    padding-left: 16px;
+    padding-right: 16px;
 
     &.hidden {
       display: none;

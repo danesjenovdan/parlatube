@@ -117,7 +117,7 @@ export default {
     },
   },
 
-  beforeMount() {
+  created() {
     this.$http.get('http://speeches.knedl.si/getSpeeches/1', {
       emulateJSON: true,
     }).then((result) => {

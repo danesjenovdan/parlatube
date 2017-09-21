@@ -369,19 +369,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/colors';
+@import '../styles/scroller';
+
 .slider-container  {
   display: flex;
   flex-wrap: wrap;
-  flex: 0 0 100%;
+  flex: 0 1 100%;
   overflow: hidden;
   position: relative;
+  padding-top: 10px;
 
   .slider-viewport {
     width: 100%;
-    height: 40px;
+    height: 55px; // 44 + 11 for scrollbar
 
-    overflow-x: scroll;
-    overflow-y: hidden;
+    overflow-x: auto;
+    overflow-y: visible;
+
+    @extend %scroller;
 
     .ruler-container {
       height: 100%;
@@ -391,8 +397,7 @@ export default {
 
       .ruler {
         height: 100%;
-        background-color: gray;
-        background: linear-gradient(left, #00ff00, #00aabb);
+        background-color: light-gray;
         cursor: pointer;
         position: relative;
 
@@ -400,8 +405,8 @@ export default {
 
         .seconds {
           width: 100%;
-          background-image: url('../assets/marker.png');
-          background-position: bottom;
+          background: linear-gradient(left, #729fcf 10px, #4c7bb4 20px);
+          background-position-y: center;
           height: 20px;
           top: calc(100% - 20px);
           position: relative;
@@ -410,35 +415,38 @@ export default {
       }
 
       .marked {
-        background: yellow;
-        height: 100%;
+        background: $blue;
+        height: 35px;
         position: absolute;
+        margin-top: 5px;
       }
 
       .marker {
-        height: 100%;
+        height: 35px;
         position: absolute;
-        top: 0;
-        width: 1px;
-        background: black;
-        opacity: 0.6;
+        top: 5px;
+        width: 2px;
+        margin-left: -1px;
+        background: $white;
+        opacity: 1;
 
         z-index: 2;
 
         &:hover {
-          opacity: 1;
+          // TODO
         }
 
-        &.start-marker {
+        &.start-marker,
+        &.end-marker {
+          top: 0;
           left: 0;
-          background: blue;
-          width: 5px;
+          background: $red;
+          width: 11px;
+          height: 44px;
         }
         &.end-marker {
           left: 100%;
-          background: red;
-          margin-left: -5px;
-          width: 5px;
+          margin-left: -11px;
         }
       }
     }

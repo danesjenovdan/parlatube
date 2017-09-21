@@ -1,6 +1,7 @@
 <template>
   <div id="home">
     <div class="container">
+      <div class="intro">Odreži zanimiv del videa in ga deli s prijatelji!</div>
       <div class="video-and-transcripts-container">
         <div class="video-container">
           <parla-video></parla-video>
@@ -69,13 +70,40 @@ export default {
   background: linear-gradient(to bottom, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 
+  .intro {
+    display: flex;
+    flex: 1 1 100%;
+    justify-content: center;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+
+    margin-bottom: 35px;
+
+    &:before,
+    &:after {
+      content: '';
+      width: 43px;
+      height: 100%;
+
+      margin-left: 12px;
+      margin-right: 12px;
+
+      background-image: url('../../assets/izrezi.png');
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    &:after {
+      transform: scale(-1, 1);
+    }
+  }
+
   .video-and-transcripts-container {
     display: flex;
     flex: 1 0 100%;
     flex-wrap: nowrap;
     overflow: hidden;
     max-height: 371px;
-    margin-bottom: 50px; // TODO
 
     .video-container {
       display: flex;
