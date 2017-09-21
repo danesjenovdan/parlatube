@@ -2,17 +2,21 @@
   <div id="editor">
     <div class="editor-controls-container">
       <slider></slider>
-      <div class="row">
-        <button
-          @click="createSnippet"
-        >Izreži!</button>
-      </div>
+    </div>
+    <div class="editor-controls-container">
       <div class="text-stuff">
         <h1>TU SO KONTROLE ZA TEXT OVERLAY</h1>
         <p>Ko enkrat vpišeš tekst, ga lahko z miško premikaš.</p>
         <input type="text" v-model="localDrawingText" placeholder="sem vpiši tekst"/>
         <input type="number" v-model="localFontSize" />
         <color-picker v-model="colorPickerProps" />
+      </div>
+    </div>
+    <div class="editor-controls-container">
+      <div class="row">
+        <button
+          @click="createSnippet"
+        >Izreži!</button>
       </div>
     </div>
   </div>
@@ -146,6 +150,14 @@ export default {
     .row {
       display: flex;
       flex: 0 0 100%;
+    }
+
+    .text-stuff {
+      display: flex;
+      flex: 1 1 100%;
+
+      border-top: 1px solid $light-black;
+      border-bottom: 1px solid $light-black;
     }
   }
 }

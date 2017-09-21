@@ -51,7 +51,7 @@
         <div
           class="slider-zoom-plus slider-button"
           @click="zoomIn"
-        >+</div>
+        ></div>
         <div
           class="start-here slider-button"
           @click.prevent="startHere"
@@ -68,7 +68,7 @@
         <div
           class="slider-zoom-minus slider-button"
           @click="zoomOut"
-        >-</div>
+        ></div>
       </div>
       <div class="slider-zoom-row">
         <input
@@ -475,8 +475,9 @@ export default {
     margin: auto;
     margin-bottom: 20px;
     display: flex;
-    flex: 0 0 100%;
+    flex: 1 1 100%;
     flex-wrap: wrap;
+    margin-top: 23px;
 
     .slider-zoom-row {
       position: relative;
@@ -484,66 +485,97 @@ export default {
       overflow: hidden;
       flex: 0 0 100%;
       justify-content: center;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
     }
 
     .slider-input {
-      width: 38px;
-      height: 38px;
+      width: 76px;
+      height: 33px;
       display: flex;
       text-align: center;
       padding: 0;
-      border: 1px solid #000000;
-      margin: 1px;
+      border: 1px solid $white;
+
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+
+      &:disabled {
+        border-color: $black;
+        margin-left: 6px;
+        margin-right: 6px;
+        color: $black;
+      }
     }
 
     .slider-button {
-      border: 1px solid #ffffff;
-      width: 40px;
-      height: 30px;
-      background: blue;
-      color: #ffffff;
-      line-height: 30px;
-      font-family: Arial, Helvetica, sans-serif;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
+      width: 42px;
+      height: 42px;
+      background: $white;
+      border-radius: 50%;
+      box-shadow: 0 2px 3px rgba(88, 88, 88, 0.35);
 
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-top: 10px;
+ 
       cursor: pointer;
 
+      background-position: center;
+      background-repeat: no-repeat;
+
       &:hover {
-        background-color: rgba(0, 0, 255, 0.5);
+        // TODO
       }
       &:active {
-        background-color: rgba(0, 0, 255, 0.8);
+        // TODO
       }
 
-      &.play:before {
-        content: '▶';
-        display: block;
-        position: relative;
-        margin: auto;
-        color: white;
+      &.slider-zoom-plus,
+      &.slider-zoom-minus {
+        background-image: url('../assets/icons/zoom-in.svg');
+        background-size: 28px;
       }
-      &.pause:before {
-        content: '⏸';
-        display: block;
-        position: relative;
-        margin: auto;
-        color: white;
+      &.slider-zoom-minus {
+        background-image: url('../assets/icons/zoom-out.svg');
       }
-      &.start-here:before {
-        content: '┣';
-        display: block;
-        position: relative;
-        margin: auto;
-        color: white;
+      &.play,
+      &.pause {
+        background-color: $blue;
+        background-image: url('../assets/icons/triangle.svg');
+        background-position-x: 4px;
+        width: 58px;
+        height: 58px;
+        margin-top: 0;
+
+        &:hover {
+          background-color: $light-blue;
+        }
       }
-      &.end-here:before {
-        content: '┫';
+      &.start-here,
+      &.end-here {
+        background-color: $red;
+
+        &:hover {
+          background-color: $light-red;
+        }
+      }
+      &.start-here::before,
+      &.end-here::before {
+        content: '';
         display: block;
-        position: relative;
-        margin: auto;
-        color: white;
+        width: 100%;
+        height: 100%;
+
+        background-image: url('../assets/icons/set-marker.svg');
+        background-size: 50%;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-position-x: 10px;
+        border-radius: 50%;
+      }
+      &.end-here::before {
+        transform: scale(-1, 1);
       }
     }
   }
