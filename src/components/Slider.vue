@@ -451,6 +451,16 @@ export default {
       }
     }
 
+    &::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 35px;
+      background-color: $dark-gray;
+      position: absolute;
+      margin-top: 5px;
+    }
+
   }
 
   .slider-buttons-container {
