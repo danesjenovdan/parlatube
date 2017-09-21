@@ -84,7 +84,7 @@ export default {
     justify-content: space-around;
 
     height: 78px;
-    margin-bottom: 57px;
+    margin-bottom: 44px;
 
     font-family: 'Space Mono', monospace;
     font-size: 26px;

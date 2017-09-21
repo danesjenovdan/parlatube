@@ -259,7 +259,6 @@ export default {
 
 .highlight {
   font-weight: bold;
-  background-color: yellow;
 }
 
 .speeches-container {

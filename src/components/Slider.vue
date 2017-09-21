@@ -41,7 +41,7 @@
 
           <div
             class="seconds"
-            :style="{'background-size': `${localStepSize}px ${localStepSize}px`}">
+            :style="{'background-size': `${localStepSize}px ${localStepSize}px`, left: `${localStartMarkerPosition}px`, width: `${localEndMarkerPosition - localStartMarkerPosition}px`}">
           </div>
         </div>
       </div>
@@ -382,7 +382,7 @@ export default {
 
   .slider-viewport {
     width: 100%;
-    height: 55px; // 44 + 11 for scrollbar
+    height: 56px; // 44 + 11 for scrollbar + 1 for margin
 
     overflow-x: auto;
     overflow-y: visible;
@@ -405,12 +405,19 @@ export default {
 
         .seconds {
           width: 100%;
-          background: linear-gradient(left, #729fcf 10px, #4c7bb4 20px);
           background-position-y: center;
-          height: 20px;
-          top: calc(100% - 20px);
+          height: 35px;
+          top: 5px;
           position: relative;
           // transition: all 0.5s linear;
+
+          opacity: 0.4;
+
+          background-image: linear-gradient(left, #ffffff 1px, $blue 1px);
+          background-image: -webkit-linear-gradient(left, #ffffff 1px, $blue 1px);
+          background-image: -moz-linear-gradient(left, #ffffff 1px, $blue 1px);
+          background-image: -o-linear-gradient(left, #ffffff 1px, $blue 1px);
+          background-image: -ms-linear-gradient(left, #ffffff 1px, $blue 1px);
         }
       }
 
