@@ -3,11 +3,15 @@
     <div class="container">
       <parla-video height="552"></parla-video>
     </div>
-    <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
+    <div class="feed-container">
+      <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
+    </div>
   </div>
 </template>
 
 <script>
+/* globals FB */
+
 import ParlaVideo from 'components/ParlaVideo';
 
 export default {
@@ -20,6 +24,9 @@ export default {
 
   components: {
     ParlaVideo,
+  },
+
+  methods: {
   },
 
   mounted() {
@@ -51,6 +58,10 @@ export default {
     }, () => {
       // an error occured when trying to get snippet info from server
     });
+
+    if (FB) {
+      FB.XFBML.parse(this.$el);
+    }
   },
 
   created() {
@@ -75,6 +86,14 @@ export default {
   background: -webkit-linear-gradient(top, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to bottom, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+
+  .feed-container {
+    display: flex;
+    flex: 0 0 738px;
+    position: relative;
+    margin: auto;
+    margin-top: 84px;
+  }
 }
 </style>
 
