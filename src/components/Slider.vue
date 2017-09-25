@@ -11,8 +11,9 @@
       <div class="ruler-container">
         <div
           class="ruler"
-          v-bind:style="{width: `${duration * localStepSize}px`}"
+          v-bind:style="{width: `${(duration * localStepSize)}px`}"
           @mousedown="rulerDown"
+          ref="ruler"
         >
           <div
             class="marker start-marker"
@@ -41,7 +42,7 @@
 
           <div
             class="seconds"
-            :style="{'background-size': `${localStepSize}px ${localStepSize}px`, left: `${localStartMarkerPosition}px`, width: `${localEndMarkerPosition - localStartMarkerPosition}px`}">
+            :style="{'background-size': `${localStepSize}px ${localStepSize}px`}">
           </div>
         </div>
       </div>
@@ -216,7 +217,7 @@ export default {
     duration(newDuration) {
       this.numberOfSeconds = Math.floor(newDuration);
       if (newDuration && (newDuration > 0)) {
-        this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / newDuration;
+        this.localStepSize = (this.$refs.viewport.getBoundingClientRect().width - 10) / newDuration;
         this.baseLocalStepSize = this.localStepSize;
       }
 
@@ -232,7 +233,9 @@ export default {
         const perfectRulerOffset = (this.localTimeMarkerPosition) -
           ((this.$refs.viewport.getBoundingClientRect().width / 2));
 
-        if ((this.$refs.viewport.getBoundingClientRect().width +
+        if (newLocalStepSize === this.baseLocalStepSize) {
+          this.rulerOffset = 0;
+        } else if ((this.$refs.viewport.getBoundingClientRect().width +
           perfectRulerOffset) <= (this.duration * newLocalStepSize)) {
           this.rulerOffset = perfectRulerOffset;
         } else if (this.localTimeMarkerPosition >
@@ -312,7 +315,7 @@ export default {
     },
 
     seekHere(event) {
-      const whereToSeek = ((event.clientX + this.rulerOffset) -
+      const whereToSeek = ((event.clientX + this.rulerOffset) - 5 -
         this.$refs.viewport.getBoundingClientRect().left) / this.localStepSize;
 
       this.$store.commit('video/UPDATE_SEEK_TO', whereToSeek);
@@ -351,7 +354,7 @@ export default {
     },
 
     updateBaseLocalStepSize() {
-      this.baseLocalStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
+      this.baseLocalStepSize = (this.$refs.viewport.getBoundingClientRect().width - 10) / this.duration; // eslint-disable-line max-len
     },
 
     padZeroes: text => (text.length < 2 ? `0${text}` : text),
@@ -361,7 +364,7 @@ export default {
   },
 
   mounted() {
-    this.localStepSize = this.$refs.viewport.getBoundingClientRect().width / this.duration;
+    this.localStepSize = (this.$refs.viewport.getBoundingClientRect().width - 10) / this.duration;
     this.baseLocalStepSize = this.localStepSize;
     this.rulerOffset = 0;
   },
@@ -390,10 +393,13 @@ export default {
     @extend %scroller;
 
     .ruler-container {
+      display: block;
+      // width: calc(100% - 10px);
       height: 100%;
       position: relative;
-      display: block;
-      float: left;
+      // float: left;
+      padding-left: 5px;
+      padding-right: 5px;
 
       .ruler {
         height: 100%;
@@ -408,16 +414,12 @@ export default {
           background-position-y: center;
           height: 35px;
           top: 5px;
-          position: relative;
+          position: absolute;
           // transition: all 0.5s linear;
 
           opacity: 0.4;
 
-          background-image: linear-gradient(left, #ffffff 1px, $blue 1px);
-          background-image: -webkit-linear-gradient(left, #ffffff 1px, $blue 1px);
-          background-image: -moz-linear-gradient(left, #ffffff 1px, $blue 1px);
-          background-image: -o-linear-gradient(left, #ffffff 1px, $blue 1px);
-          background-image: -ms-linear-gradient(left, #ffffff 1px, $blue 1px);
+          background-image: linear-gradient(to left, #ffffff 1px, rgba(255, 255, 255, 0) 1px);
         }
       }
 
@@ -439,6 +441,8 @@ export default {
 
         z-index: 2;
 
+        // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+
         &:hover {
           // TODO
         }
@@ -450,22 +454,41 @@ export default {
           background: $red;
           width: 11px;
           height: 44px;
+
+          margin-left: -6px;
+
+          &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 5px;
+            left: 6px;
+            width: 6px;
+            height: 35px;
+            background-color: $blue;
+          }
         }
         &.end-marker {
           left: 100%;
-          margin-left: -11px;
+          // margin-left: -16px;
+
+          &:after {
+            left: 0;
+          }
         }
       }
     }
 
     &::before {
       content: '';
-      display: block;
-      width: 100%;
+      display: flex;
+      flex: 1 1 100%;
+      width: calc(100% - 10px);
       height: 35px;
       background-color: $dark-gray;
       position: absolute;
       margin-top: 5px;
+      left: 5px;
     }
 
   }

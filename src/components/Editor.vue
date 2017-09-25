@@ -126,6 +126,13 @@ export default {
       this.colorPickerLeft = this.$refs.colorpicker.getBoundingClientRect().left - 62 - 6;
       this.colorPickerVisible = !this.colorPickerVisible;
     },
+
+    resetState() {
+      // this.$store.commit('video/RESET_STATE');
+      // this.$store.commit('editor/RESET_STATE');
+      // this.$store.commit('drawing/RESET_STATE');
+      alert('a sploh rabimo ta gumb?');
+    },
   },
 
   watch: {
