@@ -267,7 +267,8 @@ export default {
 
       this.currentX = event.clientX;
 
-      if ((this.localStartMarkerPosition + diffX) >= 0) {
+      if (((this.localStartMarkerPosition + diffX) >= 0) &&
+        ((this.localStartMarkerPosition + diffX) < (this.localEndMarkerPosition - 10))) {
         this.localStartMarkerPosition = (this.localStartMarkerPosition + diffX);
       }
     },
@@ -290,7 +291,8 @@ export default {
 
       this.currentX = event.clientX;
 
-      if ((this.localEndMarkerPosition + diffX) <= ((this.duration * this.localStepSize))) {
+      if ((this.localEndMarkerPosition + diffX) <= ((this.duration * this.localStepSize)) &&
+        ((this.localEndMarkerPosition + diffX) > (this.localStartMarkerPosition + 10))) {
         this.localEndMarkerPosition = this.localEndMarkerPosition + diffX;
       }
     },
@@ -463,7 +465,7 @@ export default {
             position: absolute;
             top: 5px;
             left: 6px;
-            width: 6px;
+            width: 5px;
             height: 35px;
             background-color: $blue;
           }
