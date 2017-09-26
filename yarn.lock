@@ -6344,6 +6344,10 @@ vue-color@^2.4.0:
     material-colors "^1.0.0"
     tinycolor2 "^1.1.2"
 
+vue-draggable-resizable@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/vue-draggable-resizable/-/vue-draggable-resizable-1.5.0.tgz#51db186f26f28fe437a35be04e47ac1b25d0d13a"
+
 vue-hot-reload-api@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.1.0.tgz#9ca58a6e0df9078554ce1708688b6578754d86de"

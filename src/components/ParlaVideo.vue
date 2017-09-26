@@ -2,12 +2,24 @@
     <div id="video">
       <div id="player"></div>
       <div id="drawing-container">
-        <div
+        <vue-draggable-resizable
+          :w="100"
+          :h="100"
+          :x="100"
+          :y="100"
+          v-on:dragging=""
+          v-on:resizing=""
+          :parent="true"
+          id="drawing"
+        >
+          {{ drawingText }}
+        </vue-draggable-resizable>
+        <!-- <div
           id="drawing"
           :style="{transform: `translate(${drawingX}px, ${drawingY}px)`, 'font-size': `${fontSize}px`, color: color}"
           @mousedown.prevent="onDrawingMouseDown"
           @touchstart.prevent="onDrawingTouchStart"
-        >{{ drawingText }}</div>
+        >{{ drawingText }}</div> -->
       </div>
     </div>
 </template>
@@ -15,9 +27,14 @@
 <script>
 import YouTubePlayer from 'youtube-player';
 import { mapState, mapGetters } from 'vuex';
+import VueDraggableResizable from 'vue-draggable-resizable';
 
 export default {
   name: 'ParlaVideo',
+
+  components: {
+    VueDraggableResizable,
+  },
 
   props: {
     height: {
@@ -219,6 +236,7 @@ export default {
       top: 45%;
       left: 45%;
       color: #ffffff;
+      // overflow: hidden;
     }
   }
 }

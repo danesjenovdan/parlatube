@@ -7,7 +7,7 @@
       <div class="text-stuff">
         <div class="row">
           <label for="drawing-text">Besedilo čez video</label>
-          <input id="drawing-text" type="text" v-model="localDrawingText"/>
+          <textarea id="drawing-text" type="text" v-model="localDrawingText"></textarea>
           <div
             class="colorpicker"
             @click="showColorPicker"
