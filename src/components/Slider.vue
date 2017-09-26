@@ -577,6 +577,10 @@ export default {
           background-color: $light-blue;
         }
       }
+      &.pause {
+        background-image: url('../assets/icons/pause.svg');
+        background-position-x: 0.5px;
+      }
       &.start-here,
       &.end-here {
         background-color: $red;

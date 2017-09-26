@@ -90,12 +90,13 @@ export default {
       margin-left: 12px;
       margin-right: 12px;
 
-      background-image: url('../../assets/izrezi.png');
+      background-image: url('../../assets/icons/cut.svg');
       background-position: center;
       background-repeat: no-repeat;
+      transform: scale(-1, 1);
     }
     &:after {
-      transform: scale(-1, 1);
+      transform: scale(1, 1);
     }
   }
 

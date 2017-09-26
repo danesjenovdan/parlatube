@@ -2,7 +2,7 @@
   <div id="header">
     <div class="container">
       <div id="logo">
-        <img src="../assets/logo.png">
+        <img src="../assets/logo.svg">
         <p><strong>predsedniška</strong><br>soočenja 2017</p>
       </div>
       <div id="partners">
@@ -50,6 +50,8 @@ export default {
 
     img {
       display: inline-block;
+      width: 79px;
+      height: 58px;
     }
 
     p {
