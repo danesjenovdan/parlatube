@@ -46,6 +46,26 @@
           <label for="title-text">Naslov objave</label>
           <input id="title-text" type="text" v-model="localTitleText"/>
         </div>
+        <div class="row">
+          <label></label>
+          <div
+            :class="['emoji-button', { visible: emojiPickerVisible }]"
+            @click="emojiPickerVisible = !emojiPickerVisible"
+          >
+            Dodaj emoji
+            <picker
+              :emoji-size="16"
+              :per-line="9"
+              :skin="1"
+              :native="false"
+              set="emojione"
+              :exclude="['recent']"
+              :class="['emojipicker', { visible: emojiPickerVisible }]"
+              :i18n="i18n_si"
+              @click="pickEmoji"
+            ></picker>
+          </div>
+        </div>
       </div>
     </div>
     <div class="editor-controls-container">
@@ -65,8 +85,9 @@
 
 <script>
 import 'element-ui/lib/theme-default/index.css';
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import { Compact } from 'vue-color';
+import { Picker } from 'emoji-mart-vue';
 import Slider from './Slider';
 
 export default {
@@ -84,12 +105,31 @@ export default {
       colorPickerVisible: false,
       fontOptions: [10, 20, 30, 40, 50, 60, 70, 80, 90],
       displayFontOptions: false,
+      emojiPickerVisible: false,
+      i18n_si: {
+        search: 'Išči ...',
+        notfound: 'Ne najdem nobenega',
+        categories: {
+          search: 'Rezultati iskanja',
+          recent: 'Pogosto uporabljeni',
+          people: 'Smajliji in ljudje',
+          nature: 'Živali in narava',
+          foods: 'Hrana in pijača',
+          activity: 'Aktivnosti',
+          places: 'Potovanja in kraji',
+          objects: 'Predmeti',
+          symbols: 'Simboli',
+          flags: 'Zastave',
+          custom: 'Posebneži',
+        },
+      },
     };
   },
 
   components: {
     Slider,
     'color-picker': Compact,
+    Picker,
   },
 
   computed: {
@@ -97,10 +137,6 @@ export default {
       duration: 'video/durationGetter',
       loopStart: 'editor/startMarkerGetter',
       loopEnd: 'editor/endMarkerGetter',
-    }),
-
-    ...mapState({
-      drawing: state => state.drawing,
     }),
   },
 
@@ -110,7 +146,7 @@ export default {
         video_id: 1,
         start_time: this.loopStart * 1000,
         end_time: this.loopEnd * 1000,
-        extras: JSON.stringify(this.drawing),
+        extras: JSON.stringify(this.$store.state.drawing),
         published: 1,
         looping: 1,
       };
@@ -133,6 +169,11 @@ export default {
       // this.$store.commit('editor/RESET_STATE');
       // this.$store.commit('drawing/RESET_STATE');
       alert('a sploh rabimo ta gumb?');
+    },
+
+    pickEmoji(stuff) {
+      console.log(stuff);
+      this.$store.commit('drawing/UPDATE_EMOJI', stuff.unified);
     },
   },
 
@@ -163,24 +204,23 @@ export default {
   display: flex;
   flex: 0 0 100%;
   flex-wrap: wrap;
-  overflow: hidden;
 
   padding-top: 16px;
   background-color: $gray;
 
   .editor-controls-container  {
     display: flex;
-    flex: 1 1 100%;
+    flex: 0 1 100%;
     margin: auto;
     flex-wrap: wrap;
-    overflow: hidden;
 
     padding-left: 16px;
     padding-right: 16px;
 
+
     .row {
       display: flex;
-      flex: 0 0 100%;
+      flex: 0 1 100%;
       position: relative;
     }
 
@@ -341,6 +381,68 @@ export default {
             color: $white;
           }
         }
+      }
+    }
+
+    .emoji-button {
+      position: relative;
+      display: flex;
+      flex: 0 1 171px;
+      height: 33px;
+      background-color: $blue;
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+      color: $white;
+      font-weight: 700;
+      text-align: center;
+      line-height: 33px;
+      padding-left: 18px;
+      letter-spacing: 0.96px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $light-blue;
+      }
+
+      &::after {
+        content: '';
+        width: 20px;
+        background-image: url('../assets/icons/emoji.png');
+        background-size: 20px 20px;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin-left: 13px;
+      }
+
+      &.visible::before {
+        content: '';
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 6px 8px 6px;
+        border-color: transparent transparent #ffffff transparent;
+        position: absolute;
+        bottom: -10px;
+        left: 15px;
+        display: block;
+        z-index: 3;
+      }
+    }
+    .emojipicker {
+      position: absolute;
+      display: none;
+      left: 0;
+      top: 43px;
+      border-radius: 0;
+      width: 257px;
+      height: 291px;
+      z-index: 2;
+      overflow-y: hidden;
+      border: none;
+      box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.35);
+
+      &.visible {
+        display: block;
       }
     }
 

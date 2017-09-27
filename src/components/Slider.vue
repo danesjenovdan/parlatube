@@ -380,10 +380,11 @@ export default {
 .slider-container  {
   display: flex;
   flex-wrap: wrap;
-  flex: 0 1 100%;
+  flex: 0 1 949px;
   overflow: hidden;
   position: relative;
   padding-top: 10px;
+  overflow: hidden;
 
   .slider-viewport {
     width: 100%;

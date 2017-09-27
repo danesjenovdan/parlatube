@@ -5,28 +5,37 @@ const namespaced = true;
 
 // initial state
 const state = {
-  x: 0,
-  y: 0,
-  width: 100,
-  height: 100,
+  textX: 0,
+  textY: 0,
+  textWidth: 200,
+  textHeight: 33,
   text: '',
   fontSize: 40,
   color: '#bc2a2a',
+
+  emojiX: 0,
+  emojiY: 0,
+  emojiWidth: 40,
+  emojiHeight: 40,
+  emoji: '',
+
+  videoWidth: 0,
+  videoHeight: 0,
 };
 
 // mutations
 const mutations = {
-  UPDATE_X(state, newX) {
-    state.x = newX;
+  UPDATE_TEXT_X(state, newTextX) {
+    state.textX = newTextX;
   },
-  UPDATE_Y(state, newY) {
-    state.y = newY;
+  UPDATE_TEXT_Y(state, newTextY) {
+    state.textY = newTextY;
   },
-  UPDATE_WIDTH(state, newWidth) {
-    state.width = newWidth;
+  UPDATE_TEXT_WIDTH(state, newTextWidth) {
+    state.textWidth = newTextWidth;
   },
-  UPDATE_HEIGHT(state, newHeight) {
-    state.height = newHeight;
+  UPDATE_TEXT_HEIGHT(state, newTextHeight) {
+    state.textHeight = newTextHeight;
   },
   UPDATE_TEXT(state, newText) {
     state.text = newText;
@@ -37,19 +46,63 @@ const mutations = {
   UPDATE_COLOR(state, newColor) {
     state.color = newColor;
   },
+
+  UPDATE_EMOJI_X(state, newEmojiX) {
+    state.emojiX = newEmojiX;
+  },
+  UPDATE_EMOJI_Y(state, newEmojiY) {
+    state.emojiY = newEmojiY;
+  },
+  UPDATE_EMOJI_WIDTH(state, newEmojiWidth) {
+    state.emojiWidth = newEmojiWidth;
+  },
+  UPDATE_EMOJI_HEIGHT(state, newEmojiHeight) {
+    state.emojiHeight = newEmojiHeight;
+  },
+  UPDATE_EMOJI(state, newEmoji) {
+    state.emoji = newEmoji;
+  },
+
+  UPDATE_VIDEO_SIZE(state, newVideoSizes) {
+    state.videoWidth = newVideoSizes.width;
+    state.videoHeight = newVideoSizes.height;
+  },
+
   UPDATE_STATE(state, newState) {
-    state.x = newState.x;
-    state.y = newState.y;
+    state.textX = newState.textX;
+    state.textY = newState.textY;
+    state.textWidth = newState.textWidth;
+    state.textHeight = newState.textHeight;
     state.text = newState.text;
     state.fontSize = newState.fontSize;
     state.color = newState.color;
+
+    state.emojiX = newState.emojiX;
+    state.emojiY = newState.emojiY;
+    state.emojiWidth = newState.emojiWidth;
+    state.emojiHeight = newState.emojiHeight;
+    state.emoji = newState.emoji;
+
+    state.videoWidth = newState.videoWidth;
+    state.videoHeight = newState.videoHeight;
   },
   RESET_STATE(state) {
-    state.x = 0;
-    state.y = 0;
+    state.textX = 0;
+    state.textY = 0;
+    state.textWidth = 100;
+    state.textHeight = 33;
     state.text = '';
     state.fontSize = 40;
     state.color = '#bc2a2a';
+
+    state.emojiX = 0;
+    state.emojiY = 0;
+    state.emojiWidth = 40;
+    state.emojiHeight = 40;
+    state.emoji = '';
+
+    state.videoWidth = 0;
+    state.videoHeight = 0;
   },
 };
 
