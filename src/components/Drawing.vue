@@ -78,11 +78,17 @@ export default {
       this.$store.commit('drawing/UPDATE_TEXT_Y', top);
       this.$store.commit('drawing/UPDATE_TEXT_WIDTH', width);
       this.$store.commit('drawing/UPDATE_TEXT_HEIGHT', height);
+
+      const rect = this.$el.getBoundingClientRect();
+      this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
     },
 
     onEmojiDragStop(left, top) {
       this.$store.commit('drawing/UPDATE_EMOJI_X', left);
       this.$store.commit('drawing/UPDATE_EMOJI_Y', top);
+
+      const rect = this.$el.getBoundingClientRect();
+      this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
     },
 
     onEmojiResizeStop(left, top, width, height) {
@@ -90,6 +96,9 @@ export default {
       this.$store.commit('drawing/UPDATE_EMOJI_Y', top);
       this.$store.commit('drawing/UPDATE_EMOJI_WIDTH', width);
       this.$store.commit('drawing/UPDATE_EMOJI_HEIGHT', height);
+
+      const rect = this.$el.getBoundingClientRect();
+      this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
     },
 
     manipulateTextSize() {
@@ -136,6 +145,8 @@ export default {
         emoji.top = localEmojiY;
         emoji.width = localEmojiWidth;
         emoji.height = localEmojiHeight;
+
+        console.log(localEmojiX, localEmojiY, localEmojiWidth, localEmojiHeight);
       }
     },
   },

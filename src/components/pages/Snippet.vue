@@ -44,6 +44,7 @@ export default {
 
       // update drawing
       const processedExtras = JSON.parse(snippetSuccess.data.extras.replace(/&#34;/g, '"'));
+      console.log(processedExtras);
       this.$store.commit('drawing/UPDATE_STATE', processedExtras);
 
       this.$http.get(`http://snippet.knedl.si/getVideo?id=${snippetSuccess.data.video_id}`, {
