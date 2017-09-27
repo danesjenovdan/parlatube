@@ -14,13 +14,33 @@
             ref="colorpicker"
           >
             <div class="color" :style="{ 'background-color': colorPickerProps.hex }"></div>
+            <color-picker
+              v-model="colorPickerProps"
+              :class="{ visible: colorPickerVisible }"
+              ref="colorPalette"
+            />
           </div>
-          <color-picker
-            v-model="colorPickerProps"
-            :class="{ visible: colorPickerVisible }"
-            :style="{ left: `${colorPickerLeft}px` }"
-            ref="colorPalette"
-          />
+          <div
+            class="font-size-picker"
+            @click="displayFontOptions = !displayFontOptions"
+          >
+            <input
+              v-model="localFontSize"
+              @focus="displayFontOptions = true"
+              @blur="displayFontOptions = false"
+              @click.stop
+            >
+            <div
+              class="font-options"
+              v-if="displayFontOptions"
+            >
+              <div
+                class="font-option"
+                v-for="option in fontOptions"
+                @click="localFontSize = option"
+              >{{ option }} px</div>
+            </div>
+          </div>
         </div>
         <div class="row">
           <label for="title-text">Naslov objave</label>
@@ -57,30 +77,13 @@ export default {
       localDrawingText: '',
       localTitleText: '',
       localFontSize: 40,
-      colorPickerLeft: 0,
+      // colorPickerLeft: 0,
       colorPickerProps: {
-        hex: '#000000',
-        hsl: {
-          h: 150,
-          s: 0.5,
-          l: 0.2,
-          a: 1,
-        },
-        hsv: {
-          h: 150,
-          s: 0.66,
-          v: 0.30,
-          a: 1,
-        },
-        rgba: {
-          r: 25,
-          g: 77,
-          b: 51,
-          a: 1,
-        },
-        a: 1,
+        hex: '#bc2a2a',
       },
       colorPickerVisible: false,
+      fontOptions: [10, 20, 30, 40, 50, 60, 70, 80, 90],
+      displayFontOptions: false,
     };
   },
 
@@ -122,8 +125,6 @@ export default {
     },
 
     showColorPicker() {
-      console.log(this.$refs.colorpicker.getBoundingClientRect());
-      this.colorPickerLeft = this.$refs.colorpicker.getBoundingClientRect().left - 62 - 6;
       this.colorPickerVisible = !this.colorPickerVisible;
     },
 
@@ -143,6 +144,7 @@ export default {
       this.$store.commit('drawing/UPDATE_FONT_SIZE', newLocalFontSize);
     },
     colorPickerProps(newColorPickerProps) {
+      console.log('ping');
       this.$store.commit('drawing/UPDATE_COLOR', newColorPickerProps.hex);
     },
   },
@@ -209,7 +211,7 @@ export default {
         display: flex;
         flex: 0 0 212px;
       }
-      input {
+      input, textarea {
         border: none;
         background: $white;
         font-family: 'Space Mono', monospace;
@@ -222,6 +224,9 @@ export default {
 
         display: flex;
         flex: 0 1 429px;
+      }
+      textarea {
+        height: 66px;
       }
 
       .colorpicker {
@@ -245,6 +250,7 @@ export default {
           position: absolute;
           top: 6px;
           left: 6px;
+          border: 1px solid $gray;
         }
 
         &::after {
@@ -263,17 +269,77 @@ export default {
       .vc-compact {
         display: none;
         z-index: 2;
-        position: absolute;
+        position: relative;
         top: 33px;
         border-radius: 0;
 
         width: 56px;
         height: 56px;
+        box-shadow: none;
 
         &.visible {
           display: flex;
+        }
+      }
 
-          box-shadow: none;
+      .font-size-picker {
+        position: relative;
+
+        input {
+          max-width: 73px;
+          // flex: 0 2;
+          padding-left: 10px;
+          padding-right: 0;
+          margin-left: 14px;
+          font-weight: 400;
+          font-size: 14px;
+        }
+
+        &::before {
+          content: ' px';
+          display: block;
+          position: absolute;
+          top: 0;
+          right: 30px;
+          
+          font-family: 'Space Mono', monospace;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 33px;
+
+        }
+
+        &::after {
+          content: '';
+          display: block;
+          position: absolute;
+          width: 13px;
+          height: 8px;
+          top: 14px;
+          right: 11px;
+
+          background-image: url('../assets/v.png');
+        }
+      }
+      .font-options {
+        background-color: $white;
+        position: relative;
+        margin-left: 14px;
+        height: 33px;
+        overflow-y: auto;
+        @extend %scroller;
+        text-align: left;
+        font-family: 'Space Mono', monospace;
+        font-size: 14px;
+
+        .font-option {
+          cursor: pointer;
+          padding-left: 10px;
+
+          &:hover {
+            background-color: $black;
+            color: $white;
+          }
         }
       }
     }

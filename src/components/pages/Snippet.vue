@@ -1,7 +1,7 @@
 <template>
   <div id="snippet">
     <div class="container">
-      <parla-video height="552"></parla-video>
+      <parla-video height="552" :disableEditing="true"></parla-video>
     </div>
     <div class="feed-container">
       <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>

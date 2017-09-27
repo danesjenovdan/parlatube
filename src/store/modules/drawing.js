@@ -7,9 +7,11 @@ const namespaced = true;
 const state = {
   x: 0,
   y: 0,
+  width: 100,
+  height: 100,
   text: '',
   fontSize: 40,
-  color: '#ffffff',
+  color: '#bc2a2a',
 };
 
 // mutations
@@ -19,6 +21,12 @@ const mutations = {
   },
   UPDATE_Y(state, newY) {
     state.y = newY;
+  },
+  UPDATE_WIDTH(state, newWidth) {
+    state.width = newWidth;
+  },
+  UPDATE_HEIGHT(state, newHeight) {
+    state.height = newHeight;
   },
   UPDATE_TEXT(state, newText) {
     state.text = newText;
@@ -41,7 +49,7 @@ const mutations = {
     state.y = 0;
     state.text = '';
     state.fontSize = 40;
-    state.color = '#ffffff';
+    state.color = '#bc2a2a';
   },
 };
 
