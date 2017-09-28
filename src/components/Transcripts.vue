@@ -77,16 +77,16 @@ export default {
       this.scrollTranscripts = false;
       this.$refs.speechesContainer.scrollTop = 0;
 
-      const highlightingRegex = new RegExp(term, 'g'); // TODO highlighting hack
-      this.$http.get(`http://speeches.knedl.si/q/${term}`).then((result) => {
+      this.$http.get(`http://speeches.knedl.si/q/1/${term}`).then((result) => {
+        console.log(result);
         if (result.data.length > 0) {
           this.transcripts = result.data
           .sort((a, b) => a.start_time_stamp - b.start_time_stamp)
           .map(speech => ({
-            content: speech.content.replace(highlightingRegex, `<span class="highlight">${term}</span>`), // TODO highlighting hack
+            content: speech.content_t,
             end_time_stamp: speech.timestamp_start,
             start_time_stamp: speech.timestamp_start,
-            image_url: speech.speaker_url,
+            image_url: `http://speeches.knedl.si${speech.speaker_url}`,
             id: speech.id,
             name: speech.speaker_name,
           }));
@@ -121,7 +121,16 @@ export default {
     this.$http.get('http://speeches.knedl.si/getSpeeches/1', {
       emulateJSON: true,
     }).then((result) => {
-      this.transcripts = result.data.sort((a, b) => a.start_time_stamp - b.start_time_stamp);
+      this.transcripts = result.data
+        .sort((a, b) => a.start_time_stamp - b.start_time_stamp)
+        .map(speech => ({
+          content: speech.content,
+          end_time_stamp: speech.end_time_stamp,
+          start_time_stamp: speech.start_time_stamp,
+          image_url: `http://speeches.knedl.si${speech.image_url}`,
+          id: speech.id,
+          name: speech.name,
+        }));
       this.allSpeeches = this.transcripts;
     });
   },
@@ -257,8 +266,9 @@ export default {
 @import '../styles/colors';
 @import '../styles/scroller';
 
-.highlight {
-  font-weight: bold;
+.speech-content p em {
+  font-weight: 700;
+  font-style: normal;
 }
 
 .speeches-container {

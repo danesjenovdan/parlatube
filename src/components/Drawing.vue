@@ -1,14 +1,14 @@
 <template>
-  <div id="drawing-container" @click="manipulateTextSize">
+  <div id="drawing-container">
     <vue-draggable-resizable
-      v-if="drawingText !== ''"
-      :x="$store.state.drawing.textX"
-      :y="$store.state.drawing.textY"
-      :w="$store.state.drawing.textWidth"
-      :h="$store.state.drawing.textHeight"
+      v-if="(drawingText !== '') && videoPlaying"
+      :x="10"
+      :y="300"
+      :w="620"
+      :h="50"
       @dragstop="onTextDragStop"
       @resizestop="onTextResizeStop"
-      :parent="false"
+      :parent="true"
       id="text"
       :class="{ editable: textEditable }"
       :draggable="!disableEditing"
@@ -18,17 +18,18 @@
       {{ drawingText }}
     </vue-draggable-resizable>
     <vue-draggable-resizable
-      v-if="selectedEmoji !== ''"
-      :x="$store.state.drawing.emojiX"
-      :y="$store.state.drawing.emojiY"
-      :w="$store.state.drawing.emojiWidth"
-      :h="$store.state.drawing.emojiHeight"
+      v-if="(selectedEmoji !== '') && videoPlaying"
+      :x="300"
+      :y="300"
+      :w="40"
+      :h="40"
       @dragstop="onEmojiDragStop"
       @resizestop="onEmojiResizeStop"
-      :parent="false"
+      :parent="true"
       id="emoji"
       :draggable="!disableEditing"
       :resizable="!disableEditing"
+      @mounted="emojiMounted"
     >
       <div
         id="emoji-image"
@@ -36,6 +37,7 @@
       >
       </div>
     </vue-draggable-resizable>
+    <button @click="manipulateSizes">FIXME</button>
   </div>
 </template>
 
@@ -101,15 +103,12 @@ export default {
       this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
     },
 
-    manipulateTextSize() {
+    manipulateSizes() {
       const rect = this.$el.getBoundingClientRect();
       const text = this.$children
-        .filter(child => child.left === this.$store.state.drawing.textX)[0];
+        .filter(child => child.$el.innerText !== '')[0];
       const emoji = this.$children
-        .filter(child => child.left === this.$store.state.drawing.emojiX)[0];
-
-      console.log(text);
-      console.log(emoji);
+        .filter(child => child !== text)[0];
 
       if (text) {
         const localTextX = (this.$store.state.drawing.textX /
@@ -145,9 +144,11 @@ export default {
         emoji.top = localEmojiY;
         emoji.width = localEmojiWidth;
         emoji.height = localEmojiHeight;
-
-        console.log(localEmojiX, localEmojiY, localEmojiWidth, localEmojiHeight);
       }
+    },
+
+    emojiMounted() {
+      console.log('ping');
     },
   },
 
@@ -157,12 +158,25 @@ export default {
       fontSize: state => state.drawing.fontSize,
       color: state => state.drawing.color,
       selectedEmoji: state => state.drawing.emoji,
+      videoPlaying: state => state.video.playing,
     }),
 
     textEditable() {
-      console.log(!this.disableEditing && (this.drawingText !== ''));
       return (!this.disableEditing && (this.drawingText !== ''));
     },
+  },
+
+  watch: {
+    videoPlaying(newVideoPlaying) {
+      if (newVideoPlaying) {
+        this.manipulateSizes();
+      }
+    },
+  },
+
+  mounted() {
+    const rect = this.$el.getBoundingClientRect();
+    this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
   },
 };
 </script>

@@ -37,7 +37,7 @@
               <div
                 class="font-option"
                 v-for="option in fontOptions"
-                @click="localFontSize = option"
+                @click.stop="updateLocalFontSize(option)"
               >{{ option }} px</div>
             </div>
           </div>
@@ -171,9 +171,13 @@ export default {
       alert('a sploh rabimo ta gumb?');
     },
 
-    pickEmoji(stuff) {
-      console.log(stuff);
-      this.$store.commit('drawing/UPDATE_EMOJI', stuff.unified);
+    pickEmoji(emoji) {
+      this.$store.commit('drawing/UPDATE_EMOJI', emoji.unified);
+    },
+
+    updateLocalFontSize(newLocalFontSize) {
+      this.localFontSize = newLocalFontSize;
+      this.displayFontOptions = false;
     },
   },
 
@@ -185,7 +189,6 @@ export default {
       this.$store.commit('drawing/UPDATE_FONT_SIZE', newLocalFontSize);
     },
     colorPickerProps(newColorPickerProps) {
-      console.log('ping');
       this.$store.commit('drawing/UPDATE_COLOR', newColorPickerProps.hex);
     },
   },
@@ -314,7 +317,7 @@ export default {
         border-radius: 0;
 
         width: 56px;
-        height: 56px;
+        height: 76px;
         box-shadow: none;
 
         &.visible {
@@ -324,6 +327,7 @@ export default {
 
       .font-size-picker {
         position: relative;
+        height: 33px;
 
         input {
           max-width: 73px;
@@ -365,12 +369,13 @@ export default {
         background-color: $white;
         position: relative;
         margin-left: 14px;
-        height: 33px;
+        height: 81px;
         overflow-y: auto;
         @extend %scroller;
         text-align: left;
         font-family: 'Space Mono', monospace;
         font-size: 14px;
+        z-index: 2;
 
         .font-option {
           cursor: pointer;

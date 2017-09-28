@@ -73,7 +73,6 @@ export default {
 
   watch: {
     height(newHeight) {
-      console.log(newHeight);
       if (newHeight) {
         this.player.setSize(null, this.height).then(() => {
           const rect = this.$el.getBoundingClientRect();
