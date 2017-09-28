@@ -5,16 +5,16 @@ const namespaced = true;
 
 // initial state
 const state = {
-  textX: 0,
-  textY: 0,
-  textWidth: 200,
-  textHeight: 33,
+  textX: 10,
+  textY: 300,
+  textWidth: 620,
+  textHeight: 50,
   text: '',
   fontSize: 40,
   color: '#bc2a2a',
 
-  emojiX: 0,
-  emojiY: 0,
+  emojiX: 300,
+  emojiY: 300,
   emojiWidth: 40,
   emojiHeight: 40,
   emoji: '',
@@ -87,16 +87,16 @@ const mutations = {
     state.videoHeight = newState.videoHeight;
   },
   RESET_STATE(state) {
-    state.textX = 0;
-    state.textY = 0;
-    state.textWidth = 100;
-    state.textHeight = 33;
+    state.textX = 10;
+    state.textY = 300;
+    state.textWidth = 620;
+    state.textHeight = 50;
     state.text = '';
     state.fontSize = 40;
     state.color = '#bc2a2a';
 
-    state.emojiX = 0;
-    state.emojiY = 0;
+    state.emojiX = 300;
+    state.emojiY = 300;
     state.emojiWidth = 40;
     state.emojiHeight = 40;
     state.emoji = '';

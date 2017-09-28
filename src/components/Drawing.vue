@@ -14,6 +14,7 @@
       :draggable="!disableEditing"
       :resizable="!disableEditing"
       :style="{'font-size': `${fontSize}px`, color: color}"
+      ref="text"
     >
       {{ drawingText }}
     </vue-draggable-resizable>
@@ -29,7 +30,6 @@
       id="emoji"
       :draggable="!disableEditing"
       :resizable="!disableEditing"
-      @mounted="emojiMounted"
     >
       <div
         id="emoji-image"
@@ -37,7 +37,6 @@
       >
       </div>
     </vue-draggable-resizable>
-    <button @click="manipulateSizes">FIXME</button>
   </div>
 </template>
 
@@ -70,6 +69,8 @@ export default {
     onTextDragStop(left, top) {
       this.$store.commit('drawing/UPDATE_TEXT_X', left);
       this.$store.commit('drawing/UPDATE_TEXT_Y', top);
+      this.$store.commit('drawing/UPDATE_TEXT_WIDTH', this.$refs.text.width);
+      this.$store.commit('drawing/UPDATE_TEXT_HEIGHT', this.$refs.text.height);
 
       const rect = this.$el.getBoundingClientRect();
       this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
@@ -110,6 +111,8 @@ export default {
       const emoji = this.$children
         .filter(child => child !== text)[0];
 
+      console.log(rect);
+
       if (text) {
         const localTextX = (this.$store.state.drawing.textX /
           this.$store.state.drawing.videoWidth) * rect.width;
@@ -124,6 +127,8 @@ export default {
         text.top = localTextY;
         text.width = localTextWidth;
         text.height = localTextHeight;
+
+        console.log(localTextX, localTextY, localTextWidth, localTextHeight);
 
         const localFontSize = (this.$store.state.drawing.fontSize /
           this.$store.state.drawing.videoHeight) * rect.height;
@@ -168,8 +173,12 @@ export default {
 
   watch: {
     videoPlaying(newVideoPlaying) {
+      console.log('ping');
       if (newVideoPlaying) {
-        this.manipulateSizes();
+        console.log('pong');
+        this.$nextTick(() => {
+          this.manipulateSizes();
+        });
       }
     },
   },
