@@ -27,7 +27,7 @@
             <input
               v-model="localFontSize"
               @focus="displayFontOptions = true"
-              @blur="displayFontOptions = false"
+              @blur.prevent="displayFontOptions = false"
               @click.stop
             >
             <div
@@ -204,22 +204,20 @@ export default {
 @import '../styles/scroller';
 
 #editor {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
+  width: 100%;
 
   padding-top: 16px;
   background-color: $gray;
 
   .editor-controls-container  {
     display: flex;
-    flex: 0 1 100%;
+    flex: 0 1 949px;
     margin: auto;
     flex-wrap: wrap;
+    max-width: 949px;
 
     padding-left: 16px;
     padding-right: 16px;
-
 
     .row {
       display: flex;
@@ -291,7 +289,7 @@ export default {
           height: 21px;
 
           position: absolute;
-          top: 6px;
+          top: 5px;
           left: 6px;
           border: 1px solid $gray;
         }

@@ -21,12 +21,12 @@ export default {
 #parlatube {
   display: flex;
   flex-wrap: wrap;
-  flex: 0 0 100%;
+  flex: 0 1 100%;
   overflow: hidden;
 
   .header {
     display: flex;
-    flex: 0 0 100%;
+    flex: 0 1 100%;
   }
 }
 </style>

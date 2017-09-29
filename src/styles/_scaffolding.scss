@@ -1,8 +1,6 @@
 .container {
-  display: flex;
-  flex: 0 1 981px;
-  flex-wrap: wrap;
-  
+  max-width: 981px;
+
   position: relative;
   overflow: hidden;
 }

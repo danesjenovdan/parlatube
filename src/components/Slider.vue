@@ -509,7 +509,7 @@ export default {
       position: relative;
       display: flex;
       overflow: hidden;
-      flex: 0 0 100%;
+      flex: 0 1 100%;
       justify-content: center;
       margin-bottom: 15px;
       padding-bottom: 5px;

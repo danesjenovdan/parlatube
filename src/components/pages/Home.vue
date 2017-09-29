@@ -43,7 +43,7 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');
+    this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');// '-CLenqwC-Qw'
   },
 
   mounted() {
