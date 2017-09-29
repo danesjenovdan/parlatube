@@ -30,6 +30,7 @@
       id="emoji"
       :draggable="!disableEditing"
       :resizable="!disableEditing"
+      :class="{ editable: emojiEditable }"
     >
       <div
         id="emoji-image"
@@ -41,9 +42,10 @@
 </template>
 
 <script>
-import VueDraggableResizable from 'vue-draggable-resizable';
 import { mapState } from 'vuex';
 import { Emoji } from 'emoji-mart-vue';
+import VueDraggableResizable from './VueDraggableResizable';
+// import VueDraggableResizable from 'vue-draggable-resizable';
 
 export default {
   name: 'Drawing',
@@ -124,9 +126,13 @@ export default {
           this.$store.state.drawing.videoHeight) * rect.height;
 
         text.left = localTextX;
+        text.x = localTextX;
         text.top = localTextY;
+        text.y = localTextY;
         text.width = localTextWidth;
+        text.w = localTextWidth;
         text.height = localTextHeight;
+        text.h = localTextHeight;
 
         console.log(localTextX, localTextY, localTextWidth, localTextHeight);
 
@@ -146,9 +152,13 @@ export default {
           this.$store.state.drawing.videoHeight) * rect.height;
 
         emoji.left = localEmojiX;
+        emoji.x = localEmojiX;
         emoji.top = localEmojiY;
+        emoji.y = localEmojiY;
         emoji.width = localEmojiWidth;
+        emoji.w = localEmojiWidth;
         emoji.height = localEmojiHeight;
+        emoji.h = localEmojiHeight;
       }
     },
 
@@ -168,6 +178,9 @@ export default {
 
     textEditable() {
       return (!this.disableEditing && (this.drawingText !== ''));
+    },
+    emojiEditable() {
+      return (!this.disableEditing && (this.selectedEmoji !== ''));
     },
   },
 
@@ -191,18 +204,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/colors';
+
 #drawing-container {
+  display: block;
   width: 100%;
   height: 100%;
   position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 
   #text {
+    min-width: 40px;
+    min-height: 40px;
     background: transparent;
     position: absolute;
     font-size: 40px;
     font-family: Anton, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-weight: 900;
-    text-transform: uppercase;
     top: 45%;
     left: 45%;
     overflow: hidden;
@@ -210,6 +231,9 @@ export default {
     text-align: center;
 
     user-select: none;
+
+    text-shadow: 1px 1px 0 $black, -1px -1px 0 $black, 1px -1px 0 $black, -1px 1px 0 $black, 1px 1px 0 $black;
+    letter-spacing: 3px;
   }
 }
 
@@ -225,7 +249,7 @@ export default {
 </style>
 
 <style lang="scss">
-#text.editable {
+#text.editable, #emoji.editable {
   .handle {
     display: block !important;
   }

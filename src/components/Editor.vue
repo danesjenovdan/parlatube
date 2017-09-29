@@ -26,9 +26,6 @@
           >
             <input
               v-model="localFontSize"
-              @focus="displayFontOptions = true"
-              @blur.prevent="displayFontOptions = false"
-              @click.stop
             >
             <div
               class="font-options"
@@ -37,7 +34,7 @@
               <div
                 class="font-option"
                 v-for="option in fontOptions"
-                @click.stop="updateLocalFontSize(option)"
+                @click="localFontSize = option"
               >{{ option }} px</div>
             </div>
           </div>

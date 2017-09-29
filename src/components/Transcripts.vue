@@ -157,10 +157,11 @@ export default {
     display: flex;
     flex: 1 1 100%;
     overflow: hidden;
-    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.2);
+    // box-shadow: 0 4px 7px rgba(0, 0, 0, 0.2);
     height: 54px;
     background-color: $white;
     align-items: center;
+    border-bottom: 2px solid $gray;
 
     &::after {
       content: '';
