@@ -7,6 +7,8 @@
         placeholder="išči ..."
         v-model="searchTerm"
       >
+      <div :class="['number-of-results', { filtering: amIFiltering }]">({{ numberOfResults }})</div>
+      <div :class="{ clearme: amIFiltering, searchme: !amIFiltering }" @click="clearResults"></div>
     </div>
     <div
       class="speeches-container"
@@ -26,6 +28,7 @@
             :style="{'background-image': `url(${speech.image_url})`}"
           ></div>
           <div class="speaker-name">{{ speech.name }}</div>
+          <div v-if="amIFiltering" :class="['speech-expander', { shrink: speech.expanded, expand: !speech.expanded }]" @click.stop="toggleSpeech(speech)"></div>
         </div>
         <div class="speech-content">
           <p v-html="speech.content"></p>
@@ -48,6 +51,7 @@ export default {
       currentSpeechId: 0,
       scrollTranscripts: true,
       searchTerm: '',
+      numberOfResults: 0,
     };
   },
 
@@ -61,6 +65,9 @@ export default {
         ((speech.end_time_stamp / 1000) > this.currentTime));
 
       return filteredSpeeches[0];
+    },
+    amIFiltering() {
+      return this.searchTerm !== '';
     },
   },
 
@@ -83,17 +90,43 @@ export default {
           this.transcripts = result.data
           .sort((a, b) => a.start_time_stamp - b.start_time_stamp)
           .map(speech => ({
-            content: speech.content_t,
+            content_t: speech.content_t[0],
+            highlight: speech.highlight,
+            content: speech.highlight,
             end_time_stamp: speech.timestamp_start,
             start_time_stamp: speech.timestamp_start,
             image_url: `http://speeches.knedl.si${speech.speaker_url}`,
             id: speech.id,
             name: speech.speaker_name,
+            expanded: false,
           }));
+
+          this.numberOfResults = result.data.length;
         } else {
           this.transcripts = this.allSpeeches;
+          this.numberOfResults = 0;
         }
       });
+    },
+
+    toggleSpeech(speech) {
+      const theSpeech = this.transcripts.filter(transcript => transcript === speech)[0];
+      const theIndex = this.transcripts.indexOf(theSpeech);
+      const newTranscripts = JSON.parse(JSON.stringify(this.transcripts));
+      if (speech.expanded) {
+        newTranscripts[theIndex].content = speech.highlight;
+        newTranscripts[theIndex].expanded = false;
+      } else {
+        newTranscripts[theIndex].content = speech.content_t;
+        newTranscripts[theIndex].expanded = true;
+      }
+      this.transcripts = newTranscripts;
+    },
+
+    clearResults() {
+      if (this.amIFiltering) {
+        this.searchTerm = '';
+      }
     },
   },
 
@@ -125,6 +158,8 @@ export default {
         .sort((a, b) => a.start_time_stamp - b.start_time_stamp)
         .map(speech => ({
           content: speech.content,
+          content_t: speech.content,
+          highlight: '',
           end_time_stamp: speech.end_time_stamp,
           start_time_stamp: speech.start_time_stamp,
           image_url: `http://speeches.knedl.si${speech.image_url}`,
@@ -163,8 +198,7 @@ export default {
     align-items: center;
     border-bottom: 2px solid $gray;
 
-    &::after {
-      content: '';
+    .searchme {
       display: flex;
       flex: 0 0 35px;
       height: 35px;
@@ -172,6 +206,17 @@ export default {
       background-size: contain;
       background-color: $white;
       margin-right: 10px;
+    }
+
+    .clearme {
+      display: flex;
+      flex: 0 0 35px;
+      height: 35px;
+      background-image: url('../assets/icons/clear.svg');
+      background-size: contain;
+      background-color: $white;
+      margin-right: 10px;
+      cursor: pointer;
     }
 
     #search-input {
@@ -184,6 +229,27 @@ export default {
       line-height: 54px;
 
       padding-left: 14px;
+    }
+
+    .number-of-results {
+      font-family: 'Space Mono', monospace;
+      color: $black;
+      position: absolute;
+      right: 50px;
+      padding-right: 6px;
+      padding-left: 2px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+
+      display: none;
+      
+      font-size: 12px;      
+
+      background: $white;
+
+      &.filtering {
+        display: block;
+      }
     }
   }
 
@@ -205,7 +271,7 @@ export default {
     position: relative;
     background-color: $white;
 
-    &:hover::after {
+    &:hover::before {
       content: '';
       position: absolute;
       top: 0;
@@ -219,7 +285,7 @@ export default {
 
     .speaker-info {
       display: flex;
-      flex: 1 0 calc(100% - 5px);
+      flex: 1 1 calc(100% - 5px);
       flex-wrap: nowrap;
 
       padding: 17px 13px 11px 13px;
@@ -243,6 +309,28 @@ export default {
         text-transform: uppercase;
         font-size: 14px;
         font-weight: 700;
+      }
+      
+      .speech-expander {
+        width: 13px;
+        height: 17px;
+        top: 19px;
+        right: 7px;
+        position: absolute;
+        background-size: contain;
+        transition: all 0.2s ease-out;
+
+        &.expand {
+          background-image: url('../assets/icons/expand.png');
+        }
+
+        &.shrink {
+          background-image: url('../assets/icons/shrink.png');
+        }
+
+        &:hover {
+          transform: scale(1.2);
+        }
       }
     }
 
@@ -268,8 +356,11 @@ export default {
 @import '../styles/scroller';
 
 .speech-content p em {
-  font-weight: 700;
+  // font-weight: 700;
   font-style: normal;
+  background-color: rgba(188, 42, 42, 0.4); // $red with 0.4 opacity
+  padding-left: 1px;
+  padding-right: 1px;
 }
 
 .speeches-container {
