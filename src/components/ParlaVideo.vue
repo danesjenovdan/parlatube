@@ -1,28 +1,30 @@
 <template>
     <div id="video">
       <div id="player"></div>
-      <div id="drawing-container">
-        <div
-          id="drawing"
-          :style="{transform: `translate(${drawingX}px, ${drawingY}px)`, 'font-size': `${fontSize}px`, color: color}"
-          @mousedown.prevent="onDrawingMouseDown"
-          @touchstart.prevent="onDrawingTouchStart"
-        >{{ drawingText }}</div>
-      </div>
+      <drawing :disableEditing="disableEditing"></drawing>
     </div>
 </template>
 
 <script>
 import YouTubePlayer from 'youtube-player';
 import { mapState, mapGetters } from 'vuex';
+import Drawing from 'components/Drawing';
 
 export default {
   name: 'ParlaVideo',
+
+  components: {
+    Drawing,
+  },
 
   props: {
     height: {
       type: Number,
       default: 371,
+    },
+    disableEditing: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -37,48 +39,6 @@ export default {
   },
 
   methods: {
-    onDrawingMouseDown(event) {
-      this.currentX = event.clientX;
-      this.currentY = event.clientY;
-      window.addEventListener('mousemove', this.onDrawingDragging);
-      window.addEventListener('mouseup', this.onDrawingDragEnd);
-    },
-
-    onDrawingDragging(event) {
-      const diffX = (event.clientX - this.currentX);
-      const diffY = (event.clientY - this.currentY);
-      this.currentX = event.clientX;
-      this.currentY = event.clientY;
-      this.$store.commit('drawing/UPDATE_X', this.drawingX + diffX);
-      this.$store.commit('drawing/UPDATE_Y', this.drawingY + diffY);
-    },
-
-    onDrawingDragEnd() {
-      window.removeEventListener('mousemove', this.onDrawingDragging);
-      window.removeEventListener('mouseup', this.onDrawingDragEnd);
-    },
-
-    onDrawingTouchStart(event) {
-      this.currentX = event.targetTouches[0].clientX;
-      this.currentY = event.targetTouches[0].clientY;
-      window.addEventListener('touchmove', this.onDrawingTouchDragging);
-      window.addEventListener('touchend', this.onDrawingTouchDragEnd);
-    },
-
-    onDrawingTouchDragging(event) {
-      const diffX = (event.targetTouches[0].clientX - this.currentX);
-      const diffY = (event.targetTouches[0].clientY - this.currentY);
-      this.currentX = event.targetTouches[0].clientX;
-      this.currentY = event.targetTouches[0].clientY;
-      this.$store.commit('drawing/UPDATE_X', this.drawingX + diffX);
-      this.$store.commit('drawing/UPDATE_Y', this.drawingY + diffY);
-    },
-
-    onDrawingTouchDragEnd() {
-      window.removeEventListener('touchmove', this.onDrawingTouchDragging);
-      window.removeEventListener('touchend', this.onDrawingTouchDragEnd);
-    },
-
     updateVideoId(newVideoId) {
       this.player.loadVideoById(newVideoId);
       this.player.playVideo();
@@ -113,9 +73,13 @@ export default {
 
   watch: {
     height(newHeight) {
-      console.log(newHeight);
       if (newHeight) {
         this.player.setSize(null, this.height);
+          // .then(() => {
+          // const rect = this.$el.getBoundingClientRect();
+          // this.$store.commit('drawing/UPDATE_VIDEO_SIZE',
+          // { width: rect.width, height: rect.height });
+          // });
       }
     },
 
@@ -202,25 +166,7 @@ export default {
   flex: 0 0 100%;
   flex-wrap: wrap;
   position: relative;
-
-  #drawing-container {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-
-    #drawing {
-      background: transparent;
-      position: absolute;
-      font-size: 40px;
-      cursor: pointer;
-      font-family: Anton, Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-      font-weight: 900;
-      text-transform: uppercase;
-      top: 45%;
-      left: 45%;
-      color: #ffffff;
-    }
-  }
+  overflow: hidden;
 }
 </style>
 

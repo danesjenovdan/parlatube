@@ -7,29 +7,68 @@
       <div class="text-stuff">
         <div class="row">
           <label for="drawing-text">Besedilo čez video</label>
-          <input id="drawing-text" type="text" v-model="localDrawingText"/>
-          <div
-            class="colorpicker"
-            @click="showColorPicker"
-            ref="colorpicker"
-          >
-            <div class="color" :style="{ 'background-color': colorPickerProps.hex }"></div>
+          <textarea id="drawing-text" type="text" v-model="localDrawingText"></textarea>
+          <div class="row shrinkable">
+            <div class="row">
+              <div
+                class="colorpicker"
+                @click="showColorPicker"
+                ref="colorpicker"
+              >
+                <div class="color" :style="{ 'background-color': colorPickerProps.hex }"></div>
+                <color-picker
+                  v-model="colorPickerProps"
+                  :class="{ visible: colorPickerVisible }"
+                  ref="colorPalette"
+                />
+              </div>
+              <div
+                class="font-size-picker"
+                @click="displayFontOptions = !displayFontOptions"
+              >
+                <input
+                  v-model="localFontSize"
+                >
+                <div
+                  class="font-options"
+                  v-if="displayFontOptions"
+                >
+                  <div
+                    class="font-option"
+                    v-for="option in fontOptions"
+                    @click="localFontSize = option"
+                  >{{ option }} px</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div
+                :class="['emoji-button', { visible: emojiPickerVisible }]"
+                @click="emojiPickerVisible = !emojiPickerVisible"
+              >
+                Dodaj emoji
+                <picker
+                  :emoji-size="16"
+                  :sheet-size="16"
+                  :per-line="9"
+                  :skin="1"
+                  :native="false"
+                  set="emojione"
+                  :class="['emojipicker', { visible: emojiPickerVisible }]"
+                  :i18n="i18n_si"
+                  @click="pickEmoji"
+                  @click.native.stop
+                ></picker>
+              </div>
+            </div>
           </div>
-          <color-picker
-            v-model="colorPickerProps"
-            :class="{ visible: colorPickerVisible }"
-            :style="{ left: `${colorPickerLeft}px` }"
-            ref="colorPalette"
-          />
-        </div>
-        <div class="row">
-          <label for="title-text">Naslov objave</label>
-          <input id="title-text" type="text" v-model="localTitleText"/>
         </div>
       </div>
     </div>
     <div class="editor-controls-container">
       <div class="row row-buttons">
+        <label for="title-text">Naslov objave</label>
+        <input id="title-text" type="text" v-model="localTitleText"/>
         <button
           @click="createSnippet"
           class="editor-button"
@@ -45,8 +84,9 @@
 
 <script>
 import 'element-ui/lib/theme-default/index.css';
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import { Compact } from 'vue-color';
+import { Picker } from 'emoji-mart-vue';
 import Slider from './Slider';
 
 export default {
@@ -57,36 +97,38 @@ export default {
       localDrawingText: '',
       localTitleText: '',
       localFontSize: 40,
-      colorPickerLeft: 0,
+      // colorPickerLeft: 0,
       colorPickerProps: {
-        hex: '#000000',
-        hsl: {
-          h: 150,
-          s: 0.5,
-          l: 0.2,
-          a: 1,
-        },
-        hsv: {
-          h: 150,
-          s: 0.66,
-          v: 0.30,
-          a: 1,
-        },
-        rgba: {
-          r: 25,
-          g: 77,
-          b: 51,
-          a: 1,
-        },
-        a: 1,
+        hex: '#bc2a2a',
       },
       colorPickerVisible: false,
+      fontOptions: [10, 20, 30, 40, 50, 60, 70, 80, 90],
+      displayFontOptions: false,
+      emojiPickerVisible: false,
+      i18n_si: {
+        search: 'Išči ...',
+        notfound: 'Ne najdem nobenega',
+        categories: {
+          search: 'Rezultati iskanja',
+          recent: 'Pogosto uporabljeni',
+          people: 'Smajliji in ljudje',
+          nature: 'Živali in narava',
+          foods: 'Hrana in pijača',
+          activity: 'Aktivnosti',
+          places: 'Potovanja in kraji',
+          objects: 'Predmeti',
+          symbols: 'Simboli',
+          flags: 'Zastave',
+          custom: 'Posebneži',
+        },
+      },
     };
   },
 
   components: {
     Slider,
     'color-picker': Compact,
+    Picker,
   },
 
   computed: {
@@ -94,10 +136,6 @@ export default {
       duration: 'video/durationGetter',
       loopStart: 'editor/startMarkerGetter',
       loopEnd: 'editor/endMarkerGetter',
-    }),
-
-    ...mapState({
-      drawing: state => state.drawing,
     }),
   },
 
@@ -107,7 +145,7 @@ export default {
         video_id: 1,
         start_time: this.loopStart * 1000,
         end_time: this.loopEnd * 1000,
-        extras: JSON.stringify(this.drawing),
+        extras: JSON.stringify(this.$store.state.drawing),
         published: 1,
         looping: 1,
       };
@@ -122,8 +160,6 @@ export default {
     },
 
     showColorPicker() {
-      console.log(this.$refs.colorpicker.getBoundingClientRect());
-      this.colorPickerLeft = this.$refs.colorpicker.getBoundingClientRect().left - 62 - 6;
       this.colorPickerVisible = !this.colorPickerVisible;
     },
 
@@ -132,6 +168,23 @@ export default {
       // this.$store.commit('editor/RESET_STATE');
       // this.$store.commit('drawing/RESET_STATE');
       alert('a sploh rabimo ta gumb?');
+    },
+
+    pickEmoji(emoji) {
+      const newEmoji = {
+        emojiX: 300,
+        emojiY: 300,
+        emojiWidth: 40,
+        emojiHeight: 40,
+        emoji: emoji.unified,
+        id: (Math.random() * 1e16).toString(36),
+      };
+      this.$store.commit('drawing/ADD_EMOJI', newEmoji);
+    },
+
+    updateLocalFontSize(newLocalFontSize) {
+      this.localFontSize = newLocalFontSize;
+      this.displayFontOptions = false;
     },
   },
 
@@ -158,28 +211,59 @@ export default {
 @import '../styles/scroller';
 
 #editor {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
-  overflow: hidden;
+  width: 100%;
 
   padding-top: 16px;
   background-color: $gray;
 
   .editor-controls-container  {
     display: flex;
-    flex: 1 1 100%;
+    flex: 0 1 949px;
     margin: auto;
     flex-wrap: wrap;
-    overflow: hidden;
+    max-width: 949px;
 
     padding-left: 16px;
     padding-right: 16px;
 
     .row {
       display: flex;
-      flex: 0 0 100%;
+      flex: 0 1 100%;
       position: relative;
+      
+      &.shrinkable {
+        flex: 1 0 173px;
+        width: 173px;
+      }
+
+      .row {
+        flex-wrap: wrap;
+      }
+    }
+
+    label {
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+      line-height: 33px;
+      display: flex;
+      flex: 0 0 212px;
+    }
+    input, textarea {
+      border: none;
+      background: $white;
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      height: 33px;
+      line-height: 33px;
+
+      padding: 0 14px 0 14px;
+
+      display: flex;
+      flex: 0 1 429px;
+    }
+    textarea {
+      height: 81px;
     }
 
     .text-stuff {
@@ -202,28 +286,6 @@ export default {
         }
       }
 
-      label {
-        font-family: 'Space Mono', monospace;
-        font-size: 16px;
-        line-height: 33px;
-        display: flex;
-        flex: 0 0 212px;
-      }
-      input {
-        border: none;
-        background: $white;
-        font-family: 'Space Mono', monospace;
-        font-size: 16px;
-        font-weight: 700;
-        height: 33px;
-        line-height: 33px;
-
-        padding: 0 14px 0 14px;
-
-        display: flex;
-        flex: 0 1 429px;
-      }
-
       .colorpicker {
         display: flex;
         flex: 0 0 62px;
@@ -243,8 +305,9 @@ export default {
           height: 21px;
 
           position: absolute;
-          top: 6px;
+          top: 5px;
           left: 6px;
+          border: 1px solid $gray;
         }
 
         &::after {
@@ -263,28 +326,160 @@ export default {
       .vc-compact {
         display: none;
         z-index: 2;
-        position: absolute;
+        position: relative;
         top: 33px;
         border-radius: 0;
 
         width: 56px;
-        height: 56px;
+        height: 76px;
+        box-shadow: none;
 
         &.visible {
           display: flex;
+        }
+      }
 
-          box-shadow: none;
+      .font-size-picker {
+        position: relative;
+        height: 33px;
+
+        input {
+          max-width: 73px;
+          // flex: 0 2;
+          padding-left: 10px;
+          padding-right: 0;
+          margin-left: 14px;
+          font-weight: 400;
+          font-size: 14px;
+        }
+
+        &::before {
+          content: ' px';
+          display: block;
+          position: absolute;
+          top: 0;
+          right: 30px;
+          
+          font-family: 'Space Mono', monospace;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 33px;
+
+        }
+
+        &::after {
+          content: '';
+          display: block;
+          position: absolute;
+          width: 13px;
+          height: 8px;
+          top: 14px;
+          right: 11px;
+
+          background-image: url('../assets/v.png');
+        }
+      }
+      .font-options {
+        background-color: $white;
+        position: relative;
+        margin-left: 14px;
+        height: 81px;
+        overflow-y: auto;
+        @extend %scroller;
+        text-align: left;
+        font-family: 'Space Mono', monospace;
+        font-size: 14px;
+        z-index: 2;
+
+        .font-option {
+          cursor: pointer;
+          padding-left: 10px;
+
+          &:hover {
+            background-color: $black;
+            color: $white;
+          }
         }
       }
     }
 
+    .emoji-button {
+      position: relative;
+      display: flex;
+      flex: 0 1 141px;
+      height: 33px;
+      background-color: $blue;
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+      color: $white;
+      font-weight: 700;
+      text-align: center;
+      line-height: 33px;
+      padding-left: 9px;
+      padding-right: 9px;
+      // letter-spacing: 0.96px;
+      cursor: pointer;
+
+      margin-left: 14px;
+
+      &:hover {
+        background-color: $light-blue;
+
+        &.visible::before {
+          border-color: transparent transparent $light-blue transparent;
+        }
+      }
+
+      &::after {
+        content: '';
+        width: 20px;
+        background-image: url('../assets/icons/emoji.png');
+        background-size: 20px 20px;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin-left: 13px;
+      }
+
+      &.visible::before {
+        content: '';
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 6px 8px 6px;
+        border-color: transparent transparent $blue transparent;
+        position: absolute;
+        top: -8px;
+        right: 15px;
+        display: block;
+        z-index: 3;
+      }
+    }
+    .emojipicker {
+      position: absolute;
+      display: none;
+      right: 0;
+      top: -303px;
+      border-radius: 0;
+      width: 257px;
+      height: 291px;
+      z-index: 2;
+      overflow-y: hidden;
+      border: none;
+      box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.35);
+
+      &.visible {
+        display: block;
+      }
+    }
+
     .row-buttons {
-      justify-content: flex-end;
+      padding-top: 33px;
+      padding-bottom: 33px;
     }
 
     .editor-button {
       display: flex;
-      flex: 0 0 255px;
+      flex: 0 2 120px;
       height: 48px;
       background-color: $red;
       border: none;
@@ -295,8 +490,8 @@ export default {
       font-weight: 700;
       justify-content: center;
 
-      margin-top: 33px;
-      margin-bottom: 34px;
+      margin-left: 14px;
+      margin-top: -8px;
 
       cursor: pointer;
 
@@ -305,14 +500,12 @@ export default {
       }
     }
     .reset-button {
-      flex: 0 0 134px;
+      flex: 0 2 120px;
       background-color: $gray;
       color: $black;
       text-decoration: underline;
 
       font-size: 16px;
-
-      margin-left: 10px;
 
       &:hover {
         background-color: $dark-gray;
@@ -335,5 +528,9 @@ export default {
   // height: 56px;
   @extend %scroller;
   overflow-y: scroll !important;
+}
+.emoji-mart-search,
+.emoji-mart-category-label {
+  display: none;
 }
 </style>

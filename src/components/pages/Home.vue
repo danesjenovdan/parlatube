@@ -43,7 +43,7 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');
+    this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');// '-CLenqwC-Qw'
   },
 
   mounted() {
@@ -56,6 +56,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../../styles/colors';
+@import '../../styles/scaffolding';
 
 #home {
   display: flex;
@@ -73,19 +74,24 @@ export default {
 
   .intro {
     display: flex;
-    flex: 1 1 100%;
     justify-content: center;
+
+    width: 100%;
 
     font-family: 'Poppins', sans-serif;
     font-size: 30px;
+    line-height: 26px;
+
+    text-align: center;
 
     margin-bottom: 35px;
 
     &:before,
     &:after {
+      display: block;
       content: '';
       width: 43px;
-      height: 100%;
+      height: 26px;
 
       margin-left: 12px;
       margin-right: 12px;

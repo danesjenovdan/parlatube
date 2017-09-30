@@ -10,15 +10,17 @@
         <img src="../assets/djnd.png">
       </div>
     </div>
-    <div id="navbar">
-      <router-link
-        :to="{name: 'Home'}"
-        class="navbar-option"
-      >SOOČENJE</router-link>
-      <router-link
-        :to="{name: 'Collections'}"
-        class="navbar-option"
-      >IZSEKI</router-link>
+    <div class="container">
+      <div id="navbar">
+        <router-link
+          :to="{name: 'Home'}"
+          class="navbar-option"
+        >SOOČENJE</router-link>
+        <router-link
+          :to="{name: 'Collections'}"
+          class="navbar-option"
+        >IZSEKI</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -31,11 +33,13 @@ export default {
 
 <style lang="scss">
 @import '../styles/colors';
+@import '../styles/scaffolding';
 
 #header {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
+  // display: flex;
+  // flex: 0 0 100%;
+  // flex-wrap: wrap;
+  width: 100%;
   background-color: $gray;
   justify-content: center;
 
