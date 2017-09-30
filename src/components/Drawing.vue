@@ -144,13 +144,13 @@ export default {
           this.$store.state.drawing.videoHeight) * rect.height;
 
         text.left = localTextX;
-        text.x = localTextX;
+        // text.x = localTextX;
         text.top = localTextY;
-        text.y = localTextY;
+        // text.y = localTextY;
         text.width = localTextWidth;
-        text.w = localTextWidth;
+        // text.w = localTextWidth;
         text.height = localTextHeight;
-        text.h = localTextHeight;
+        // text.h = localTextHeight;
 
         const localFontSize = (this.$store.state.drawing.fontSize /
           this.$store.state.drawing.videoHeight) * rect.height;
@@ -178,6 +178,8 @@ export default {
         emojiElement.height = localEmojiHeight;
         emojiElement.h = localEmojiHeight;
       });
+
+      this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
     },
   },
 
@@ -209,8 +211,11 @@ export default {
   },
 
   mounted() {
-    const rect = this.$el.getBoundingClientRect();
-    this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
+    if (this.disableEditing) {
+      // const rect = this.$el.getBoundingClientRect();
+      // this.$store.commit
+      // ('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
+    }
   },
 };
 </script>

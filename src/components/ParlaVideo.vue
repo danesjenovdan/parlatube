@@ -74,10 +74,12 @@ export default {
   watch: {
     height(newHeight) {
       if (newHeight) {
-        this.player.setSize(null, this.height).then(() => {
-          const rect = this.$el.getBoundingClientRect();
-          this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
-        });
+        this.player.setSize(null, this.height);
+          // .then(() => {
+          // const rect = this.$el.getBoundingClientRect();
+          // this.$store.commit('drawing/UPDATE_VIDEO_SIZE',
+          // { width: rect.width, height: rect.height });
+          // });
       }
     },
 

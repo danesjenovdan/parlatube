@@ -54,10 +54,10 @@
                   :skin="1"
                   :native="false"
                   set="emojione"
-                  :exclude="['recent']"
                   :class="['emojipicker', { visible: emojiPickerVisible }]"
                   :i18n="i18n_si"
                   @click="pickEmoji"
+                  @click.native.stop
                 ></picker>
               </div>
             </div>
@@ -179,7 +179,6 @@ export default {
         emoji: emoji.unified,
         id: (Math.random() * 1e16).toString(36),
       };
-      console.log(newEmoji);
       this.$store.commit('drawing/ADD_EMOJI', newEmoji);
     },
 
