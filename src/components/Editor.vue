@@ -57,7 +57,7 @@
                   :exclude="['recent']"
                   :class="['emojipicker', { visible: emojiPickerVisible }]"
                   :i18n="i18n_si"
-                  @click.stop="pickEmoji"
+                  @click="pickEmoji"
                 ></picker>
               </div>
             </div>
@@ -171,7 +171,16 @@ export default {
     },
 
     pickEmoji(emoji) {
-      this.$store.commit('drawing/UPDATE_EMOJI', emoji.unified);
+      const newEmoji = {
+        emojiX: 300,
+        emojiY: 300,
+        emojiWidth: 40,
+        emojiHeight: 40,
+        emoji: emoji.unified,
+        id: (Math.random() * 1e16).toString(36),
+      };
+      console.log(newEmoji);
+      this.$store.commit('drawing/ADD_EMOJI', newEmoji);
     },
 
     updateLocalFontSize(newLocalFontSize) {

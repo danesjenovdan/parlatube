@@ -322,7 +322,7 @@ export default {
         this.width = (Math.round(this.elmW / this.grid[0]) * this.grid[0])
         this.height = (Math.round(this.elmH / this.grid[1]) * this.grid[1])
 
-        this.$emit('resizing', this.left, this.top, this.width, this.height)
+        this.$emit('resizing', { left: this.left, top: this.top, width: this.width, height: this.height })
       } else if (this.dragging) {
         if (this.elmX + dX < this.parentX) this.mouseOffX = (dX - (diffX = this.parentX - this.elmX))
         else if (this.elmX + this.elmW + dX > this.parentW) this.mouseOffX = (dX - (diffX = this.parentW - this.elmX - this.elmW))
@@ -340,18 +340,18 @@ export default {
           this.top = (Math.round(this.elmY / this.grid[1]) * this.grid[1])
         }
 
-        this.$emit('dragging', this.left, this.top)
+        this.$emit('dragging', { left: this.left, top: this.top })
       }
     },
     handleUp: function (e) {
       this.handle = null
       if (this.resizing) {
         this.resizing = false
-        this.$emit('resizestop', this.left, this.top, this.width, this.height)
+        this.$emit('resizestop', { left: this.left, top: this.top, width: this.width, height: this.height })
       }
       if (this.dragging) {
         this.dragging = false
-        this.$emit('dragstop', this.left, this.top)
+        this.$emit('dragstop', { left: this.left, top: this.top })
       }
 
       this.elmX = this.left

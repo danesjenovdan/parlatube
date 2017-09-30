@@ -19,22 +19,22 @@
       {{ drawingText }}
     </vue-draggable-resizable>
     <vue-draggable-resizable
-      v-if="(selectedEmoji !== '') && videoPlaying"
+      v-for="emoji in emojis"
       :x="300"
       :y="300"
       :w="40"
       :h="40"
-      @dragstop="onEmojiDragStop"
-      @resizestop="onEmojiResizeStop"
+      @dragstop="onEmojiDragStop(emoji.id, $event)"
+      @resizestop="onEmojiResizeStop(emoji.id, $event)"
       :parent="true"
-      id="emoji"
+      :id="emoji.id"
       :draggable="!disableEditing"
       :resizable="!disableEditing"
-      :class="{ editable: emojiEditable }"
+      :class="['emoji', { editable: emojiEditable }]"
     >
       <div
-        id="emoji-image"
-        :style="{'background-image': `url('http://djstatic.knedl.si/emojis/${selectedEmoji}.png')`}"
+        class="emoji-image"
+        :style="{'background-image': `url('http://djstatic.knedl.si/emojis/${emoji.emoji}.png')`}"
       >
       </div>
     </vue-draggable-resizable>
@@ -68,9 +68,9 @@ export default {
   },
 
   methods: {
-    onTextDragStop(left, top) {
-      this.$store.commit('drawing/UPDATE_TEXT_X', left);
-      this.$store.commit('drawing/UPDATE_TEXT_Y', top);
+    onTextDragStop(event) {
+      this.$store.commit('drawing/UPDATE_TEXT_X', event.left);
+      this.$store.commit('drawing/UPDATE_TEXT_Y', event.top);
       this.$store.commit('drawing/UPDATE_TEXT_WIDTH', this.$refs.text.width);
       this.$store.commit('drawing/UPDATE_TEXT_HEIGHT', this.$refs.text.height);
 
@@ -78,29 +78,49 @@ export default {
       this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
     },
 
-    onTextResizeStop(left, top, width, height) {
-      this.$store.commit('drawing/UPDATE_TEXT_X', left);
-      this.$store.commit('drawing/UPDATE_TEXT_Y', top);
-      this.$store.commit('drawing/UPDATE_TEXT_WIDTH', width);
-      this.$store.commit('drawing/UPDATE_TEXT_HEIGHT', height);
+    onTextResizeStop(event) {
+      this.$store.commit('drawing/UPDATE_TEXT_X', event.left);
+      this.$store.commit('drawing/UPDATE_TEXT_Y', event.top);
+      this.$store.commit('drawing/UPDATE_TEXT_WIDTH', event.width);
+      this.$store.commit('drawing/UPDATE_TEXT_HEIGHT', event.height);
 
       const rect = this.$el.getBoundingClientRect();
       this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
     },
 
-    onEmojiDragStop(left, top) {
-      this.$store.commit('drawing/UPDATE_EMOJI_X', left);
-      this.$store.commit('drawing/UPDATE_EMOJI_Y', top);
+    onEmojiDragStop(id, event) {
+      const newEmojis = this.emojis.filter(emoji => emoji.id === id).map((emoji) => {
+        const generatedEmoji = {
+          emojiX: event.left,
+          emojiY: event.top,
+          emojiWidth: emoji.emojiWidth,
+          emojiHeight: emoji.emojiHeight,
+          emoji: emoji.emoji,
+          id,
+        };
+        return generatedEmoji;
+      });
+
+      this.$store.commit('drawing/UPDATE_EMOJI', newEmojis[0]);
 
       const rect = this.$el.getBoundingClientRect();
       this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
     },
 
-    onEmojiResizeStop(left, top, width, height) {
-      this.$store.commit('drawing/UPDATE_EMOJI_X', left);
-      this.$store.commit('drawing/UPDATE_EMOJI_Y', top);
-      this.$store.commit('drawing/UPDATE_EMOJI_WIDTH', width);
-      this.$store.commit('drawing/UPDATE_EMOJI_HEIGHT', height);
+    onEmojiResizeStop(id, event) {
+      const newEmoji = this.emojis.filter(emoji => emoji.id === id).map((emoji) => {
+        const generatedEmoji = {
+          emojiX: event.left,
+          emojiY: event.top,
+          emojiWidth: event.width,
+          emojiHeight: event.height,
+          emoji: emoji.emoji,
+          id,
+        };
+        return generatedEmoji;
+      })[0];
+
+      this.$store.commit('drawing/UPDATE_EMOJI', newEmoji);
 
       const rect = this.$el.getBoundingClientRect();
       this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
@@ -110,10 +130,8 @@ export default {
       const rect = this.$el.getBoundingClientRect();
       const text = this.$children
         .filter(child => child.$el.innerText !== '')[0];
-      const emoji = this.$children
-        .filter(child => child !== text)[0];
-
-      console.log(rect);
+      const emojiElements = this.$children
+        .filter(child => child.$el.classList[1] === 'emoji');
 
       if (text) {
         const localTextX = (this.$store.state.drawing.textX /
@@ -134,36 +152,32 @@ export default {
         text.height = localTextHeight;
         text.h = localTextHeight;
 
-        console.log(localTextX, localTextY, localTextWidth, localTextHeight);
-
         const localFontSize = (this.$store.state.drawing.fontSize /
           this.$store.state.drawing.videoHeight) * rect.height;
         this.$store.commit('drawing/UPDATE_FONT_SIZE', localFontSize);
       }
 
-      if (emoji) {
-        const localEmojiX = (this.$store.state.drawing.emojiX /
+      emojiElements.forEach((emojiElement) => {
+        /* eslint-disable no-param-reassign */
+        const myEmoji = this.emojis.filter(emoji => emoji.id === emojiElement.$el.id)[0];
+        const localEmojiX = (myEmoji.emojiX /
           this.$store.state.drawing.videoWidth) * rect.width;
-        const localEmojiY = (this.$store.state.drawing.emojiY /
+        const localEmojiY = (myEmoji.emojiY /
           this.$store.state.drawing.videoHeight) * rect.height;
-        const localEmojiWidth = (this.$store.state.drawing.emojiWidth /
+        const localEmojiWidth = (myEmoji.emojiWidth /
           this.$store.state.drawing.videoWidth) * rect.width;
-        const localEmojiHeight = (this.$store.state.drawing.emojiHeight /
+        const localEmojiHeight = (myEmoji.emojiHeight /
           this.$store.state.drawing.videoHeight) * rect.height;
 
-        emoji.left = localEmojiX;
-        emoji.x = localEmojiX;
-        emoji.top = localEmojiY;
-        emoji.y = localEmojiY;
-        emoji.width = localEmojiWidth;
-        emoji.w = localEmojiWidth;
-        emoji.height = localEmojiHeight;
-        emoji.h = localEmojiHeight;
-      }
-    },
-
-    emojiMounted() {
-      console.log('ping');
+        emojiElement.left = localEmojiX;
+        emojiElement.x = localEmojiX;
+        emojiElement.top = localEmojiY;
+        emojiElement.y = localEmojiY;
+        emojiElement.width = localEmojiWidth;
+        emojiElement.w = localEmojiWidth;
+        emojiElement.height = localEmojiHeight;
+        emojiElement.h = localEmojiHeight;
+      });
     },
   },
 
@@ -172,7 +186,7 @@ export default {
       drawingText: state => state.drawing.text,
       fontSize: state => state.drawing.fontSize,
       color: state => state.drawing.color,
-      selectedEmoji: state => state.drawing.emoji,
+      emojis: state => state.drawing.emojis,
       videoPlaying: state => state.video.playing,
     }),
 
@@ -180,15 +194,13 @@ export default {
       return (!this.disableEditing && (this.drawingText !== ''));
     },
     emojiEditable() {
-      return (!this.disableEditing && (this.selectedEmoji !== ''));
+      return (!this.disableEditing && (this.emojis.length > 0));
     },
   },
 
   watch: {
     videoPlaying(newVideoPlaying) {
-      console.log('ping');
       if (newVideoPlaying) {
-        console.log('pong');
         this.$nextTick(() => {
           this.manipulateSizes();
         });
@@ -237,8 +249,8 @@ export default {
   }
 }
 
-#emoji {
-  #emoji-image {
+.emoji {
+  .emoji-image {
     width: 100%;
     height: 100%;
     background-size: contain;
@@ -249,7 +261,7 @@ export default {
 </style>
 
 <style lang="scss">
-#text.editable, #emoji.editable {
+#text.editable, .emoji.editable {
   .handle {
     display: block !important;
   }

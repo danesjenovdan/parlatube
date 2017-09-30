@@ -13,11 +13,7 @@ const state = {
   fontSize: 40,
   color: '#bc2a2a',
 
-  emojiX: 300,
-  emojiY: 300,
-  emojiWidth: 40,
-  emojiHeight: 40,
-  emoji: '',
+  emojis: [],
 
   videoWidth: 0,
   videoHeight: 0,
@@ -47,21 +43,28 @@ const mutations = {
     state.color = newColor;
   },
 
-  UPDATE_EMOJI_X(state, newEmojiX) {
-    state.emojiX = newEmojiX;
+  ADD_EMOJI(state, newEmoji) {
+    state.emojis.push(newEmoji);
   },
-  UPDATE_EMOJI_Y(state, newEmojiY) {
-    state.emojiY = newEmojiY;
+  UPDATE_EMOJI_X(state, payload) {
+    state.emojis.filter(emoji => emoji.id === payload.id)[0].emojiX = payload.newEmojiX;
   },
-  UPDATE_EMOJI_WIDTH(state, newEmojiWidth) {
-    state.emojiWidth = newEmojiWidth;
+  UPDATE_EMOJI_Y(state, payload) {
+    state.emojis.filter(emoji => emoji.id === payload.id)[0].emojiY = payload.newEmojiY;
   },
-  UPDATE_EMOJI_HEIGHT(state, newEmojiHeight) {
-    state.emojiHeight = newEmojiHeight;
+  UPDATE_EMOJI_WIDTH(state, payload) {
+    state.emojis.filter(emoji => emoji.id === payload.id)[0].emojiWidth = payload.newEmojiWidth;
   },
-  UPDATE_EMOJI(state, newEmoji) {
-    state.emoji = newEmoji;
+  UPDATE_EMOJI_HEIGHT(state, payload) {
+    state.emojis.filter(emoji => emoji.id === payload.id)[0].emojiHeight = payload.newEmojiHeight;
   },
+  UPDATE_EMOJI(state, payload) {
+    const newEmojis = JSON.parse(JSON.stringify(state.emojis));
+    const lookingFor = newEmojis.filter(emoji => emoji.id === payload.id)[0];
+    newEmojis[newEmojis.indexOf(lookingFor)] = payload;
+    state.emojis = newEmojis;
+  },
+
 
   UPDATE_VIDEO_SIZE(state, newVideoSizes) {
     state.videoWidth = newVideoSizes.width;
@@ -77,11 +80,7 @@ const mutations = {
     state.fontSize = newState.fontSize;
     state.color = newState.color;
 
-    state.emojiX = newState.emojiX;
-    state.emojiY = newState.emojiY;
-    state.emojiWidth = newState.emojiWidth;
-    state.emojiHeight = newState.emojiHeight;
-    state.emoji = newState.emoji;
+    state.emojis = newState.emojis;
 
     state.videoWidth = newState.videoWidth;
     state.videoHeight = newState.videoHeight;
@@ -95,11 +94,7 @@ const mutations = {
     state.fontSize = 40;
     state.color = '#bc2a2a';
 
-    state.emojiX = 300;
-    state.emojiY = 300;
-    state.emojiWidth = 40;
-    state.emojiHeight = 40;
-    state.emoji = '';
+    state.emojis = [];
 
     state.videoWidth = 0;
     state.videoHeight = 0;
