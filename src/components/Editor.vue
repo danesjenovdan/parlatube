@@ -8,65 +8,67 @@
         <div class="row">
           <label for="drawing-text">Besedilo čez video</label>
           <textarea id="drawing-text" type="text" v-model="localDrawingText"></textarea>
-          <div
-            class="colorpicker"
-            @click="showColorPicker"
-            ref="colorpicker"
-          >
-            <div class="color" :style="{ 'background-color': colorPickerProps.hex }"></div>
-            <color-picker
-              v-model="colorPickerProps"
-              :class="{ visible: colorPickerVisible }"
-              ref="colorPalette"
-            />
-          </div>
-          <div
-            class="font-size-picker"
-            @click="displayFontOptions = !displayFontOptions"
-          >
-            <input
-              v-model="localFontSize"
-            >
-            <div
-              class="font-options"
-              v-if="displayFontOptions"
-            >
+          <div class="row shrinkable">
+            <div class="row">
               <div
-                class="font-option"
-                v-for="option in fontOptions"
-                @click="localFontSize = option"
-              >{{ option }} px</div>
+                class="colorpicker"
+                @click="showColorPicker"
+                ref="colorpicker"
+              >
+                <div class="color" :style="{ 'background-color': colorPickerProps.hex }"></div>
+                <color-picker
+                  v-model="colorPickerProps"
+                  :class="{ visible: colorPickerVisible }"
+                  ref="colorPalette"
+                />
+              </div>
+              <div
+                class="font-size-picker"
+                @click="displayFontOptions = !displayFontOptions"
+              >
+                <input
+                  v-model="localFontSize"
+                >
+                <div
+                  class="font-options"
+                  v-if="displayFontOptions"
+                >
+                  <div
+                    class="font-option"
+                    v-for="option in fontOptions"
+                    @click="localFontSize = option"
+                  >{{ option }} px</div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <label for="title-text">Naslov objave</label>
-          <input id="title-text" type="text" v-model="localTitleText"/>
-        </div>
-        <div class="row">
-          <label></label>
-          <div
-            :class="['emoji-button', { visible: emojiPickerVisible }]"
-            @click="emojiPickerVisible = !emojiPickerVisible"
-          >
-            Dodaj emoji
-            <picker
-              :emoji-size="16"
-              :per-line="9"
-              :skin="1"
-              :native="false"
-              set="emojione"
-              :exclude="['recent']"
-              :class="['emojipicker', { visible: emojiPickerVisible }]"
-              :i18n="i18n_si"
-              @click="pickEmoji"
-            ></picker>
+            <div class="row">
+              <div
+                :class="['emoji-button', { visible: emojiPickerVisible }]"
+                @click="emojiPickerVisible = !emojiPickerVisible"
+              >
+                Dodaj emoji
+                <picker
+                  :emoji-size="16"
+                  :sheet-size="16"
+                  :per-line="9"
+                  :skin="1"
+                  :native="false"
+                  set="emojione"
+                  :exclude="['recent']"
+                  :class="['emojipicker', { visible: emojiPickerVisible }]"
+                  :i18n="i18n_si"
+                  @click.stop="pickEmoji"
+                ></picker>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="editor-controls-container">
       <div class="row row-buttons">
+        <label for="title-text">Naslov objave</label>
+        <input id="title-text" type="text" v-model="localTitleText"/>
         <button
           @click="createSnippet"
           class="editor-button"
@@ -220,6 +222,40 @@ export default {
       display: flex;
       flex: 0 1 100%;
       position: relative;
+      
+      &.shrinkable {
+        flex: 1 0 173px;
+        width: 173px;
+      }
+
+      .row {
+        flex-wrap: wrap;
+      }
+    }
+
+    label {
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+      line-height: 33px;
+      display: flex;
+      flex: 0 0 212px;
+    }
+    input, textarea {
+      border: none;
+      background: $white;
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      height: 33px;
+      line-height: 33px;
+
+      padding: 0 14px 0 14px;
+
+      display: flex;
+      flex: 0 1 429px;
+    }
+    textarea {
+      height: 81px;
     }
 
     .text-stuff {
@@ -240,31 +276,6 @@ export default {
         &:last-child {
           margin-bottom: 0;
         }
-      }
-
-      label {
-        font-family: 'Space Mono', monospace;
-        font-size: 16px;
-        line-height: 33px;
-        display: flex;
-        flex: 0 0 212px;
-      }
-      input, textarea {
-        border: none;
-        background: $white;
-        font-family: 'Space Mono', monospace;
-        font-size: 16px;
-        font-weight: 700;
-        height: 33px;
-        line-height: 33px;
-
-        padding: 0 14px 0 14px;
-
-        display: flex;
-        flex: 0 1 429px;
-      }
-      textarea {
-        height: 66px;
       }
 
       .colorpicker {
@@ -387,7 +398,7 @@ export default {
     .emoji-button {
       position: relative;
       display: flex;
-      flex: 0 1 171px;
+      flex: 0 1 141px;
       height: 33px;
       background-color: $blue;
       font-family: 'Space Mono', monospace;
@@ -396,12 +407,19 @@ export default {
       font-weight: 700;
       text-align: center;
       line-height: 33px;
-      padding-left: 18px;
-      letter-spacing: 0.96px;
+      padding-left: 9px;
+      padding-right: 9px;
+      // letter-spacing: 0.96px;
       cursor: pointer;
+
+      margin-left: 14px;
 
       &:hover {
         background-color: $light-blue;
+
+        &.visible::before {
+          border-color: transparent transparent $light-blue transparent;
+        }
       }
 
       &::after {
@@ -420,10 +438,10 @@ export default {
         height: 0;
         border-style: solid;
         border-width: 0 6px 8px 6px;
-        border-color: transparent transparent #ffffff transparent;
+        border-color: transparent transparent $blue transparent;
         position: absolute;
-        bottom: -10px;
-        left: 15px;
+        top: -8px;
+        right: 15px;
         display: block;
         z-index: 3;
       }
@@ -431,8 +449,8 @@ export default {
     .emojipicker {
       position: absolute;
       display: none;
-      left: 0;
-      top: 43px;
+      right: 0;
+      top: -303px;
       border-radius: 0;
       width: 257px;
       height: 291px;
@@ -447,12 +465,13 @@ export default {
     }
 
     .row-buttons {
-      justify-content: flex-end;
+      padding-top: 33px;
+      padding-bottom: 33px;
     }
 
     .editor-button {
       display: flex;
-      flex: 0 0 255px;
+      flex: 0 2 120px;
       height: 48px;
       background-color: $red;
       border: none;
@@ -463,8 +482,8 @@ export default {
       font-weight: 700;
       justify-content: center;
 
-      margin-top: 33px;
-      margin-bottom: 34px;
+      margin-left: 14px;
+      margin-top: -8px;
 
       cursor: pointer;
 
@@ -473,14 +492,12 @@ export default {
       }
     }
     .reset-button {
-      flex: 0 0 134px;
+      flex: 0 2 120px;
       background-color: $gray;
       color: $black;
       text-decoration: underline;
 
       font-size: 16px;
-
-      margin-left: 10px;
 
       &:hover {
         background-color: $dark-gray;
@@ -503,5 +520,9 @@ export default {
   // height: 56px;
   @extend %scroller;
   overflow-y: scroll !important;
+}
+.emoji-mart-search,
+.emoji-mart-category-label {
+  display: none;
 }
 </style>
