@@ -4,13 +4,14 @@
       <div class="intro">Odreži zanimiv del videa in ga deli s prijatelji!</div>
       <div class="video-and-transcripts-container">
         <div class="video-container">
-          <parla-video></parla-video>
+          <parla-video :showDrawing="editing" :showControls="!editing"></parla-video>
         </div>
         <div class="transcripts-container">
           <transcripts></transcripts>
         </div>
       </div>
-      <editor></editor>
+      <button @click="editing = true" v-if="!editing">odpri</button>
+      <editor v-if="editing" v-on:disableEditing="editing = false"></editor>
       <div class="row feed-container">
         <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="910050625081286656" data-width="100%" data-height="802">#soocenje Tweets</a>
       </div>
@@ -20,7 +21,7 @@
 
 <script>
 /* globals twttr */
-
+import isMobile from 'ismobilejs';
 import ParlaVideo from 'components/ParlaVideo';
 import Editor from 'components/Editor';
 import Transcripts from 'components/Transcripts';
@@ -30,6 +31,7 @@ export default {
 
   data() {
     return {
+      editing: false,
     };
   },
 
@@ -43,12 +45,17 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');// '-CLenqwC-Qw'
+    this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');// -CLenqwC-Qw wXE4_es0cCI
   },
 
   mounted() {
     // Twitter embed thing
     twttr.widgets.load(this.$el);
+
+    console.log(isMobile.any);
+    if (isMobile.any) {
+      this.editing = false;
+    }
   },
 };
 </script>

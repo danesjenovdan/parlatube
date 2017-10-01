@@ -167,7 +167,7 @@ export default {
       // this.$store.commit('video/RESET_STATE');
       // this.$store.commit('editor/RESET_STATE');
       // this.$store.commit('drawing/RESET_STATE');
-      alert('a sploh rabimo ta gumb?');
+      this.$emit('disableEditing');
     },
 
     pickEmoji(emoji) {
@@ -201,7 +201,7 @@ export default {
   },
 
   mounted() {
-    this.$store.commit('editor/UPDATE_END_TIME', this.duration);
+    // this.$store.commit('editor/UPDATE_END_TIME', this.duration);
   },
 };
 </script>

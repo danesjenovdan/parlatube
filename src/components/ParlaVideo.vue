@@ -1,7 +1,7 @@
 <template>
     <div id="video">
       <div id="player"></div>
-      <drawing :disableEditing="disableEditing"></drawing>
+      <drawing v-if="showDrawing" :disableEditing="disableEditing"></drawing>
     </div>
 </template>
 
@@ -26,6 +26,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    showDrawing: {
+      type: Boolean,
+      default: true,
+    },
+    showControls: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -35,6 +43,7 @@ export default {
       currentX: null,
       currentY: null,
       oldCurrentTime: 0,
+      player: null,
     };
   },
 
@@ -63,11 +72,6 @@ export default {
       drawingText: 'drawing/textGetter',
       fontSize: 'drawing/fontSizeGetter',
       color: 'drawing/colorGetter',
-    }),
-
-    player: () => YouTubePlayer('player', {
-      width: null,
-      height: `${this.height}px`,
     }),
   },
 
@@ -106,6 +110,13 @@ export default {
   },
 
   mounted() {
+    this.player = YouTubePlayer('player', {
+      width: null,
+      height: `${this.height}px`,
+      playerVars: {
+        controls: this.showControls ? 1 : 0,
+      },
+    });
     this.player.loadVideoById(this.videoId);
     this.player.playVideo();
     this.player.mute(); // TODO unMute
@@ -180,4 +191,12 @@ export default {
 
   min-height: 300px;
 }
+
+// iframe .html5-video-player div {
+//   display: none;
+// }
+// iframe .html5-video-player .html5-video-container {
+//   display: block;
+//   background: red;
+// }
 </style>

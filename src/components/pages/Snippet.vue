@@ -3,6 +3,9 @@
     <div class="container">
       <parla-video :height="552" :disableEditing="true"></parla-video>
     </div>
+    <div class="container">
+      <share></share>
+    </div>
     <div class="feed-container">
       <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
     </div>
@@ -13,6 +16,7 @@
 /* globals FB */
 
 import ParlaVideo from 'components/ParlaVideo';
+import Share from 'components/Share';
 
 export default {
   name: 'Snippet',
@@ -24,6 +28,7 @@ export default {
 
   components: {
     ParlaVideo,
+    Share,
   },
 
   methods: {

@@ -141,12 +141,12 @@ export default {
       duration: 'video/durationGetter',
       currentTime: 'video/currentTimeGetter',
       startMarkerPosition: 'editor/startMarkerGetter',
-      endMarkerPosition: 'editor/endMarkerGetter',
     }),
 
     ...mapState({
       videoPlaying: state => state.video.playing,
       shouldIPause: state => state.video.shouldIPause,
+      endMarkerPosition: state => state.editor.endTime,
     }),
   },
 
@@ -369,6 +369,11 @@ export default {
     this.localStepSize = (this.$refs.viewport.getBoundingClientRect().width - 10) / this.duration;
     this.baseLocalStepSize = this.localStepSize;
     this.rulerOffset = 0;
+    console.log('updating end time', this.duration);
+    this.$store.commit('editor/UPDATE_END_TIME', this.duration);
+    // this.$nextTick(() => {
+    //   this.localEndMarkerPosition = this.endMarkerPosition * this.localStepSize;
+    // });
   },
 };
 </script>
