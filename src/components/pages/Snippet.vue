@@ -5,6 +5,8 @@
     </div>
     <div class="container">
       <share></share>
+      <div class="conversion">Odreži zanimiv del videa in ga deli s prijatelji!</div>
+      <div class="conversion-button"><span class="cutme"></span>PRIPRAVI IZSEK</div>
     </div>
     <div class="feed-container">
       <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
@@ -79,6 +81,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../styles/colors';
+
 #snippet {
   display: flex;
   flex: 0 0 100%;
@@ -92,6 +96,71 @@ export default {
   background: -webkit-linear-gradient(top, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to bottom, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+
+  .conversion {
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    line-height: 26px;
+
+    text-align: center;
+
+    margin-top: 76px;
+    margin-bottom: 35px;
+    font-weight: 300;
+
+    // &:before,
+    // &:after {
+    //   display: block;
+    //   content: '';
+    //   width: 43px;
+    //   height: 26px;
+
+    //   margin-left: 12px;
+    //   margin-right: 12px;
+
+    //   background-image: url('../../assets/icons/cut.svg');
+    //   background-position: center;
+    //   background-repeat: no-repeat;
+    //   transform: scale(-1, 1);
+    // }
+    // &:after {
+    //   transform: scale(1, 1);
+    // }
+  }
+  .conversion-button {
+    width: 298px;
+    height: 68px;
+    border: 4px solid $red;
+    color: $red;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 68px;
+    position: relative;
+    margin: auto;
+    cursor: pointer;
+
+    .cutme {
+      background-image: url('../../assets/icons/cut-red.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 54px;
+      height: 32px;
+      display: inline-block;
+      top: 9px;
+      position: relative;
+      transform: scale(-1, 1);
+      margin-right: 17px;
+      filter: color($red);
+    }
+  }
 
   .feed-container {
     display: flex;

@@ -48,6 +48,12 @@ export default {
     this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');// -CLenqwC-Qw wXE4_es0cCI
   },
 
+//   konami
+// console error
+// css spravi kvadrat v kvadrat v treh vrsticah
+// cookie
+// link do google forme
+
   mounted() {
     // Twitter embed thing
     twttr.widgets.load(this.$el);
