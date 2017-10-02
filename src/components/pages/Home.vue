@@ -11,7 +11,7 @@
         </div>
       </div>
       <button @click="editing = true" v-if="!editing">odpri</button>
-      <editor v-if="editing" v-on:disableEditing="editing = false"></editor>
+      <editor v-if="editing" v-on:disableEditing="disableEditing"></editor>
       <div class="row feed-container">
         <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="910050625081286656" data-width="100%" data-height="802">#soocenje Tweets</a>
       </div>
@@ -41,11 +41,21 @@ export default {
     Transcripts,
   },
 
+  methods: {
+    disableEditing() {
+      this.editing = false;
+      this.$store.commit('video/TURN_LOOPING_OFF');
+      this.$nextTick(() => {
+        this.$store.commit('video/UPDATE_SEEK_TO', this.$store.state.video.duration);
+      });
+    },
+  },
+
   created() {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', 'wXE4_es0cCI');// -CLenqwC-Qw wXE4_es0cCI
+    this.$store.commit('video/UPDATE_VIDEOID', 'qTOUqKI1NEc');// -CLenqwC-Qw wXE4_es0cCI
   },
 
 //   konami
@@ -141,7 +151,7 @@ export default {
 
   .feed-container {
     display: flex;
-    flex: 0 0 738px;
+    flex: 0 0 538px;
     position: relative;
     margin: auto;
     margin-top: 84px;

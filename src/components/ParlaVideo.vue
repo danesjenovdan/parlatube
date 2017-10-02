@@ -34,6 +34,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    isLive: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data() {
@@ -132,6 +136,7 @@ export default {
 
       // update duration if needed
       this.player.getDuration().then((duration) => {
+        // console.log(duration);
         if (this.duration !== duration) {
           this.$store.commit('video/UPDATE_DURATION', duration);
         }
@@ -139,6 +144,8 @@ export default {
 
       // check if player out of bounds and update current time
       this.player.getCurrentTime().then((currentTime) => {
+        // console.log(this.duration, currentTime);
+        // console.log(currentTime);
         // return if currentTime didn't change or is undefined or duration is 0
         if ((currentTime === this.oldCurrentTime) || !currentTime || (this.duration === 0)) {
           return false;
@@ -154,7 +161,14 @@ export default {
           }
         }
 
+        // if (this.isLive) {
+        //   this.$store.commit('video/UPDATE_DURATION', currentTime + 1);
+        //   this.$nextTick(() => {
+        //     this.$store.commit('video/UPDATE_CURRENT_TIME', currentTime);
+        //   });
+        // } else {
         this.$store.commit('video/UPDATE_CURRENT_TIME', currentTime);
+        // }
         return true;
       });
     }, 50);

@@ -75,7 +75,6 @@ const mutations = {
 
 // getters
 const getters = {
-  currentTimeGetter: state => state.currentTime,
   seekToGetter: state => state.seekTo,
   durationGetter: state => state.duration,
 };

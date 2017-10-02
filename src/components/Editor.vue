@@ -1,7 +1,7 @@
 <template>
   <div id="editor">
     <div class="editor-controls-container">
-      <slider></slider>
+      <slider :live="false"></slider>
     </div>
     <div class="editor-controls-container">
       <div class="text-stuff">

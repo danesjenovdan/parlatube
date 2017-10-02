@@ -51,11 +51,19 @@ const getters = {
 };
 
 // actions
-// const actions = {};
+const actions = {
+  updateSliderValues(context, newValues) {
+    console.log(context, newValues);
+    context.commit('UPDATE_SLIDER_VALUES', newValues);
+    context.commit('UPDATE_START_TIME', newValues[0]);
+    context.commit('UPDATE_END_TIME', newValues[1]);
+  },
+};
 
 export default {
   namespaced,
   state,
   mutations,
   getters,
+  actions,
 };

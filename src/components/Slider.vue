@@ -114,6 +114,14 @@ export default {
       default: 20,
       validator: value => value > 0,
     },
+    live: {
+      type: Boolean,
+      default: true,
+    },
+    duration: {
+      type: Number,
+      default: 100,
+    },
   },
 
   data() {
@@ -138,8 +146,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      duration: 'video/durationGetter',
-      currentTime: 'video/currentTimeGetter',
+      videoDuration: 'video/durationGetter',
       startMarkerPosition: 'editor/startMarkerGetter',
     }),
 
@@ -147,6 +154,7 @@ export default {
       videoPlaying: state => state.video.playing,
       shouldIPause: state => state.video.shouldIPause,
       endMarkerPosition: state => state.editor.endTime,
+      currentTime: state => state.video.currentTime,
     }),
   },
 
@@ -180,15 +188,13 @@ export default {
 
     endMarkerPosition(newEndMarkerPosition) {
       this.localEndMarkerPosition = newEndMarkerPosition * this.localStepSize;
-      if (this.localEndMarkerPosition > this.localStartMarkerPosition) {
-        // make both editor and video know they can loop
-        this.$store.commit('editor/TURN_LOOPING_ON');
-        this.$store.commit('video/TURN_LOOPING_ON');
-      }
+      // make both editor and video know they can loop
+      this.$store.commit('editor/TURN_LOOPING_ON');
+      this.$store.commit('video/TURN_LOOPING_ON');
 
+      // update processedEndTime
       const minutes = String(Math.floor(newEndMarkerPosition / 60));
       const seconds = String(newEndMarkerPosition % 60);
-
       this.processedEndTime = `${this.padZeroes(minutes)}:${this.padZeroes(seconds.split('.')[0])}`;
     },
 
@@ -205,13 +211,19 @@ export default {
     },
 
     localStartMarkerPosition(newLocalStartMarkerPosition) {
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [newLocalStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
+      this.$store.dispatch('editor/updateSliderValues', [newLocalStartMarkerPosition / this.localStepSize, this.localEndMarkerPosition / this.localStepSize]);
       this.$store.commit('video/UPDATE_LOOP_START', newLocalStartMarkerPosition / this.localStepSize);
     },
 
     localEndMarkerPosition(newLocalEndMarkerPosition) {
-      this.$store.commit('editor/UPDATE_SLIDER_VALUES', [this.localStartMarkerPosition / this.localStepSize, newLocalEndMarkerPosition / this.localStepSize]);
+      this.$store.dispatch('editor/updateSliderValues', [this.localStartMarkerPosition / this.localStepSize, newLocalEndMarkerPosition / this.localStepSize]);
       this.$store.commit('video/UPDATE_LOOP_END', newLocalEndMarkerPosition / this.localStepSize);
+    },
+
+    videoDuration(newVideoDuration) {
+      if (!this.live) {
+        this.duration = newVideoDuration;
+      }
     },
 
     duration(newDuration) {
@@ -220,6 +232,10 @@ export default {
         this.localStepSize = (this.$refs.viewport.getBoundingClientRect().width - 10) / newDuration;
         this.baseLocalStepSize = this.localStepSize;
       }
+
+      // if (newDuration * this.localStepSize > this.localEndMarkerPosition) {
+      //   this.localEndMarkerPosition = newDuration * this.localStepSize;
+      // }
 
       this.localEndMarkerPosition = newDuration * this.localStepSize;
     },
@@ -363,14 +379,27 @@ export default {
   },
 
   created() {
+    if (!this.live) {
+      this.duration = this.videoDuration;
+      console.log('duration', this.duration);
+    } else {
+      console.log('pin');
+    }
   },
 
   mounted() {
+    console.log('duration', this.duration);
     this.localStepSize = (this.$refs.viewport.getBoundingClientRect().width - 10) / this.duration;
     this.baseLocalStepSize = this.localStepSize;
     this.rulerOffset = 0;
-    console.log('updating end time', this.duration);
-    this.$store.commit('editor/UPDATE_END_TIME', this.duration);
+
+    if (this.live) {
+      console.log(this.currentTime);
+      this.$store.dispatch('editor/updateSliderValues', [0, this.currentTime + 30]);
+      this.duration = this.currentTime + 30;
+    } else {
+      this.$store.dispatch('editor/updateSliderValues', [0, this.duration]);
+    }
     // this.$nextTick(() => {
     //   this.localEndMarkerPosition = this.endMarkerPosition * this.localStepSize;
     // });
@@ -508,7 +537,7 @@ export default {
     display: flex;
     flex: 1 1 100%;
     flex-wrap: wrap;
-    margin-top: 23px;
+    margin-top: 20px;
 
     .slider-zoom-row {
       position: relative;
@@ -516,20 +545,24 @@ export default {
       overflow: hidden;
       flex: 0 1 100%;
       justify-content: center;
-      margin-bottom: 15px;
+      // margin-bottom: 15px;
       padding-bottom: 5px;
+
+      &:first-child {
+        margin-bottom: 8px;
+      }
     }
 
     .slider-input {
-      width: 76px;
-      height: 33px;
+      width: 56px;
+      height: 25px;
       display: flex;
       text-align: center;
       padding: 0;
       border: 1px solid $white;
 
       font-family: 'Space Mono', monospace;
-      font-size: 16px;
+      font-size: 12px;
 
       &:disabled {
         border-color: $black;
