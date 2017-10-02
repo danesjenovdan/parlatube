@@ -147,6 +147,8 @@ export default {
     margin: auto;
     cursor: pointer;
 
+    transition: all 0.2s ease-out;
+
     .cutme {
       background-image: url('../../assets/icons/cut-red.svg');
       background-position: center;
@@ -159,6 +161,15 @@ export default {
       transform: scale(-1, 1);
       margin-right: 17px;
       filter: color($red);
+    }
+
+    &:hover {
+      background-color: $red;
+      color: $white;
+
+      .cutme {
+        background-image: url('../../assets/icons/cut-white.svg');
+      }
     }
   }
 

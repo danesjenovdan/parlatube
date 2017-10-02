@@ -1,7 +1,6 @@
 <template>
   <div id="home">
     <div class="container">
-      <div class="intro">Odreži zanimiv del videa in ga deli s prijatelji!</div>
       <div class="video-and-transcripts-container">
         <div class="video-container">
           <parla-video :showDrawing="editing" :showControls="!editing"></parla-video>
@@ -10,8 +9,20 @@
           <transcripts></transcripts>
         </div>
       </div>
-      <button @click="editing = true" v-if="!editing">odpri</button>
-      <editor v-if="editing" v-on:disableEditing="disableEditing"></editor>
+      <div
+        v-if="!editing"
+        class="conversion"
+      >Odreži zanimiv del videa in ga deli s prijatelji!</div>
+      <div
+        v-if="!editing"
+        @click="editing = true"
+        class="conversion-button"
+      ><span class="cutme"></span>PRIPRAVI IZSEK</div>
+      <editor
+        v-if="editing"
+        v-on:disableEditing="disableEditing"
+        :live="live"
+      ></editor>
       <div class="row feed-container">
         <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/soocenje" data-widget-id="910050625081286656" data-width="100%" data-height="802">#soocenje Tweets</a>
       </div>
@@ -32,6 +43,7 @@ export default {
   data() {
     return {
       editing: false,
+      live: false,
     };
   },
 
@@ -45,9 +57,9 @@ export default {
     disableEditing() {
       this.editing = false;
       this.$store.commit('video/TURN_LOOPING_OFF');
-      this.$nextTick(() => {
+      if (this.live) {
         this.$store.commit('video/UPDATE_SEEK_TO', this.$store.state.video.duration);
-      });
+      }
     },
   },
 
@@ -95,39 +107,39 @@ export default {
   background: linear-gradient(to bottom, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 
-  .intro {
-    display: flex;
-    justify-content: center;
+  // .intro {
+  //   display: flex;
+  //   justify-content: center;
 
-    width: 100%;
+  //   width: 100%;
 
-    font-family: 'Poppins', sans-serif;
-    font-size: 30px;
-    line-height: 26px;
+  //   font-family: 'Poppins', sans-serif;
+  //   font-size: 30px;
+  //   line-height: 26px;
 
-    text-align: center;
+  //   text-align: center;
 
-    margin-bottom: 35px;
+  //   margin-bottom: 35px;
 
-    &:before,
-    &:after {
-      display: block;
-      content: '';
-      width: 43px;
-      height: 26px;
+  //   &:before,
+  //   &:after {
+  //     display: block;
+  //     content: '';
+  //     width: 43px;
+  //     height: 26px;
 
-      margin-left: 12px;
-      margin-right: 12px;
+  //     margin-left: 12px;
+  //     margin-right: 12px;
 
-      background-image: url('../../assets/icons/cut.svg');
-      background-position: center;
-      background-repeat: no-repeat;
-      transform: scale(-1, 1);
-    }
-    &:after {
-      transform: scale(1, 1);
-    }
-  }
+  //     background-image: url('../../assets/icons/cut.svg');
+  //     background-position: center;
+  //     background-repeat: no-repeat;
+  //     transform: scale(-1, 1);
+  //   }
+  //   &:after {
+  //     transform: scale(1, 1);
+  //   }
+  // }
 
   .video-and-transcripts-container {
     display: flex;
@@ -149,9 +161,87 @@ export default {
     }
   }
 
-  .feed-container {
+  .conversion {
     display: flex;
-    flex: 0 0 538px;
+    justify-content: center;
+
+    width: 100%;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    line-height: 26px;
+
+    text-align: center;
+
+    margin-top: 35px;
+    margin-bottom: 30px;
+    font-weight: 300;
+
+    // &:before,
+    // &:after {
+    //   display: block;
+    //   content: '';
+    //   width: 43px;
+    //   height: 26px;
+
+    //   margin-left: 12px;
+    //   margin-right: 12px;
+
+    //   background-image: url('../../assets/icons/cut.svg');
+    //   background-position: center;
+    //   background-repeat: no-repeat;
+    //   transform: scale(-1, 1);
+    // }
+    // &:after {
+    //   transform: scale(1, 1);
+    // }
+  }
+  .conversion-button {
+    width: 298px;
+    height: 68px;
+    border: 4px solid $red;
+    color: $red;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 68px;
+    position: relative;
+    margin: auto;
+    cursor: pointer;
+
+    transition: all 0.2s ease-out;
+
+    .cutme {
+      background-image: url('../../assets/icons/cut-red.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 54px;
+      height: 32px;
+      display: inline-block;
+      top: 9px;
+      position: relative;
+      transform: scale(-1, 1);
+      margin-right: 17px;
+      filter: color($red);
+    }
+
+    &:hover {
+      background-color: $red;
+      color: $white;
+
+      .cutme {
+        background-image: url('../../assets/icons/cut-white.svg');
+      }
+    }
+  }
+
+  .feed-container {
+    // display: flex;
+    // flex: 0 0 538px;
+    width: 100%;
+    max-width: 538px;
     position: relative;
     margin: auto;
     margin-top: 84px;

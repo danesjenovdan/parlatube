@@ -396,9 +396,13 @@ export default {
     if (this.live) {
       console.log(this.currentTime);
       this.$store.dispatch('editor/updateSliderValues', [0, this.currentTime + 30]);
+      this.$store.commit('video/UPDATE_LOOP_START', 0);
+      this.$store.commit('video/UPDATE_LOOP_END', this.currentTime + 30);
       this.duration = this.currentTime + 30;
     } else {
       this.$store.dispatch('editor/updateSliderValues', [0, this.duration]);
+      this.$store.commit('video/UPDATE_LOOP_START', 0);
+      this.$store.commit('video/UPDATE_LOOP_END', this.duration);
     }
     // this.$nextTick(() => {
     //   this.localEndMarkerPosition = this.endMarkerPosition * this.localStepSize;
