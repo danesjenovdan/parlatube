@@ -1,7 +1,7 @@
 <template>
   <div id="drawing-container">
     <vue-draggable-resizable
-      v-if="(drawingText !== '') && videoPlaying"
+      v-if="(drawingText !== '')"
       :x="10"
       :y="300"
       :w="620"

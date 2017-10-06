@@ -171,9 +171,8 @@ export default {
     },
 
     resetState() {
-      // this.$store.commit('video/RESET_STATE');
-      // this.$store.commit('editor/RESET_STATE');
-      // this.$store.commit('drawing/RESET_STATE');
+      this.$store.commit('editor/RESET_STATE');
+      this.$store.commit('drawing/RESET_STATE');
       this.$emit('disableEditing');
     },
 
@@ -326,7 +325,7 @@ export default {
           top: 14px;
           right: 11px;
 
-          background-image: url('../assets/v.png');
+          background-image: url('../assets/icons/v.svg');
         }
       }
 
@@ -383,7 +382,7 @@ export default {
           top: 14px;
           right: 11px;
 
-          background-image: url('../assets/v.png');
+          background-image: url('../assets/icons/v.svg');
         }
       }
       .font-options {

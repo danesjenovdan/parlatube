@@ -103,7 +103,7 @@ export default {
 
           this.numberOfResults = result.data.length;
         } else {
-          this.transcripts = this.allSpeeches;
+          this.transcripts = [];
           this.numberOfResults = 0;
         }
       });
@@ -262,6 +262,20 @@ export default {
 
     overflow-x: hidden;
     overflow-y: auto;
+
+    background-color: $white;
+
+    position: relative;
+
+    &:before {
+      content: 'Ni rezultatov';
+      display: block;
+      position: absolute;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      top: 10px;
+      left: 14px;
+    }
   }
   .speech {
     display: flex;

@@ -119,6 +119,7 @@ export default {
       height: `${this.height}px`,
       playerVars: {
         controls: this.showControls ? 1 : 0,
+        rel: 0,
       },
     });
     this.player.loadVideoById(this.videoId);
@@ -204,6 +205,12 @@ export default {
   position: relative;
 
   min-height: 300px;
+}
+
+iframe {
+  .ytp-paus-overlay {
+    display: none;
+  }
 }
 
 // iframe .html5-video-player div {

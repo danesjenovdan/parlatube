@@ -70,6 +70,8 @@ export default {
     if (FB) {
       FB.XFBML.parse(this.$el);
     }
+
+    this.$http.get(`http://speeches.knedl.si/analytics/collect/${this.$route.params.snippetId}`);
   },
 
   created() {

@@ -492,30 +492,19 @@ export default {
         &.end-marker {
           top: 0;
           left: 0;
-          background: $red;
-          width: 11px;
-          height: 44px;
+          background: transparent;
+          width: 5px;
+          height: 34px;
+          border-top: 5px solid $red;
+          border-bottom: 5px solid $red;
+          border-left: 6px solid $red;
 
           margin-left: -6px;
-
-          &::after {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 5px;
-            left: 6px;
-            width: 5px;
-            height: 35px;
-            background-color: $blue;
-          }
         }
         &.end-marker {
           left: 100%;
-          // margin-left: -16px;
-
-          &:after {
-            left: 0;
-          }
+          border-left: none;
+          border-right: 6px solid $red;
         }
       }
     }
@@ -602,7 +591,8 @@ export default {
       &.slider-zoom-plus,
       &.slider-zoom-minus {
         background-image: url('../assets/icons/zoom-in.svg');
-        background-size: 28px;
+        background-size: 20px;
+        background-position: center 10px;
       }
       &.slider-zoom-minus {
         background-image: url('../assets/icons/zoom-out.svg');
