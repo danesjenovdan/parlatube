@@ -67,7 +67,7 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', 'qTOUqKI1NEc');// -CLenqwC-Qw wXE4_es0cCI
+    this.$store.commit('video/UPDATE_VIDEOID', 'ge65-j39Fy0');// -CLenqwC-Qw wXE4_es0cCI
   },
 
 //   konami
