@@ -84,7 +84,7 @@ export default {
       this.scrollTranscripts = false;
       this.$refs.speechesContainer.scrollTop = 0;
 
-      this.$http.get(`http://speeches.knedl.si/q/1/${term}`).then((result) => {
+      this.$http.get(`http://speeches.soocenje.24ur.com/q/1/${term}`).then((result) => {
         console.log(result);
         if (result.data.length > 0) {
           this.transcripts = result.data
@@ -151,7 +151,7 @@ export default {
   },
 
   created() {
-    this.$http.get('http://speeches.knedl.si/getSpeeches/1', {
+    this.$http.get('http://speeches.soocenje.24ur.com/getSpeeches/1', {
       emulateJSON: true,
     }).then((result) => {
       this.transcripts = result.data
@@ -162,7 +162,7 @@ export default {
           highlight: '',
           end_time_stamp: speech.end_time_stamp,
           start_time_stamp: speech.start_time_stamp,
-          image_url: `http://speeches.knedl.si${speech.image_url}`,
+          image_url: `http://speeches.soocenje.24ur.com${speech.image_url}`,
           id: speech.id,
           name: speech.name,
         }));

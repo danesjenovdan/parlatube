@@ -9,7 +9,7 @@
       <div class="conversion-button"><span class="cutme"></span>PRIPRAVI IZSEK</div>
     </div>
     <div class="feed-container">
-      <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
+      <div class="fb-comments" data-href="http://soocenje.24ur.com/" data-numposts="20" data-width="100%"></div>
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
 
   mounted() {
     // on mount get data from API and set up
-    this.$http.get(`http://snippet.knedl.si/getSnippet?id=${this.$route.params.snippetId}`, {
+    this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${this.$route.params.snippetId}`, {
       emulateJSON: true,
     }).then((snippetSuccess) => {
       // set video to loop and set start and end times
@@ -54,7 +54,7 @@ export default {
       console.log('processedExtras: ', processedExtras);
       this.$store.commit('drawing/UPDATE_STATE', processedExtras);
 
-      this.$http.get(`http://snippet.knedl.si/getVideo?id=${snippetSuccess.data.video_id}`, {
+      this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${snippetSuccess.data.video_id}`, {
         emulateJSON: true,
       }).then((videoSuccess) => {
         // set video ID (locally and in store)
@@ -71,7 +71,7 @@ export default {
       FB.XFBML.parse(this.$el);
     }
 
-    this.$http.get(`http://speeches.knedl.si/analytics/collect/${this.$route.params.snippetId}`);
+    this.$http.get(`http://speeches.soocenje.24ur.com/analytics/collect/${this.$route.params.snippetId}`);
   },
 
   created() {

@@ -11,11 +11,11 @@
           @click="updateSnippet(playlist.indexOf(snippet))"
         >
           <div class="snippet-title">{{ snippet.title || 'Brez naslova' }}</div>
-          <a class="snippet-outlink" target="_blank" :href="`http://parlatube.knedl.si/#/snippet/${snippet.id}`">Link</a>
+          <a class="snippet-outlink" target="_blank" :href="`http://soocenje.24ur.com/#/snippet/${snippet.id}`">Link</a>
         </div>
       </div>
     </div>
-    <div class="fb-comments" data-href="http://parlatube.knedl.si/" data-numposts="20" data-width="100%"></div>
+    <div class="fb-comments" data-href="http://soocenje.24ur.com/" data-numposts="20" data-width="100%"></div>
   </div>
 </template>
 
@@ -77,7 +77,7 @@ export default {
 
     currentSnippet(newCurrentSnippet) {
       // set next snippet
-      this.$http.get(`http://snippet.knedl.si/getVideo?id=${this.playlist[newCurrentSnippet].video_id}`, { emulateJSON: true }).then((videoSuccess) => {
+      this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${this.playlist[newCurrentSnippet].video_id}`, { emulateJSON: true }).then((videoSuccess) => {
         // set video ID (in store)
         this.$store.commit('video/UPDATE_VIDEOID', videoSuccess.data.videoid);
 
@@ -110,7 +110,7 @@ export default {
 
   mounted() {
     // on mount get data from API and set up
-    this.$http.get(`http://snippet.knedl.si/getPlaylist?id=${this.$route.params.playlistId}`, { emulateJSON: true }).then((playlistSuccess) => {
+    this.$http.get(`http://snippet.soocenje.24ur.com/getPlaylist?id=${this.$route.params.playlistId}`, { emulateJSON: true }).then((playlistSuccess) => {
       // set snippets
       this.snippets = playlistSuccess.data.snippets;
 
@@ -123,7 +123,7 @@ export default {
       }
 
       // set first snippet
-      this.$http.get(`http://snippet.knedl.si/getVideo?id=${this.playlist[this.currentSnippet].video_id}`, { emulateJSON: true }).then((videoSuccess) => {
+      this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${this.playlist[this.currentSnippet].video_id}`, { emulateJSON: true }).then((videoSuccess) => {
         // set video ID (in store)
         this.$store.commit('video/UPDATE_VIDEOID', videoSuccess.data.videoid);
       }, () => {

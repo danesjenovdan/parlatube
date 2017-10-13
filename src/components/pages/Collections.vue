@@ -49,17 +49,17 @@ export default {
   },
 
   mounted() {
-    this.$http.get('http://snippet.knedl.si/getPlaylists', { emulateJSON: true }).then((playlistsSuccess) => {
+    this.$http.get('http://snippet.soocenje.24ur.com/getPlaylists', { emulateJSON: true }).then((playlistsSuccess) => {
       console.log(playlistsSuccess);
       this.playlists = playlistsSuccess.data;
     }, () => {
       // an error occured
     });
 
-    this.$http.get('http://speeches.knedl.si/analytics/top/10', { emulateJSON: true }).then((topSuccess) => {
+    this.$http.get('http://speeches.soocenje.24ur.com/analytics/top/10', { emulateJSON: true }).then((topSuccess) => {
       console.log(topSuccess);
       topSuccess.data.counters.forEach((snippet) => {
-        this.$http.get(`http://snippet.knedl.si/getSnippet?id=${snippet.key}`, {
+        this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${snippet.key}`, {
           emulateJSON: true,
         }).then((snippetSuccess) => {
           console.log(snippetSuccess);
