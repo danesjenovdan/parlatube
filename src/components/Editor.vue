@@ -157,7 +157,7 @@ export default {
         looping: 1,
       };
 
-      this.$http.post('http://snippet.knedl.si/setSnippet', data, {
+      this.$http.post('http://snippet.soocenje.24ur.com/setSnippet', data, {
         emulateJSON: true,
       }).then((response) => {
         this.$router.push({ path: `/snippet/${response.data.id}` });

@@ -34,7 +34,7 @@
     >
       <div
         class="emoji-image"
-        :style="{'background-image': `url('http://djstatic.knedl.si/emojis/${emoji.emoji}.png')`}"
+        :style="{'background-image': `url('http://static.soocenje.24ur.com/emojis/${emoji.emoji}.png')`}"
       >
       </div>
     </vue-draggable-resizable>
