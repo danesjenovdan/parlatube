@@ -1,21 +1,25 @@
 <template>
   <div id="playlist">
-    <div class="video-and-playlist-container">
-      <div class="video-container">
-        <parla-video></parla-video>
-      </div>
-      <div class="playlist-container">
-        <div
-          :class="['playlist-item', {current: playlist.indexOf(snippet) === currentSnippet}]"
-          v-for="snippet in playlist"
-          @click="updateSnippet(playlist.indexOf(snippet))"
-        >
-          <div class="snippet-title">{{ snippet.title || 'Brez naslova' }}</div>
-          <a class="snippet-outlink" target="_blank" :href="`http://soocenje.24ur.com/#/snippet/${snippet.id}`">Link</a>
+    <div class="container">
+      <div class="video-and-playlist-container">
+        <div class="video-container">
+          <parla-video></parla-video>
+        </div>
+        <div class="playlist-container">
+          <div
+            :class="['playlist-item', {current: playlist.indexOf(snippet) === currentSnippet}]"
+            v-for="snippet in playlist"
+            @click="updateSnippet(playlist.indexOf(snippet))"
+          >
+            <div class="snippet-title">{{ snippet.title || 'Brez naslova' }}</div>
+            <a class="snippet-outlink" target="_blank" :href="`http://soocenje.24ur.com/#/snippet/${snippet.id}`"></a>
+          </div>
         </div>
       </div>
     </div>
-    <div class="fb-comments" data-href="http://soocenje.24ur.com/" data-numposts="20" data-width="100%"></div>
+    <div class="feed-container">
+      <div class="fb-comments" :data-href="`http://soocenje.24ur.com/playlist/${$route.params.playlistId}`" data-numposts="20" data-width="100%"></div>
+    </div>
   </div>
 </template>
 
@@ -143,6 +147,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../styles/colors';
+
 #playlist {
   display: flex;
   flex: 0 0 100%;
@@ -157,13 +163,13 @@ export default {
 
     .video-container {
       display: flex;
-      flex: 1 1 100%;
+      flex: 2 1 100%;
       overflow: hidden;
     }
 
     .playlist-container {
       display: flex;
-      flex: 1 1 100%;
+      flex: 1 2 100%;
       overflow: hidden;
       flex-wrap: wrap;
       overflow-y: auto;
@@ -173,25 +179,60 @@ export default {
         display: flex;
         flex: 1 1 100%;
         justify-content: space-between;
+        position: relative;
 
         height: 30px;
         line-height: 30px;
 
         cursor: pointer;
 
-        border-bottom: 1px solid #000000;
+        padding: 5px 10px 5px 48px;
 
-        padding: 0 10px 0 10px;
+        font-family: 'Space Mono', monospace;
+        font-weight: 400;
 
-        &.current {
-          background: rgba(0, 0, 0, 0.2);
+        &.current, {
+          background: #F5DFDF;
+          font-weight: 700;
         }
 
         &:hover {
-          background: rgba(0, 0, 0, 0.3);
+          background: #FCF4F4;
+        }
+
+        .snippet-outlink {
+          &::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 30px;
+            background-image: url('../../assets/icons/play-snippet.svg');
+            position: absolute;
+            top: 5px;
+            left: 10px;
+          }
+          &::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background-image: url('../../assets/icons/link.svg');
+            display: block;
+          }
+        }
+
+        &.current .snippet-outlink::after,
+        &:hover .snippet-outlink::after  {
+          background-image: url('../../assets/icons/link-hover.svg');
         }
       }
     }
+  }
+  .feed-container {
+    display: flex;
+    flex: 0 0 738px;
+    position: relative;
+    margin: auto;
+    margin-top: 84px;
   }
 }
 </style>

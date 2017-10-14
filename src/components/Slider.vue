@@ -612,7 +612,8 @@ export default {
       }
       &.pause {
         background-image: url('../assets/icons/pause.svg');
-        background-position-x: 0.5px;
+        background-position-x: center;
+        background-size: 85%;
       }
       &.start-here,
       &.end-here {

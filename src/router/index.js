@@ -32,7 +32,7 @@ export default new Router({
       component: Playlist,
     },
     {
-      path: '/collections',
+      path: '/izseki',
       name: 'Collections',
       component: Collections,
     },

@@ -6,8 +6,8 @@
         <p><strong>predsedniška</strong><br>soočenja 2017</p>
       </router-link>
       <div id="partners">
-        <img id="pop" src="http://m.24ur.com/img/logo.png">
-        <img src="../assets/djnd.png">
+        <a target="_blank" href="http://24ur.com"><img id="pop" src="http://m.24ur.com/img/logo.png"></a>
+        <a target="_blank" href="http://danesjenovdan.si/"><img src="../assets/djnd.png"></a>
       </div>
     </div>
     <div class="container">

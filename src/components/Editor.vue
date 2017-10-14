@@ -1,5 +1,5 @@
 <template>
-  <div id="editor">
+  <div id="editor" @click="closeAllControls">
     <div class="editor-controls-container">
       <slider :live="live"></slider>
     </div>
@@ -12,7 +12,7 @@
             <div class="row">
               <div
                 class="colorpicker"
-                @click="showColorPicker"
+                @click.stop="showColorPicker"
                 ref="colorpicker"
               >
                 <div class="color" :style="{ 'background-color': colorPickerProps.hex }"></div>
@@ -24,7 +24,7 @@
               </div>
               <div
                 class="font-size-picker"
-                @click="displayFontOptions = !displayFontOptions"
+                @click.stop="displayFontOptions = !displayFontOptions"
               >
                 <input
                   v-model="localFontSize"
@@ -44,7 +44,7 @@
             <div class="row">
               <div
                 :class="['emoji-button', { visible: emojiPickerVisible }]"
-                @click="emojiPickerVisible = !emojiPickerVisible"
+                @click.stop="emojiPickerVisible = !emojiPickerVisible"
               >
                 Dodaj emoji
                 <picker
@@ -147,6 +147,12 @@ export default {
   },
 
   methods: {
+    closeAllControls() {
+      this.emojiPickerVisible = false;
+      this.displayFontOptions = false;
+      this.colorPickerVisible = false;
+    },
+
     createSnippet() {
       const data = {
         video_id: 1,
@@ -177,6 +183,12 @@ export default {
       this.$emit('disableEditing');
     },
 
+    getRandomString(length, chars) {
+      let result = '';
+      for (let i = length; i > 0; i -= 1) result += chars[Math.floor(Math.random() * chars.length)];
+      return result;
+    },
+
     pickEmoji(emoji) {
       const newEmoji = {
         emojiX: 300,
@@ -184,7 +196,7 @@ export default {
         emojiWidth: 40,
         emojiHeight: 40,
         emoji: emoji.unified,
-        id: (Math.random() * 1e16).toString(36),
+        id: `emoji${this.getRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')}`,
       };
       this.$store.commit('drawing/ADD_EMOJI', newEmoji);
     },

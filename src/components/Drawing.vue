@@ -37,6 +37,10 @@
         class="emoji-image"
         :style="{'background-image': `url('http://static.soocenje.24ur.com/emojis/${emoji.emoji}.png')`}"
       >
+      <div
+        class="emoji-trash"
+        @click="removeEmoji(emoji.id)"
+      ></div>
       </div>
     </vue-draggable-resizable>
   </div>
@@ -129,6 +133,10 @@ export default {
 
       const rect = this.$el.getBoundingClientRect();
       this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
+    },
+
+    removeEmoji(emojiId) {
+      this.$store.commit('drawing/DELETE_EMOJI', emojiId);
     },
 
     manipulateSizes() {
@@ -276,6 +284,26 @@ export default {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+  }
+  .emoji-trash {
+    width: 40px;
+    height: 40px;
+    background: $white;
+    position: absolute;
+    right: -44px;
+    border: 2px solid $black;
+
+    background-image: url('../assets/icons/trash.svg');
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    cursor: pointer;
+
+    &:hover {
+      background-image: url('../assets/icons/trash_hover.svg');
+      background-size: 55%;
+    }
   }
 }
 </style>

@@ -64,7 +64,12 @@ const mutations = {
     newEmojis[newEmojis.indexOf(lookingFor)] = payload;
     state.emojis = newEmojis;
   },
-
+  DELETE_EMOJI(state, emojiId) {
+    const newEmojis = JSON.parse(JSON.stringify(state.emojis));
+    const lookingFor = newEmojis.filter(emoji => emoji.id === emojiId)[0];
+    newEmojis.splice(newEmojis.indexOf(lookingFor), 1);
+    state.emojis = newEmojis;
+  },
 
   UPDATE_VIDEO_SIZE(state, newVideoSizes) {
     state.videoWidth = newVideoSizes.width;
