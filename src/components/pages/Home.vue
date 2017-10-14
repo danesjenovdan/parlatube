@@ -24,7 +24,7 @@
         :live="live"
       ></editor>
       <div class="row feed-container">
-        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/volitve" data-widget-id="910050625081286656" data-width="100%" data-height="802">#soocenje Tweets</a>
+        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/volitve" data-widget-id="919190509414993921" data-width="100%" data-height="802">#volitve</a>
       </div>
     </div>
   </div>
