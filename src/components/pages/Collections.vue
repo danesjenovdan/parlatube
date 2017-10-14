@@ -23,10 +23,11 @@
       <div class="container">
         <h1>Najbolj gledani izseki</h1>
         <div :class="['snippets', {empty: (snippets.length === 0)}]">
-          <div
+          <router-link
+            :to="{name: 'Home', params: {editing: true}}"
             class="snippets-empty"
             v-if="snippets.length === 0"
-          ></div>
+          ></router-link>
           <a
             v-for="snippet in snippets"
             class="snippet"
