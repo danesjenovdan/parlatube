@@ -31,7 +31,7 @@
           <a
             v-for="snippet in snippets"
             class="snippet"
-            :href="`http://soocenje.24ur.com/snipped/${snippet.id}`"
+            :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
           >
             <div
               class="snippet-img"
