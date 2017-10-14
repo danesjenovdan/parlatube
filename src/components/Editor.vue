@@ -67,8 +67,8 @@
     </div>
     <div class="editor-controls-container">
       <div class="row row-buttons">
-        <label for="title-text">Naslov objave</label>
-        <input id="title-text" type="text" v-model="localTitleText"/>
+        <label for="title-text" :class="{shake: shakeTitle}">Naslov objave</label>
+        <input id="title-text" :class="{shake: shakeTitle}" type="text" v-model="localTitleText"/>
         <button
           @click="createSnippet"
           class="editor-button"
@@ -122,6 +122,7 @@ export default {
           custom: 'Posebneži',
         },
       },
+      shakeTitle: false,
     };
   },
 
@@ -154,23 +155,30 @@ export default {
     },
 
     createSnippet() {
-      const data = {
-        video_id: 1,
-        start_time: this.loopStart * 1000,
-        end_time: this.loopEnd * 1000,
-        extras: JSON.stringify(this.$store.state.drawing),
-        published: 1,
-        looping: 1,
-        name: this.localTitleText,
-      };
+      if (this.localTitleText === '') {
+        this.shakeTitle = true;
+        setTimeout(() => {
+          this.shakeTitle = false;
+        }, 1000);
+      } else {
+        const data = {
+          video_id: 1,
+          start_time: this.loopStart * 1000,
+          end_time: this.loopEnd * 1000,
+          extras: JSON.stringify(this.$store.state.drawing),
+          published: 1,
+          looping: 1,
+          name: this.localTitleText,
+        };
 
-      this.$http.post('http://snippet.soocenje.24ur.com/setSnippet', data, {
-        emulateJSON: true,
-      }).then((response) => {
-        this.$router.push({ path: `/snippet/${response.data.id}` });
-      }, () => {
-        // something has gone wrong with saving your snippet
-      });
+        this.$http.post('http://snippet.soocenje.24ur.com/setSnippet', data, {
+          emulateJSON: true,
+        }).then((response) => {
+          this.$router.push({ path: `/snippet/${response.data.id}` });
+        }, () => {
+          // something has gone wrong with saving your snippet
+        });
+      }
     },
 
     showColorPicker() {
@@ -228,6 +236,31 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/colors';
 @import '../styles/scroller';
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
 
 #editor {
   width: 100%;
