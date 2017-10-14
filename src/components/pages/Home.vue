@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       editing: false,
-      live: true,
+      live: false,
       isMobile: false,
     };
   },
