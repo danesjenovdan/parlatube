@@ -1,5 +1,5 @@
 <template>
-  <div id="drawing-container">
+  <div id="drawing-container" v-resize="manipulateSizes">
     <vue-draggable-resizable
       v-if="(drawingText !== '')"
       :x="10"
@@ -20,6 +20,7 @@
     </vue-draggable-resizable>
     <vue-draggable-resizable
       v-for="emoji in emojis"
+      :key="emoji.id"
       :x="300"
       :y="300"
       :w="40"
@@ -44,11 +45,15 @@
 <script>
 import { mapState } from 'vuex';
 import { Emoji } from 'emoji-mart-vue';
+import resize from 'vue-resize-directive';
 import VueDraggableResizable from './VueDraggableResizable';
-// import VueDraggableResizable from 'vue-draggable-resizable';
 
 export default {
   name: 'Drawing',
+
+  directives: {
+    resize,
+  },
 
   components: {
     VueDraggableResizable,
@@ -218,11 +223,8 @@ export default {
   },
 
   mounted() {
-    if (this.disableEditing) {
-      // const rect = this.$el.getBoundingClientRect();
-      // this.$store.commit
-      // ('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
-    }
+    const rect = this.$el.getBoundingClientRect();
+    this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
   },
 };
 </script>

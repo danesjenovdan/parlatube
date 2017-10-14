@@ -1,12 +1,18 @@
 <template>
   <div id="snippet">
     <div class="container">
+      <h1>{{ title }}</h1>
+    </div>
+    <div class="container">
       <parla-video :height="552" :disableEditing="true"></parla-video>
     </div>
     <div class="container">
       <share></share>
       <div class="conversion">Odreži zanimiv del videa in ga deli s prijatelji!</div>
-      <div class="conversion-button"><span class="cutme"></span>PRIPRAVI IZSEK</div>
+      <router-link
+        :to="{ name: 'Home', params: { 'editing': true }}"
+        class="conversion-button"
+      ><span class="cutme"></span>PRIPRAVI IZSEK</router-link>
     </div>
     <div class="feed-container">
       <div class="fb-comments" data-href="http://soocenje.24ur.com/" data-numposts="20" data-width="100%"></div>
@@ -25,6 +31,7 @@ export default {
   data() {
     return {
       videoId: '',
+      title: '',
     };
   },
 
@@ -53,6 +60,7 @@ export default {
       const processedExtras = JSON.parse(snippetSuccess.data.extras.replace(/&#34;/g, '"'));
       console.log('processedExtras: ', processedExtras);
       this.$store.commit('drawing/UPDATE_STATE', processedExtras);
+      this.title = snippetSuccess.data.name;
 
       this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${snippetSuccess.data.video_id}`, {
         emulateJSON: true,
@@ -98,6 +106,17 @@ export default {
   background: -webkit-linear-gradient(top, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to bottom, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+
+  h1 {
+    color: $black;
+    font-size: 30px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 900;
+    text-decoration: none;
+    text-align: center;
+    margin: 0;
+    margin-bottom: 20px;
+  }
 
   .conversion {
     display: flex;
@@ -150,6 +169,8 @@ export default {
     cursor: pointer;
 
     transition: all 0.2s ease-out;
+    display: block;
+    text-decoration: none;
 
     .cutme {
       background-image: url('../../assets/icons/cut-red.svg');

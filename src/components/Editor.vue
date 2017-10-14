@@ -155,6 +155,7 @@ export default {
         extras: JSON.stringify(this.$store.state.drawing),
         published: 1,
         looping: 1,
+        name: this.localTitleText,
       };
 
       this.$http.post('http://snippet.soocenje.24ur.com/setSnippet', data, {

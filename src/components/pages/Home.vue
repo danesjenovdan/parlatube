@@ -5,9 +5,9 @@
         <div class="video-container">
           <parla-video :showDrawing="editing" :showControls="!editing"></parla-video>
         </div>
-        <div class="transcripts-container">
+        <!-- <div class="transcripts-container">
           <transcripts></transcripts>
-        </div>
+        </div> -->
       </div>
       <div
         v-if="!editing"
@@ -35,7 +35,7 @@
 import isMobile from 'ismobilejs';
 import ParlaVideo from 'components/ParlaVideo';
 import Editor from 'components/Editor';
-import Transcripts from 'components/Transcripts';
+// import Transcripts from 'components/Transcripts';
 
 export default {
   name: 'Home',
@@ -50,7 +50,7 @@ export default {
   components: {
     ParlaVideo,
     Editor,
-    Transcripts,
+    // Transcripts,
   },
 
   methods: {
@@ -68,6 +68,10 @@ export default {
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
     this.$store.commit('video/UPDATE_VIDEOID', 'ge65-j39Fy0');// -CLenqwC-Qw wXE4_es0cCI
+
+    if (this.$route.params.editing) {
+      this.editing = this.$route.params.editing;
+    }
   },
 
 //   konami
@@ -142,15 +146,9 @@ export default {
   // }
 
   .video-and-transcripts-container {
-    display: flex;
-    flex: 1 0 100%;
-    flex-wrap: nowrap;
     overflow: hidden;
-    max-height: 371px;
 
     .video-container {
-      display: flex;
-      flex: 1 1 100%;
       overflow: hidden;
     }
 

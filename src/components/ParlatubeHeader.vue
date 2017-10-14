@@ -1,12 +1,12 @@
 <template>
   <div id="header">
     <div class="container">
-      <div id="logo">
+      <router-link :to="{name: 'Home'}" id="logo">
         <img src="../assets/logo.svg">
         <p><strong>predsedniška</strong><br>soočenja 2017</p>
-      </div>
+      </router-link>
       <div id="partners">
-        <img src="../assets/24ur.png">
+        <img id="pop" src="http://m.24ur.com/img/logo.png">
         <img src="../assets/djnd.png">
       </div>
     </div>
@@ -49,6 +49,7 @@ export default {
     flex: 1 1 100%;
     margin-top: 33px;
     margin-bottom: 29px;
+    text-decoration: none;
 
     cursor: pointer;
 
@@ -79,6 +80,11 @@ export default {
     img {
       margin: 16px;
       display: inline-block;
+    }
+
+    #pop {
+      width: 55px;
+      height: 27px;
     }
   }
 

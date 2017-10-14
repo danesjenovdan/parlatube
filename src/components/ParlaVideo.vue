@@ -18,9 +18,13 @@ export default {
   },
 
   props: {
+    width: {
+      type: Number,
+      default: 560,
+    },
     height: {
       type: Number,
-      default: 371,
+      default: 349,
     },
     disableEditing: {
       type: Boolean,
@@ -115,7 +119,7 @@ export default {
 
   mounted() {
     this.player = YouTubePlayer('player', {
-      width: null,
+      width: `${this.width}px`,
       height: `${this.height}px`,
       playerVars: {
         controls: this.showControls ? 1 : 0,
@@ -124,7 +128,7 @@ export default {
     });
     this.player.loadVideoById(this.videoId);
     this.player.playVideo();
-    this.player.mute(); // TODO unMute
+    this.player.unMute(); // TODO unMute
     this.timeCheckerId = setInterval(() => {
       // update player playing state
       this.player.getPlayerState().then((playerState) => {
@@ -174,7 +178,7 @@ export default {
       });
     }, 50);
 
-    this.player.setSize(null, this.height);
+    // this.player.setSize(null, this.height);
   },
 
   beforeDestroy() {
@@ -188,23 +192,24 @@ export default {
 @import '../styles/colors';
 
 #video {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
   position: relative;
   overflow: hidden;
+
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
 }
 </style>
 
 <style lang="scss">
 #player {
-  display: flex;
-  flex: 0 0 100%;
-
   margin: auto;
   position: relative;
 
-  min-height: 300px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 iframe {
