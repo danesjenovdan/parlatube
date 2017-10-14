@@ -63,10 +63,10 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <label for="mute" id="label-mute">Izklopi zvok</label>
           <input type="checkbox" id="mute" v-model="mute">
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="editor-controls-container">
