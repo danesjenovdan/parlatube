@@ -63,6 +63,10 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <label for="mute" id="label-mute">Izklopi zvok</label>
+          <input type="checkbox" id="mute" v-model="mute">
+        </div>
       </div>
     </div>
     <div class="editor-controls-container">
@@ -123,6 +127,7 @@ export default {
         },
       },
       shakeTitle: false,
+      mute: false,
     };
   },
 
@@ -316,6 +321,27 @@ export default {
     }
     textarea {
       height: 81px;
+    }
+    #label-mute {
+      cursor: pointer;
+    }
+    input[type="checkbox"] {
+      display: block;
+      flex: 0 0 20px;
+      margin: 0;
+      cursor: pointer;
+
+      &::before {
+        content: '';
+        width: 30px;
+        height: 30px;
+        display: block;
+        background-color: $white;
+      }
+
+      &:checked::before {
+        background-image: url('../assets/icons/kljukica.svg');
+      }
     }
 
     .text-stuff {
