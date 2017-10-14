@@ -58,7 +58,7 @@ export default {
 
   computed: {
     orderedSnippets() {
-      return this.snippets.sort((a, b) => a.score - b.score)
+      return this.snippets.sort((a, b) => parseInt(a.score, 10) - parseInt(b.score, 10))
         .filter(snippet => snippet.published === '1');
     },
   },

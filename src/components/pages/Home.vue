@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       editing: false,
-      live: false,
+      live: true,
       isMobile: false,
     };
   },
@@ -68,7 +68,7 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', 'ge65-j39Fy0');// -CLenqwC-Qw wXE4_es0cCI
+    this.$store.commit('video/UPDATE_VIDEOID', 'AAUxm19kFZ0');// -CLenqwC-Qw wXE4_es0cCI ge65-j39Fy0
 
     if (this.$route.params.editing) {
       this.editing = this.$route.params.editing;
