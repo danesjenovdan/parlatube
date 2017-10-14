@@ -128,7 +128,7 @@ export default {
     });
     this.player.loadVideoById(this.videoId);
     this.player.playVideo();
-    this.player.mute(); // TODO unMute
+    this.player.unMute(); // TODO unMute
     this.timeCheckerId = setInterval(() => {
       // update player playing state
       this.player.getPlayerState().then((playerState) => {

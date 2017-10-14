@@ -3,7 +3,7 @@
     <div id="social" class="share-container">
       DELI!
       <a target="_blank" :href="`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`" class="social-button fb"></a>
-      <a target="_blank" :href="`http://twitter.com/share?text=text goes here&url=${encodeURIComponent(currentUrl)}&hashtags=soocenje`" class="social-button tw"></a>
+      <a target="_blank" :href="`http://twitter.com/share?text=&url=${encodeURIComponent(currentUrl)}&hashtags=volitve`" class="social-button tw"></a>
       <a target="_blank" :href="`mailto:?Subject=Ha%20ha%20ha&body=${encodeURIComponent(currentUrl)}`" class="social-button mail"></a>
     </div>
     <div id="linkshare" class="share-container">
