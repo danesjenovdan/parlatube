@@ -89,6 +89,7 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   padding: 10px;
+  padding-bottom: 0;
   width: 100%;
   background-color: $gray;
 
