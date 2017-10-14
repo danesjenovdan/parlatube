@@ -1,5 +1,5 @@
 <template>
-  <div id="drawing-container" v-resize="manipulateSizes">
+  <div id="drawing-container" v-resize="manipulateSizes" @click="playMeMaybe">
     <vue-draggable-resizable
       v-if="(drawingText !== '')"
       :x="10"
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import isMobile from 'ismobilejs';
 import { mapState } from 'vuex';
 import { Emoji } from 'emoji-mart-vue';
 import resize from 'vue-resize-directive';
@@ -77,6 +78,12 @@ export default {
   },
 
   methods: {
+    playMeMaybe() {
+      if (isMobile.any) {
+        this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+      }
+    },
+
     onTextDragStop(event) {
       this.$store.commit('drawing/UPDATE_TEXT_X', event.left);
       this.$store.commit('drawing/UPDATE_TEXT_Y', event.top);
