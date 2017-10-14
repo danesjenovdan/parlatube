@@ -343,8 +343,8 @@ export default {
 .fb_iframe_widget,
 .fb_iframe_widget span,
 .fb_iframe_widget span iframe[style] {
-  min-width: 100% !important;
-  width: 100% !important;
+  min-width: 100%;
+  width: 100%;
 }
 
 /* TODO */
