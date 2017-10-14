@@ -36,6 +36,9 @@ export default {
     float: right;
     margin-left: 20px;
     margin-bottom: 20px;
+    display: block;
+    min-width: 0;
+    width: auto;
   }
 }
 </style>

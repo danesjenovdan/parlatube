@@ -1,8 +1,11 @@
 <template>
   <div id="collections">
     <div class="container">
-      <h1>Uredniške zbirke</h1>
-      <div class="playlists">
+      <h1 v-if="Object.keys(playlists).length > 0">Uredniške zbirke</h1>
+      <div
+        class="playlists"
+        v-if="Object.keys(playlists).length > 0"
+      >
         <a
           v-for="playlist in playlists"
           class="playlist"
@@ -16,10 +19,14 @@
         </a>
       </div>
     </div>
-    <div class="snippets-container-container">
+    <div :class="['snippets-container-container', {empty: (snippets.length === 0)}]">
       <div class="container">
         <h1>Najbolj gledani izseki</h1>
-        <div class="snippets">
+        <div :class="['snippets', {empty: (snippets.length === 0)}]">
+          <div
+            class="snippets-empty"
+            v-if="snippets.length === 0"
+          ></div>
           <a
             v-for="snippet in snippets"
             class="snippet"
@@ -94,11 +101,15 @@ export default {
   background-color: $gray;
 
   .snippets-container-container {
-    background-color: #ffffff;
+    background-color: $white;
     width: calc(100% + 20px);
     margin-left: -10px;
     margin-right: -10px;
     position: relative;
+
+    &.empty {
+      background-color: $gray;
+    }
   }
 
   h1 {
@@ -117,9 +128,23 @@ export default {
     width: 100%;
     margin: auto;
     position: relative;
+    &.empty {
+      background-color: $gray;
+    }
   }
   .snippets {
     background-color: #ffffff;
+  }
+  .snippets-empty {
+    background-image: url('../../assets/brez-izsekov.png');
+    background-size: contain;
+    display: block;
+    position: relative;
+    margin: auto;
+    width: 358px;
+    height: 134px;
+    margin-top: 50px;
+    margin-bottom: 50px;
   }
   .playlist,
   .snippet {

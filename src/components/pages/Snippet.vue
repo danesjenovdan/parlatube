@@ -90,6 +90,15 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.fb_iframe_widget,
+.fb_iframe_widget span,
+.fb_iframe_widget span iframe[style] {
+  min-width: 100%;
+  width: 100%;
+}
+</style>
+
 <style lang="scss" scoped>
 @import '../../styles/colors';
 
@@ -203,14 +212,5 @@ export default {
     margin: auto;
     margin-top: 84px;
   }
-}
-</style>
-
-<style lang="scss">
-.fb_iframe_widget,
-.fb_iframe_widget span,
-.fb_iframe_widget span iframe[style] {
-  min-width: 100% !important;
-  width: 100% !important;
 }
 </style>
