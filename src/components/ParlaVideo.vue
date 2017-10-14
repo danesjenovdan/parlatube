@@ -42,6 +42,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    isMuted: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -128,7 +132,11 @@ export default {
     });
     this.player.loadVideoById(this.videoId);
     this.player.playVideo();
-    this.player.unMute(); // TODO unMute
+    if (!this.muted) {
+      this.player.unMute();
+    } else {
+      this.player.mute();
+    }
     this.timeCheckerId = setInterval(() => {
       // update player playing state
       this.player.getPlayerState().then((playerState) => {

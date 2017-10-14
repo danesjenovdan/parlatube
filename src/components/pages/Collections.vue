@@ -29,13 +29,13 @@
             v-if="snippets.length === 0"
           ></router-link>
           <a
-            v-for="snippet in snippets"
+            v-for="snippet in orderedSnippets"
             class="snippet"
             :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
           >
             <div
               class="snippet-img"
-              :style="{'background-image': `OG_IMAGE_URL/`}"
+              :style="{'background-image': `url('http://soocenje.24ur.com/images/snippet-${snippet.id}.png')`}"
             ></div>
             <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
           </a>
@@ -56,6 +56,12 @@ export default {
     };
   },
 
+  computed: {
+    orderedSnippets() {
+      return this.snippets.sort((a, b) => a.score - b.score);
+    },
+  },
+
   mounted() {
     this.$http.get('http://snippet.soocenje.24ur.com/getPlaylists', { emulateJSON: true }).then((playlistsSuccess) => {
       console.log(playlistsSuccess);
@@ -73,6 +79,7 @@ export default {
         }).then((snippetSuccess) => {
           console.log(snippetSuccess);
           const newSnippet = snippetSuccess.data;
+          newSnippet.score = topSuccess[snippet];
           delete newSnippet.extras;
           localSnippets.push(newSnippet);
         }, () => {
@@ -193,6 +200,10 @@ export default {
       max-width: 310px;
       height: 174px;
       position: relative;
+
+      background-size: cover;
+      background-position: 0 0;
+      background-repeat: no-repeat;
 
       @include respond-to(desktop) {
         width: 310px;
