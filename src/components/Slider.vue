@@ -630,7 +630,7 @@ export default {
         width: 100%;
         height: 100%;
 
-        background-image: url('../assets/icons/set-marker.svg');
+        background-image: url('../assets/icons/zacetek.svg');
         background-size: 50%;
         background-repeat: no-repeat;
         background-position: center;
@@ -638,7 +638,7 @@ export default {
         border-radius: 50%;
       }
       &.end-here::before {
-        transform: scale(-1, 1);
+        background-image: url('../assets/icons/konec.svg');
       }
     }
   }
