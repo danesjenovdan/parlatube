@@ -2,17 +2,20 @@
   <div id="parlatube">
     <parlatube-header></parlatube-header>
     <router-view></router-view>
+    <parlatube-footer></parlatube-footer>
   </div>
 </template>
 
 <script>
 import ParlatubeHeader from 'components/ParlatubeHeader';
+import ParlatubeFooter from 'components/ParlatubeFooter';
 
 export default {
   name: 'App',
 
   components: {
     ParlatubeHeader,
+    ParlatubeFooter,
   },
 };
 </script>

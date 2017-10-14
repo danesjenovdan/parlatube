@@ -286,11 +286,11 @@ export default {
     background-position: center;
   }
   .emoji-trash {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     background: $white;
     position: absolute;
-    right: -44px;
+    right: -34px;
     border: 2px solid $black;
 
     background-image: url('../assets/icons/trash.svg');
