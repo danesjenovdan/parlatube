@@ -23,13 +23,13 @@
           <a
             v-for="snippet in snippets"
             class="snippet"
-            :href="`http://localhost:8080/playlist/${snippet.id}`"
+            :href="`http://localhost:8080/playlist/`"
           >
             <div
               class="snippet-img"
-              :style="{'background-image': `OG_IMAGE_URL/${snippet.id}`}"
+              :style="{'background-image': `OG_IMAGE_URL/`}"
             ></div>
-            <div class="snippet-title">{{ snippet.name }}</div>
+            <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
           </a>
         </div>
       </div>
@@ -58,18 +58,21 @@ export default {
 
     this.$http.get('http://speeches.soocenje.24ur.com/analytics/top/10', { emulateJSON: true }).then((topSuccess) => {
       console.log(topSuccess);
+      const localSnippets = [];
       topSuccess.data.counters.forEach((snippet) => {
         this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${snippet.key}`, {
           emulateJSON: true,
         }).then((snippetSuccess) => {
           console.log(snippetSuccess);
+          const newSnippet = snippetSuccess.data;
+          delete newSnippet.extras;
+          localSnippets.push(newSnippet);
         }, () => {
           // an error occured when trying to get snippet info from server
         });
 
-        // this.snippets.append()
+        this.snippets = localSnippets;
       });
-      this.snippets = topSuccess.data;
     }, () => {
       // an error occured
     });
