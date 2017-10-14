@@ -4,7 +4,7 @@
       <h1>{{ title }}</h1>
     </div>
     <div class="container">
-      <parla-video :height="552" :disableEditing="true"></parla-video>
+      <parla-video :disableEditing="true"></parla-video>
     </div>
     <div class="container">
       <share></share>

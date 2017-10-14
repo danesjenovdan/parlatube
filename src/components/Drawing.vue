@@ -300,6 +300,8 @@ export default {
 
     cursor: pointer;
 
+    display: none;
+
     &:hover {
       background-image: url('../assets/icons/trash_hover.svg');
       background-size: 55%;
@@ -311,6 +313,9 @@ export default {
 <style lang="scss">
 #text.editable, .emoji.editable {
   .handle {
+    display: block !important;
+  }
+  .emoji-trash {
     display: block !important;
   }
 }

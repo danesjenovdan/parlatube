@@ -7,7 +7,7 @@
       </router-link>
       <div id="partners">
         <a target="_blank" href="http://24ur.com"><img id="pop" src="http://m.24ur.com/img/logo.png"></a>
-        <a target="_blank" href="http://danesjenovdan.si/"><img src="../assets/djnd.png"></a>
+        <a target="_blank" href="http://danesjenovdan.si/"><img id="djnd" src="../assets/djnd.png"></a>
       </div>
     </div>
     <div class="container">
@@ -84,6 +84,11 @@ export default {
 
     #pop {
       width: 55px;
+      height: 27px;
+    }
+
+    #djnd {
+      width: 71.5px;
       height: 27px;
     }
   }

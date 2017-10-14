@@ -3,19 +3,29 @@
     <div class="container">
       <div class="video-and-playlist-container">
         <div class="video-container">
-          <parla-video></parla-video>
+          <parla-video :disableEditing="true"></parla-video>
         </div>
         <div class="playlist-container">
-          <div
-            :class="['playlist-item', {current: playlist.indexOf(snippet) === currentSnippet}]"
-            v-for="snippet in playlist"
-            @click="updateSnippet(playlist.indexOf(snippet))"
-          >
-            <div class="snippet-title">{{ snippet.title || 'Brez naslova' }}</div>
-            <a class="snippet-outlink" target="_blank" :href="`http://soocenje.24ur.com/#/snippet/${snippet.id}`"></a>
+          <div class="buffer">
+            <div
+              :class="['playlist-item', {current: playlist.indexOf(snippet) === currentSnippet}]"
+              v-for="snippet in playlist"
+              @click="updateSnippet(playlist.indexOf(snippet))"
+            >
+              <div class="snippet-title">{{ snippet.title || 'Brez naslova' }}</div>
+              <a class="snippet-outlink" target="_blank" :href="`http://soocenje.24ur.com/#/snippet/${snippet.id}`"></a>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="container">
+      <share></share>
+      <div class="conversion">Odreži zanimiv del videa in ga deli s prijatelji!</div>
+      <router-link
+        :to="{ name: 'Home', params: { 'editing': true }}"
+        class="conversion-button"
+      ><span class="cutme"></span>PRIPRAVI IZSEK</router-link>
     </div>
     <div class="feed-container">
       <div class="fb-comments" :data-href="`http://soocenje.24ur.com/playlist/${$route.params.playlistId}`" data-numposts="20" data-width="100%"></div>
@@ -148,6 +158,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../styles/colors';
+@import '../../styles/scroller';
 
 #playlist {
   display: flex;
@@ -162,7 +173,6 @@ export default {
     overflow: hidden;
 
     .video-container {
-      display: flex;
       flex: 2 1 100%;
       overflow: hidden;
     }
@@ -172,14 +182,27 @@ export default {
       flex: 1 2 100%;
       overflow: hidden;
       flex-wrap: wrap;
-      overflow-y: auto;
+      // overflow-y: auto;
       align-content: flex-start; 
+      background-color: $gray;
+      padding: 5px 0 5px 0;
+      border-left: none;
+      max-height: 356px;
+
+      .buffer {
+        width: 100%;
+        overflow-y: auto;
+        @extend %scroller;
+        border-right: 5px solid $gray;
+      }
 
       .playlist-item {
         display: flex;
         flex: 1 1 100%;
         justify-content: space-between;
         position: relative;
+
+        background: $white;
 
         height: 30px;
         line-height: 30px;
@@ -227,6 +250,85 @@ export default {
       }
     }
   }
+
+  .conversion {
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    line-height: 26px;
+
+    text-align: center;
+
+    margin-top: 76px;
+    margin-bottom: 35px;
+    font-weight: 300;
+
+    // &:before,
+    // &:after {
+    //   display: block;
+    //   content: '';
+    //   width: 43px;
+    //   height: 26px;
+
+    //   margin-left: 12px;
+    //   margin-right: 12px;
+
+    //   background-image: url('../../assets/icons/cut.svg');
+    //   background-position: center;
+    //   background-repeat: no-repeat;
+    //   transform: scale(-1, 1);
+    // }
+    // &:after {
+    //   transform: scale(1, 1);
+    // }
+  }
+  .conversion-button {
+    width: 298px;
+    height: 68px;
+    border: 4px solid $red;
+    color: $red;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 68px;
+    position: relative;
+    margin: auto;
+    cursor: pointer;
+
+    transition: all 0.2s ease-out;
+    display: block;
+    text-decoration: none;
+
+    .cutme {
+      background-image: url('../../assets/icons/cut-red.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 54px;
+      height: 32px;
+      display: inline-block;
+      top: 9px;
+      position: relative;
+      transform: scale(-1, 1);
+      margin-right: 17px;
+      filter: color($red);
+    }
+
+    &:hover {
+      background-color: $red;
+      color: $white;
+
+      .cutme {
+        background-image: url('../../assets/icons/cut-white.svg');
+      }
+    }
+  }
+
   .feed-container {
     display: flex;
     flex: 0 0 738px;
