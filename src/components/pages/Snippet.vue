@@ -15,7 +15,7 @@
       ><span class="cutme"></span>PRIPRAVI IZSEK</router-link>
     </div>
     <div class="feed-container">
-      <div class="fb-comments" data-href="http://soocenje.24ur.com/" data-numposts="20" data-width="100%"></div>
+      <div class="fb-comments" :data-href="`http://soocenje.24ur.com/playlist/${$route.params.snippetId}`" data-numposts="20" data-width="100%"></div>
     </div>
   </div>
 </template>

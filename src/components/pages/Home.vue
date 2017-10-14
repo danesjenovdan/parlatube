@@ -10,11 +10,11 @@
         </div> -->
       </div>
       <div
-        v-if="!editing"
+        v-if="(!editing && !isMobile)"
         class="conversion"
       >Odreži zanimiv del videa in ga deli s prijatelji!</div>
       <div
-        v-if="!editing"
+        v-if="(!editing && !isMobile)"
         @click="editing = true"
         class="conversion-button"
       ><span class="cutme"></span>PRIPRAVI IZSEK</div>
@@ -44,6 +44,7 @@ export default {
     return {
       editing: false,
       live: false,
+      isMobile: false,
     };
   },
 
@@ -86,6 +87,7 @@ export default {
 
     console.log(isMobile.any);
     if (isMobile.any) {
+      this.isMobile = true;
       this.editing = false;
     }
   },

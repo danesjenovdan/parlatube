@@ -141,63 +141,63 @@ export default {
 
     manipulateSizes() {
       const rect = this.$el.getBoundingClientRect();
-      if ((rect.width !== this.videoWidth) || (rect.height !== this.videoHeight)) {
-        console.log(rect.width, rect.height);
-        console.log(this.$store.state.drawing.videoWidth, this.$store.state.drawing.videoHeight);
+      // if ((rect.width !== this.videoWidth) || (rect.height !== this.videoHeight)) {
+      console.log(rect.width, rect.height);
+      console.log(this.$store.state.drawing.videoWidth, this.$store.state.drawing.videoHeight);
 
-        const text = this.$children
-          .filter(child => child.$el.innerText !== '')[0];
-        const emojiElements = this.$children
-          .filter(child => child.$el.classList[1] === 'emoji');
+      const text = this.$children
+        .filter(child => child.$el.innerText !== '')[0];
+      const emojiElements = this.$children
+        .filter(child => child.$el.classList[1] === 'emoji');
 
-        if (text) {
-          const localTextX = (this.$store.state.drawing.textX /
-            this.$store.state.drawing.videoWidth) * rect.width;
-          const localTextY = (this.$store.state.drawing.textY /
+      if (text) {
+        const localTextX = (this.$store.state.drawing.textX /
+          this.$store.state.drawing.videoWidth) * rect.width;
+        const localTextY = (this.$store.state.drawing.textY /
+        this.$store.state.drawing.videoHeight) * rect.height;
+        const localTextWidth = (this.$store.state.drawing.textWidth /
+          this.$store.state.drawing.videoWidth) * rect.width;
+        const localTextHeight = (this.$store.state.drawing.textHeight /
           this.$store.state.drawing.videoHeight) * rect.height;
-          const localTextWidth = (this.$store.state.drawing.textWidth /
-            this.$store.state.drawing.videoWidth) * rect.width;
-          const localTextHeight = (this.$store.state.drawing.textHeight /
-            this.$store.state.drawing.videoHeight) * rect.height;
 
-          text.left = localTextX;
-          // text.x = localTextX;
-          text.top = localTextY;
-          // text.y = localTextY;
-          text.width = localTextWidth;
-          // text.w = localTextWidth;
-          text.height = localTextHeight;
-          // text.h = localTextHeight;
+        text.left = localTextX;
+        // text.x = localTextX;
+        text.top = localTextY;
+        // text.y = localTextY;
+        text.width = localTextWidth;
+        // text.w = localTextWidth;
+        text.height = localTextHeight;
+        // text.h = localTextHeight;
 
-          const localFontSize = (this.$store.state.drawing.fontSize /
-            this.$store.state.drawing.videoHeight) * rect.height;
-          this.$store.commit('drawing/UPDATE_FONT_SIZE', localFontSize);
-        }
-
-        emojiElements.forEach((emojiElement) => {
-          /* eslint-disable no-param-reassign */
-          const myEmoji = this.emojis.filter(emoji => emoji.id === emojiElement.$el.id)[0];
-          const localEmojiX = (myEmoji.emojiX /
-            this.$store.state.drawing.videoWidth) * rect.width;
-          const localEmojiY = (myEmoji.emojiY /
-            this.$store.state.drawing.videoHeight) * rect.height;
-          const localEmojiWidth = (myEmoji.emojiWidth /
-            this.$store.state.drawing.videoWidth) * rect.width;
-          const localEmojiHeight = (myEmoji.emojiHeight /
-            this.$store.state.drawing.videoHeight) * rect.height;
-
-          emojiElement.left = localEmojiX;
-          emojiElement.x = localEmojiX;
-          emojiElement.top = localEmojiY;
-          emojiElement.y = localEmojiY;
-          emojiElement.width = localEmojiWidth;
-          emojiElement.w = localEmojiWidth;
-          emojiElement.height = localEmojiHeight;
-          emojiElement.h = localEmojiHeight;
-        });
-
-        this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
+        const localFontSize = (this.$store.state.drawing.fontSize /
+          this.$store.state.drawing.videoHeight) * rect.height;
+        this.$store.commit('drawing/UPDATE_FONT_SIZE', localFontSize);
       }
+
+      emojiElements.forEach((emojiElement) => {
+        /* eslint-disable no-param-reassign */
+        const myEmoji = this.emojis.filter(emoji => emoji.id === emojiElement.$el.id)[0];
+        const localEmojiX = (myEmoji.emojiX /
+          this.$store.state.drawing.videoWidth) * rect.width;
+        const localEmojiY = (myEmoji.emojiY /
+          this.$store.state.drawing.videoHeight) * rect.height;
+        const localEmojiWidth = (myEmoji.emojiWidth /
+          this.$store.state.drawing.videoWidth) * rect.width;
+        const localEmojiHeight = (myEmoji.emojiHeight /
+          this.$store.state.drawing.videoHeight) * rect.height;
+
+        emojiElement.left = localEmojiX;
+        emojiElement.x = localEmojiX;
+        emojiElement.top = localEmojiY;
+        emojiElement.y = localEmojiY;
+        emojiElement.width = localEmojiWidth;
+        emojiElement.w = localEmojiWidth;
+        emojiElement.height = localEmojiHeight;
+        emojiElement.h = localEmojiHeight;
+      });
+
+      this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
+      // }
     },
   },
 
