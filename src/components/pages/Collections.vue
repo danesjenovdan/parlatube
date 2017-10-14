@@ -31,7 +31,7 @@
           <a
             v-for="snippet in snippets"
             class="snippet"
-            :href="`http://localhost:8080/playlist/`"
+            :href="`http://soocenje.24ur.com/snipped/${snippet.id}`"
           >
             <div
               class="snippet-img"
