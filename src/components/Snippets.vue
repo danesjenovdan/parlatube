@@ -17,7 +17,7 @@
             class="snippet-img"
             :style="{'background-image': `url('http://soocenje.24ur.com/images/snippet-${snippet.id}.png')`}"
           ></div>
-          <div class="snippet-title">{{ (snippet.score + ' ' + snippet.name) || 'Brez naslova' }}</div>
+          <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
         </a>
       </div>
     </div>
