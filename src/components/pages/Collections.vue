@@ -71,7 +71,7 @@ export default {
       // an error occured
     });
 
-    this.$http.get('http://speeches.soocenje.24ur.com/analytics/top/20', { emulateJSON: true }).then((topSuccess) => {
+    this.$http.get('http://speeches.soocenje.24ur.com/analytics/top/200', { emulateJSON: true }).then((topSuccess) => {
       console.log(topSuccess);
       const localSnippets = [];
       topSuccess.data.counters.forEach((snippet) => {
