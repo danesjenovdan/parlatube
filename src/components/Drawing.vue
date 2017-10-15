@@ -1,5 +1,5 @@
 <template>
-  <div id="drawing-container" v-resize="manipulateSizes" @click="playMeMaybe">
+  <div id="drawing-container" @click="playMeMaybe"> <!-- V-RESIZE -->
     <vue-draggable-resizable
       v-if="(drawingText !== '')"
       :x="10"
@@ -215,6 +215,7 @@ export default {
       color: state => state.drawing.color,
       emojis: state => state.drawing.emojis,
       videoPlaying: state => state.video.playing,
+      videoLoadedAndPlaying: state => state.video.loadedAndPlaying,
       videoWidth: state => state.drawing.videoWidth,
       videoHeight: state => state.drawing.videoHeight,
     }),
@@ -228,8 +229,8 @@ export default {
   },
 
   watch: {
-    videoPlaying(newVideoPlaying) {
-      if (newVideoPlaying) {
+    videoLoadedAndPlaying(newVideoLoadedAndPlaying) {
+      if (newVideoLoadedAndPlaying) {
         this.$nextTick(() => {
           this.manipulateSizes();
         });

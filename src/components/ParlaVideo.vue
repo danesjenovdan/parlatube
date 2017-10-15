@@ -142,6 +142,7 @@ export default {
       this.player.getPlayerState().then((playerState) => {
         if ((playerState === 1) || (playerState === 3)) {
           this.$store.commit('video/UPDATE_PLAYING', true);
+          this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
         } else {
           this.$store.commit('video/UPDATE_PLAYING', false);
         }

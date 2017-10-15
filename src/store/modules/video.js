@@ -15,6 +15,7 @@ const state = {
   loopEnd: 0,
   playing: false,
   shouldIPause: false,
+  loadedAndPlaying: false,
 };
 
 // mutations
@@ -70,6 +71,9 @@ const mutations = {
   },
   TOGGLE_SHOULD_I_PAUSE(state) {
     state.shouldIPause = !state.shouldIPause;
+  },
+  UPDATE_LOADED_AND_PLAYING(state, newLoadedAndPlaying) {
+    state.loadedAndPlaying = newLoadedAndPlaying;
   },
 };
 
