@@ -161,6 +161,7 @@ export default {
     cursor: pointer;
 
     max-width: 310px;
+    height: 222px;
 
     position: relative;
     
@@ -189,6 +190,7 @@ export default {
       margin: auto;
       margin-bottom: 52px;
       float: none;
+      height: auto;
 
       &:nth-child(3n) {
         margin-right: auto;
