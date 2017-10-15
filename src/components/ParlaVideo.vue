@@ -56,6 +56,7 @@ export default {
       currentY: null,
       oldCurrentTime: 0,
       player: null,
+      loadedAndPlayingCounter: 0,
     };
   },
 
@@ -140,11 +141,23 @@ export default {
     this.timeCheckerId = setInterval(() => {
       // update player playing state
       this.player.getPlayerState().then((playerState) => {
-        if ((playerState === 1) || (playerState === 3)) {
+        if ((playerState === 1)) {
           this.$store.commit('video/UPDATE_PLAYING', true);
-          this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
+
+          this.loadedAndPlayingCounter += 1;
+          if ((this.loadedAndPlayingCounter > 1)) {
+            this.player.getCurrentTime().then((currentTime) => {
+              if ((currentTime > this.loopStart) && (currentTime < this.loopEnd)) {
+                this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
+              }
+            });
+          }
+        } else if (playerState === 3) {
+          this.$store.commit('video/UPDATE_PLAYING', true);
         } else {
           this.$store.commit('video/UPDATE_PLAYING', false);
+          this.loadedAndPlayingCounter = 0;
+          this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', false);
         }
       });
 

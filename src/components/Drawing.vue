@@ -1,5 +1,6 @@
 <template>
-  <div id="drawing-container" @click="playMeMaybe"> <!-- V-RESIZE -->
+  <div id="drawing-container" :class="{invisible: mobileNeedsClick}"> <!-- V-RESIZE -->
+    <div id="drawing-overlay" :class="{visible: (!mobileNeedsClick && !videoLoadedAndPlaying)}"></div>
     <vue-draggable-resizable
       v-if="(drawingText !== '')"
       :x="10"
@@ -51,6 +52,7 @@ import isMobile from 'ismobilejs';
 import { mapState } from 'vuex';
 import { Emoji } from 'emoji-mart-vue';
 import resize from 'vue-resize-directive';
+import Vue2TouchEvents from 'vue2-touch-events';
 import VueDraggableResizable from './VueDraggableResizable';
 
 export default {
@@ -63,6 +65,7 @@ export default {
   components: {
     VueDraggableResizable,
     Emoji,
+    Vue2TouchEvents,
   },
 
   props: {
@@ -74,16 +77,11 @@ export default {
 
   data() {
     return {
+      mobileNeedsClick: false,
     };
   },
 
   methods: {
-    playMeMaybe() {
-      if (isMobile.any) {
-        this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
-      }
-    },
-
     onTextDragStop(event) {
       this.$store.commit('drawing/UPDATE_TEXT_X', event.left);
       this.$store.commit('drawing/UPDATE_TEXT_Y', event.top);
@@ -230,6 +228,14 @@ export default {
   },
 
   watch: {
+    videoPlaying(newVideoPlaying) {
+      if (newVideoPlaying) {
+        this.mobileNeedsClick = false;
+      } else {
+        this.mobileNeedsClick = true;
+      }
+    },
+
     videoLoadedAndPlaying(newVideoLoadedAndPlaying) {
       if (newVideoLoadedAndPlaying) {
         this.$nextTick(() => {
@@ -242,6 +248,10 @@ export default {
   mounted() {
     const rect = this.$el.getBoundingClientRect();
     this.$store.commit('drawing/UPDATE_VIDEO_SIZE', { width: rect.width, height: rect.height });
+
+    if (isMobile.any) {
+      this.mobileNeedsClick = true;
+    }
   },
 };
 </script>
@@ -258,6 +268,57 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
+
+  &.invisible {
+    display: none;
+  }
+
+  #drawing-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: $slightly-darker-gray;
+    z-index: 2;
+    background-image: url('../assets/loader.gif');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 40%;
+    display: none;
+
+    &::after {
+      opacity: 0;
+    }
+
+    &.visible {
+      display: block;
+    }
+
+    // &.mobile::after {
+    //   // &:hover .playlist-img::after,
+    //   // &:hover .snippet-img::after {
+    //   //   opacity: 0.7;
+    //   // }
+    //   content: '';
+    //   display: block;
+    //   position: absolute;
+    //   top: 0;
+    //   right: 0;
+    //   bottom: 0;
+    //   left: 0;
+    //   background: rgba(188, 42, 42, 1);
+    //   opacity: 1;
+    //   background-image: url('../assets/icons/play-snippet.svg');
+    //   background-position: center;
+    //   background-repeat: no-repeat;
+    //   background-size: 30%;
+    //   transition: all 0.2s ease-out;
+    // }
+    // &.mobile:active::after {
+    //   opacity: 0.7;
+    // }
+  }
 
   #text {
     min-width: 40px;
