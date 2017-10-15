@@ -58,7 +58,7 @@ export default {
 
   computed: {
     orderedSnippets() {
-      return this.snippets.sort((a, b) => parseInt(a.score, 10) - parseInt(b.score, 10))
+      return this.snippets.sort((a, b) => parseInt(b.score, 10) - parseInt(a.score, 10))
         .filter(snippet => snippet.published === '1');
     },
   },
@@ -78,9 +78,8 @@ export default {
         this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${snippet.key}`, {
           emulateJSON: true,
         }).then((snippetSuccess) => {
-          console.log(snippetSuccess);
           const newSnippet = snippetSuccess.data;
-          newSnippet.score = topSuccess[snippet];
+          newSnippet.score = snippet.counter;
           delete newSnippet.extras;
           localSnippets.push(newSnippet);
         }, () => {
