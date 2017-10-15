@@ -57,7 +57,7 @@ export default {
       this.$store.commit('video/UPDATE_SEEK_TO', (snippetSuccess.data.start_time / 1000));
 
       // update drawing
-      const processedExtras = JSON.parse(snippetSuccess.data.extras.replace(/&#34;/g, '"'));
+      const processedExtras = JSON.parse(snippetSuccess.data.extras.replace(/&#34;/g, '"').replace(/&#39;/g, '\''));
       console.log('processedExtras: ', processedExtras);
       this.$store.commit('drawing/UPDATE_STATE', processedExtras);
       this.title = snippetSuccess.data.name;
