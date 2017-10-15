@@ -1,6 +1,6 @@
 <template>
   <div id="drawing-container" :class="{invisible: mobileNeedsClick}"> <!-- V-RESIZE -->
-    <div id="drawing-overlay" :class="{visible: (!mobileNeedsClick && !videoLoadedAndPlaying)}"></div>
+    <div id="drawing-overlay" :class="{visible: !videoLoadedAndPlaying}"></div>
     <vue-draggable-resizable
       v-if="(drawingText !== '')"
       :x="10"
@@ -231,16 +231,12 @@ export default {
     videoPlaying(newVideoPlaying) {
       if (newVideoPlaying) {
         this.mobileNeedsClick = false;
-      } else {
-        this.mobileNeedsClick = true;
       }
     },
 
     videoLoadedAndPlaying(newVideoLoadedAndPlaying) {
       if (newVideoLoadedAndPlaying) {
-        this.$nextTick(() => {
-          this.manipulateSizes();
-        });
+        this.manipulateSizes();
       }
     },
   },
@@ -270,7 +266,7 @@ export default {
   left: 0;
 
   &.invisible {
-    display: none;
+    visibility: hidden;
   }
 
   #drawing-overlay {

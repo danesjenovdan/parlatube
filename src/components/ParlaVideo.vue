@@ -8,6 +8,7 @@
 <script>
 import YouTubePlayer from 'youtube-player';
 import { mapState, mapGetters } from 'vuex';
+import isMobile from 'ismobilejs';
 import Drawing from 'components/Drawing';
 
 export default {
@@ -62,8 +63,7 @@ export default {
 
   methods: {
     updateVideoId(newVideoId) {
-      this.player.loadVideoById(newVideoId);
-      this.player.playVideo();
+      this.player.cueVideoById(newVideoId);
     },
   },
 
@@ -76,6 +76,7 @@ export default {
       loopEnd: state => state.video.loopEnd,
       looping: state => state.video.looping,
       shouldIPause: state => state.video.shouldIPause,
+      videoLoadedAndPlaying: state => state.video.loadedAndPlaying,
     }),
 
     ...mapGetters({
@@ -129,37 +130,48 @@ export default {
       playerVars: {
         controls: this.showControls ? 1 : 0,
         rel: 0,
+        autoplay: 0,
       },
     });
-    this.player.loadVideoById(this.videoId);
     this.player.mute();
-    this.player.playVideo();
+    if (!isMobile.any) {
+      this.player.cueVideoById(this.videoId).then(() => {
+        this.player.playVideo();
+      });
+    } else {
+      this.player.cueVideoById(this.videoId);
+    }
     this.timeCheckerId = setInterval(() => {
       // update player playing state
       this.player.getPlayerState().then((playerState) => {
-        if ((playerState === 1)) {
-          this.$store.commit('video/UPDATE_PLAYING', true);
+        if (playerState) {
+          if (playerState === -1) {
+            this.player.playVideo();
+          } else if (playerState === 1) {
+            this.$store.commit('video/UPDATE_PLAYING', true);
 
-          this.loadedAndPlayingCounter += 1;
-          if ((this.loadedAndPlayingCounter > 1)) {
-            this.player.getCurrentTime().then((currentTime) => {
-              if (((currentTime > this.loopStart) && (currentTime < this.loopEnd)) ||
-                ((this.loopStart === 0) && (this.loopEnd === 0))) {
-                if (!this.muted) {
-                  this.player.unMute();
-                } else {
-                  this.player.mute();
+            this.loadedAndPlayingCounter += 1;
+            if ((this.loadedAndPlayingCounter === 3)) {
+              this.player.getCurrentTime().then((currentTime) => {
+                if (((currentTime > this.loopStart) && (currentTime < this.loopEnd)) ||
+                  (this.$route.name === 'Home')) {
+                  this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
+                  if (!this.muted) {
+                    this.player.unMute();
+                  } else {
+                    this.player.mute();
+                  }
                 }
-                this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
-              }
-            });
+              });
+            }
+          } else if (playerState === 3) {
+            this.loadedAndPlayingCounter = 0;
+            this.$store.commit('video/UPDATE_PLAYING', true);
+          } else {
+            this.$store.commit('video/UPDATE_PLAYING', false);
+            this.loadedAndPlayingCounter = 0;
+            this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', false);
           }
-        } else if (playerState === 3) {
-          this.$store.commit('video/UPDATE_PLAYING', true);
-        } else {
-          this.$store.commit('video/UPDATE_PLAYING', false);
-          this.loadedAndPlayingCounter = 0;
-          this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', false);
         }
       });
 
