@@ -167,7 +167,7 @@ export default {
         }, 1000);
       } else {
         const data = {
-          video_id: 2,
+          video_id: 3,
           start_time: this.loopStart * 1000,
           end_time: this.loopEnd * 1000,
           extras: JSON.stringify(this.$store.state.drawing),

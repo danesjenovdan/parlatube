@@ -68,7 +68,7 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', 'AAUxm19kFZ0');// -CLenqwC-Qw wXE4_es0cCI ge65-j39Fy0
+    this.$store.commit('video/UPDATE_VIDEOID', 'ZIluspYU_Pw');
 
     if (this.$route.params.editing) {
       this.editing = this.$route.params.editing;
