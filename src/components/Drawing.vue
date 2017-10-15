@@ -176,8 +176,9 @@ export default {
         text.height = localTextHeight;
         // text.h = localTextHeight;
 
-        const localFontSize = (this.$store.state.drawing.fontSize /
-          this.$store.state.drawing.videoHeight) * rect.height;
+        const localFontSize = ((this.$store.state.drawing.fontSize *
+          (rect.height / this.$store.state.drawing.videoHeight)) -
+          (2 * (this.$store.state.drawing.videoHeight / rect.height)));
         this.$store.commit('drawing/UPDATE_FONT_SIZE', localFontSize);
       }
 
