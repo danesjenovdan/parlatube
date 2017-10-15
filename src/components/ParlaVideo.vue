@@ -132,12 +132,8 @@ export default {
       },
     });
     this.player.loadVideoById(this.videoId);
+    this.player.mute();
     this.player.playVideo();
-    if (!this.muted) {
-      this.player.unMute();
-    } else {
-      this.player.mute();
-    }
     this.timeCheckerId = setInterval(() => {
       // update player playing state
       this.player.getPlayerState().then((playerState) => {
@@ -148,6 +144,11 @@ export default {
           if ((this.loadedAndPlayingCounter > 1)) {
             this.player.getCurrentTime().then((currentTime) => {
               if ((currentTime > this.loopStart) && (currentTime < this.loopEnd)) {
+                if (!this.muted) {
+                  this.player.unMute();
+                } else {
+                  this.player.mute();
+                }
                 this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
               }
             });

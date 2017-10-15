@@ -284,7 +284,7 @@ export default {
     background-image: url('../assets/loader.gif');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 40%;
+    background-size: 25%;
     display: none;
 
     &::after {
