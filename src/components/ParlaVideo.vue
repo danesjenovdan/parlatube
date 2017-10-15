@@ -143,7 +143,8 @@ export default {
           this.loadedAndPlayingCounter += 1;
           if ((this.loadedAndPlayingCounter > 1)) {
             this.player.getCurrentTime().then((currentTime) => {
-              if ((currentTime > this.loopStart) && (currentTime < this.loopEnd)) {
+              if (((currentTime > this.loopStart) && (currentTime < this.loopEnd)) ||
+                ((this.loopStart === 0) && (this.loopEnd === 0))) {
                 if (!this.muted) {
                   this.player.unMute();
                 } else {
