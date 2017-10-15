@@ -48,8 +48,8 @@
               >
                 Dodaj emoji
                 <picker
-                  :emoji-size="16"
-                  :sheet-size="16"
+                  :emoji-size="32"
+                  :sheet-size="32"
                   :per-line="9"
                   :skin="1"
                   :native="false"
