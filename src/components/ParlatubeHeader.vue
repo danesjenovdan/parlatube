@@ -66,6 +66,10 @@ export default {
       display: inline-block;
       color: $blue;
       margin: 0 0 0 13px;
+
+      @respond-to(mobile) {
+        display: none;
+      }
     }
   }
 

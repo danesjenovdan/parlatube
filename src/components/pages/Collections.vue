@@ -19,75 +19,30 @@
         </a>
       </div>
     </div>
-    <div :class="['snippets-container-container', {empty: (snippets.length === 0)}]">
-      <div class="container">
-        <h1>Najbolj gledani izseki</h1>
-        <div :class="['snippets', {empty: (snippets.length === 0)}]">
-          <router-link
-            :to="{name: 'Home', params: {editing: true}}"
-            class="snippets-empty"
-            v-if="snippets.length === 0"
-          ></router-link>
-          <a
-            v-for="snippet in orderedSnippets"
-            class="snippet"
-            :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
-          >
-            <div
-              class="snippet-img"
-              :style="{'background-image': `url('http://soocenje.24ur.com/images/snippet-${snippet.id}.png')`}"
-            ></div>
-            <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
-          </a>
-        </div>
-      </div>
-    </div>
+    <snippets></snippets>
   </div>  
 </template>
 
 <script>
+import Snippets from '../Snippets';
+
 export default {
   name: 'Collections',
+
+  components: {
+    Snippets,
+  },
 
   data() {
     return {
       playlists: [],
-      snippets: [],
     };
-  },
-
-  computed: {
-    orderedSnippets() {
-      return this.snippets.sort((a, b) => parseInt(b.score, 10) - parseInt(a.score, 10))
-        .filter(snippet => snippet.published === '1');
-    },
   },
 
   mounted() {
     this.$http.get('http://snippet.soocenje.24ur.com/getPlaylists', { emulateJSON: true }).then((playlistsSuccess) => {
       console.log(playlistsSuccess);
       this.playlists = playlistsSuccess.data;
-    }, () => {
-      // an error occured
-    });
-
-    this.$http.get('http://speeches.soocenje.24ur.com/analytics/top/200', { emulateJSON: true }).then((topSuccess) => {
-      console.log(topSuccess);
-      const localSnippets = [];
-      topSuccess.data.counters.forEach((snippet) => {
-        this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${snippet.key}`, {
-          emulateJSON: true,
-        }).then((snippetSuccess) => {
-          const newSnippet = snippetSuccess.data;
-          newSnippet.score = snippet.counter;
-          delete newSnippet.extras;
-          localSnippets.push(newSnippet);
-        }, () => {
-          // an error occured when trying to get snippet info from server
-        });
-
-        this.snippets = localSnippets;
-      });
     }, () => {
       // an error occured
     });

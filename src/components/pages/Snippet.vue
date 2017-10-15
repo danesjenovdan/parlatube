@@ -17,6 +17,9 @@
     <div class="feed-container">
       <div class="fb-comments" :data-href="`http://soocenje.24ur.com/playlist/${$route.params.snippetId}`" data-numposts="20" data-width="100%"></div>
     </div>
+    <div class="snippets-container">
+      <snippets :number-of-snippets="6"></snippets>
+    </div>
   </div>
 </template>
 
@@ -25,6 +28,7 @@
 
 import ParlaVideo from 'components/ParlaVideo';
 import Share from 'components/Share';
+import Snippets from 'components/Snippets';
 
 export default {
   name: 'Snippet',
@@ -38,6 +42,7 @@ export default {
   components: {
     ParlaVideo,
     Share,
+    Snippets,
   },
 
   methods: {
@@ -211,6 +216,13 @@ export default {
     position: relative;
     margin: auto;
     margin-top: 84px;
+  }
+
+  .snippets-container {
+    margin-top: 60px;
+    background: $gray;
+    padding: 20px;
+    width: 100%;
   }
 }
 </style>
