@@ -10,12 +10,16 @@
         <a target="_blank" href="http://danesjenovdan.si/"><img id="djnd" src="../assets/djnd.png"></a>
       </div>
     </div>
-    <div class="container">
+    <div class="container" id="navbar-container">
       <div id="navbar">
         <router-link
           :to="{name: 'Home'}"
           class="navbar-option"
-        >SOOČENJE</router-link>
+        >ZADNJE SOOČENJE</router-link>
+        <router-link
+          :to="{name: 'Soocenje', params: {videoId: 1}}"
+          class="navbar-option"
+        >1. SOOČENJE</router-link>
         <router-link
           :to="{name: 'Collections'}"
           class="navbar-option"
@@ -106,12 +110,19 @@ export default {
     }
   }
 
+  // #navbar-container {
+  //   overflow-x: auto;
+  // }
   #navbar {
     background-color: $white;
     display: flex;
-    flex: 0 1 981px;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+
+    width: 100%;
 
     height: 78px;
     margin-bottom: 44px;
@@ -122,15 +133,23 @@ export default {
     line-height: 78px;
 
     .navbar-option {
-      position: relative;
       cursor: pointer;
       color: $blue;
       text-decoration: none;
+      display: block;
+      position: relative;
+
+      flex: 0 0 auto;
+
+      margin: auto;
+
+      padding-left: 26px;
+      padding-right: 26px;
 
       &.active:before, &:hover:before {
         content: '';
         display: block;
-        width: 100%;
+        width: calc(100% - 52px);
         height: 16px;
         position: absolute;
         margin: auto;

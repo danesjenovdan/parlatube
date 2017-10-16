@@ -155,7 +155,7 @@ export default {
             if ((this.loadedAndPlayingCounter === 3)) {
               this.player.getCurrentTime().then((currentTime) => {
                 if (((currentTime > this.loopStart) && (currentTime < this.loopEnd)) ||
-                  (this.$route.name === 'Home')) {
+                  ((this.$route.name === 'Home') || (this.$route.name === 'Soocenje'))) {
                   this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
                   if (!this.muted) {
                     this.player.unMute();

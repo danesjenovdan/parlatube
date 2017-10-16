@@ -8,6 +8,7 @@ import Home from 'pages/Home';
 import Snippet from 'pages/Snippet';
 import Playlist from 'pages/Playlist';
 import Collections from 'pages/Collections';
+import Soocenje from 'pages/Soocenje';
 
 Vue.use(Router);
 
@@ -35,6 +36,11 @@ export default new Router({
       path: '/izseki',
       name: 'Collections',
       component: Collections,
+    },
+    {
+      path: '/soocenje/:videoId',
+      name: 'Soocenje',
+      component: Soocenje,
     },
   ],
 });

@@ -136,6 +136,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    videoId: {
+      type: Number,
+      default: 3,
+    },
   },
 
   components: {
@@ -167,7 +171,7 @@ export default {
         }, 1000);
       } else {
         const data = {
-          video_id: 3,
+          video_id: this.videoId,
           start_time: this.loopStart * 1000,
           end_time: this.loopEnd * 1000,
           extras: JSON.stringify(this.$store.state.drawing),
