@@ -53,10 +53,19 @@ export default {
 
     cursor: pointer;
 
+    @include respond-to(mobile) {
+      margin-top: 2px;
+      margin-left: -2px;
+    }
+
     img {
       display: inline-block;
       width: 79px;
       height: 58px;
+
+      @include respond-to(mobile) {
+        transform: scale(0.8);
+      }
     }
 
     p {
@@ -67,7 +76,7 @@ export default {
       color: $blue;
       margin: 0 0 0 13px;
 
-      @respond-to(mobile) {
+      @include respond-to(mobile) {
         display: none;
       }
     }
