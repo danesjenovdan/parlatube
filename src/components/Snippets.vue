@@ -15,7 +15,7 @@
         >
           <div
             class="snippet-img"
-            :style="{'background-image': `url('http://soocenje.24ur.com/images/snippet-${snippet.id}.png')`}"
+            :style="{'background-image': `url('${snippet.newImageUrl}`}"
           ></div>
           <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
         </a>
@@ -58,6 +58,8 @@ export default {
         }).then((snippetSuccess) => {
           const newSnippet = snippetSuccess.data;
           newSnippet.score = snippet.counter;
+          newSnippet.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${newSnippet.video_id}/out${Math.floor(newSnippet.start_time / 5000)}.jpg`;
+          console.log(newSnippet);
           delete newSnippet.extras;
           localSnippets.push(newSnippet);
         }, () => {
@@ -164,6 +166,20 @@ h1 {
 
     @include respond-to(desktop) {
       width: 310px;
+    }
+
+    filter: contrast(2);
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: $black;
+      opacity: 0.2;
     }
 
     &::after {

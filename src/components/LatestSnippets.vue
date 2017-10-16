@@ -15,7 +15,7 @@
         >
           <div
             class="snippet-img"
-            :style="{'background-image': `url('http://soocenje.24ur.com/images/snippet-${snippet.id}.png')`}"
+            :style="{'background-image': `url('${snippet.newImageUrl}')`}"
           ></div>
           <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
         </a>
@@ -61,6 +61,7 @@ export default {
         .map((element) => {
           const newElement = JSON.parse(JSON.stringify(element));
           newElement.name = element.name.replace(/&#39;/g, '\'');
+          newElement.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${element.video_id}/out${Math.floor(element.start_time / 5000)}.jpg`;
           return newElement;
         });
     }, () => {
@@ -158,6 +159,20 @@ h1 {
     background-size: cover;
     background-position: 0 0;
     background-repeat: no-repeat;
+
+    filter: contrast(2);
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: $black;
+      opacity: 0.2;
+    }
 
     @include respond-to(desktop) {
       width: 310px;
