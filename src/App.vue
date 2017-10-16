@@ -1,8 +1,8 @@
 <template>
   <div id="parlatube">
-    <parlatube-header></parlatube-header>
+    <parlatube-header v-if="!isEmbed"></parlatube-header>
     <router-view></router-view>
-    <parlatube-footer></parlatube-footer>
+    <parlatube-footer v-if="!isEmbed"></parlatube-footer>
   </div>
 </template>
 
@@ -16,6 +16,12 @@ export default {
   components: {
     ParlatubeHeader,
     ParlatubeFooter,
+  },
+
+  computed: {
+    isEmbed() {
+      return this.$route.name === 'Embed';
+    },
   },
 };
 </script>

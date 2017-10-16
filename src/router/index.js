@@ -9,6 +9,7 @@ import Snippet from 'pages/Snippet';
 import Playlist from 'pages/Playlist';
 import Collections from 'pages/Collections';
 import Soocenje from 'pages/Soocenje';
+import Embed from 'pages/Embed';
 
 Vue.use(Router);
 
@@ -41,6 +42,11 @@ export default new Router({
       path: '/soocenje/:videoId',
       name: 'Soocenje',
       component: Soocenje,
+    },
+    {
+      path: '/embed/:snippetId',
+      name: 'Embed',
+      component: Embed,
     },
   ],
 });
