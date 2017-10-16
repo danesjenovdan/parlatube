@@ -131,6 +131,7 @@ export default {
         controls: this.showControls ? 1 : 0,
         rel: 0,
         autoplay: 0,
+        playsinline: 1,
       },
     });
     this.player.mute();
