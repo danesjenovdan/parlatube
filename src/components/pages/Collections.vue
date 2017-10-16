@@ -19,18 +19,21 @@
         </a>
       </div>
     </div>
+    <latest-snippets></latest-snippets>
     <snippets></snippets>
   </div>  
 </template>
 
 <script>
-import Snippets from '../Snippets';
+import Snippets from 'components/Snippets';
+import LatestSnippets from 'components/LatestSnippets';
 
 export default {
   name: 'Collections',
 
   components: {
     Snippets,
+    LatestSnippets,
   },
 
   data() {

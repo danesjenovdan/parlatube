@@ -28,6 +28,9 @@
     <div class="snippets-container">
       <snippets :number-of-snippets="6"></snippets>
     </div>
+    <div class="snippets-container white">
+      <latest-snippets :number-of-snippets="6"></latest-snippets>
+    </div>
     <div class="container">
       <div class="row feed-container">
         <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/hashtag/volitve" data-widget-id="919190509414993921" data-width="100%" data-height="802">#volitve</a>
@@ -42,6 +45,7 @@ import isMobile from 'ismobilejs';
 import ParlaVideo from 'components/ParlaVideo';
 import Editor from 'components/Editor';
 import Snippets from 'components/Snippets';
+import LatestSnippets from 'components/LatestSnippets';
 
 export default {
   name: 'Home',
@@ -58,6 +62,7 @@ export default {
     ParlaVideo,
     Editor,
     Snippets,
+    LatestSnippets,
   },
 
   methods: {
@@ -262,6 +267,10 @@ export default {
     background: $gray;
     padding: 20px;
     width: 100%;
+
+    &.white {
+      background: $white;
+    }
   }
 }
 </style>

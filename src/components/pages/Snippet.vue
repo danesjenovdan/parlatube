@@ -20,6 +20,9 @@
     <div class="snippets-container">
       <snippets :number-of-snippets="6"></snippets>
     </div>
+    <div class="snippets-container white">
+      <latest-snippets :number-of-snippets="6"></latest-snippets>
+    </div>
   </div>
 </template>
 
@@ -29,6 +32,7 @@
 import ParlaVideo from 'components/ParlaVideo';
 import Share from 'components/Share';
 import Snippets from 'components/Snippets';
+import LatestSnippets from 'components/LatestSnippets';
 
 export default {
   name: 'Snippet',
@@ -43,6 +47,7 @@ export default {
     ParlaVideo,
     Share,
     Snippets,
+    LatestSnippets,
   },
 
   methods: {
@@ -223,6 +228,10 @@ export default {
     background: $gray;
     padding: 20px;
     width: 100%;
+
+    &.white {
+      background: $white;
+    }
   }
 }
 </style>
