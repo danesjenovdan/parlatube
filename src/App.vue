@@ -1,6 +1,7 @@
 <template>
   <div id="parlatube">
     <parlatube-header v-if="!isEmbed"></parlatube-header>
+    <cookies></cookies>
     <router-view></router-view>
     <parlatube-footer v-if="!isEmbed"></parlatube-footer>
   </div>
@@ -9,6 +10,7 @@
 <script>
 import ParlatubeHeader from 'components/ParlatubeHeader';
 import ParlatubeFooter from 'components/ParlatubeFooter';
+import Cookies from 'components/Cookies';
 
 export default {
   name: 'App',
@@ -16,6 +18,7 @@ export default {
   components: {
     ParlatubeHeader,
     ParlatubeFooter,
+    Cookies,
   },
 
   computed: {
