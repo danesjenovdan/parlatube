@@ -1,7 +1,7 @@
 <template>
   <div id="embed">
     <div class="container">
-      <parla-video :disableEditing="true"></parla-video>
+      <parla-video :disableEditing="true" :embedControls="true" :embedBackgroundImageUrl="`http://static.soocenje.24ur.com/frames/optimised/${snippetVideoId}/out${Math.floor(startTime / 5000)}.jpg`"></parla-video>
     </div>
   </div>
 </template>
@@ -15,11 +15,14 @@ import Snippets from 'components/Snippets';
 import LatestSnippets from 'components/LatestSnippets';
 
 export default {
-  name: 'Snippet',
+  name: 'Embed',
+
   data() {
     return {
       videoId: '',
       title: '',
+      startTime: 0,
+      snippetVideoId: 0,
     };
   },
 
@@ -51,8 +54,9 @@ export default {
       console.log('processedExtras: ', processedExtras);
       this.$store.commit('drawing/UPDATE_STATE', processedExtras);
       this.title = snippetSuccess.data.name.replace(/&#34;/g, '"').replace(/&#39;/g, '\'');
-
-      this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${snippetSuccess.data.video_id}`, {
+      this.snippetVideoId = snippetSuccess.data.video_id;
+      this.startTime = snippetSuccess.data.start_time;
+      this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${this.snippetVideoId}`, {
         emulateJSON: true,
       }).then((videoSuccess) => {
         // set video ID (locally and in store)

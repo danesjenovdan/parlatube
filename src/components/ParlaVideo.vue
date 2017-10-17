@@ -1,7 +1,18 @@
 <template>
-    <div id="video">
+    <div
+      id="video"
+      @click="togglePlaying"
+      :class="{hoverable: !embedControls, play: !videoPlaying}"
+    >
       <div id="player"></div>
       <drawing v-if="showDrawing" :disableEditing="disableEditing"></drawing>
+      <div
+        v-if="embedControls"
+        id="embed-controls"
+        :style="{'background-image': `url('${embedBackgroundImageUrl}')`}"
+        @click.stop="playVideo"
+        :class="{invisible: videoPlaying}"
+      ></div>
     </div>
 </template>
 
@@ -47,6 +58,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    embedControls: {
+      type: Boolean,
+      default: false,
+    },
+    embedBackgroundImageUrl: {
+      type: String,
+      default: 'http://static.soocenje.24ur.com/og-image.png',
+    },
   },
 
   data() {
@@ -65,6 +84,18 @@ export default {
     updateVideoId(newVideoId) {
       this.player.cueVideoById(newVideoId);
     },
+
+    playVideo() {
+      if (this.videoPlaying) {
+        this.player.pauseVideo();
+      } else {
+        this.player.playVideo();
+      }
+    },
+
+    togglePlaying() {
+      this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+    },
   },
 
   computed: {
@@ -77,6 +108,7 @@ export default {
       looping: state => state.video.looping,
       shouldIPause: state => state.video.shouldIPause,
       videoLoadedAndPlaying: state => state.video.loadedAndPlaying,
+      videoPlaying: state => state.video.playing,
     }),
 
     ...mapGetters({
@@ -137,7 +169,9 @@ export default {
     this.player.mute();
     if (!isMobile.any) {
       this.player.cueVideoById(this.videoId).then(() => {
-        this.player.playVideo();
+        if (!this.embedControls) {
+          this.player.playVideo();
+        }
       });
     } else {
       this.player.cueVideoById(this.videoId);
@@ -234,6 +268,86 @@ export default {
 
   padding-bottom: 56.25%; /* 16:9 */
   height: 0;
+
+  &.hoverable {
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-size: 30%;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: all 0.1s ease-out;
+      cursor: pointer;
+
+      z-index: 3;
+    }
+
+    &:hover::after {
+      background-image: url('../assets/icons/pause-black.svg');
+      background-color: rgba(234, 234, 234, 0.3);
+    }
+    &.play:hover::after {
+      background-image: url('../assets/icons/triangle-black.svg');
+    }
+  }
+
+  #embed-controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $gray;
+    z-index: 3;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    transition: all 0.2s ease-in;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-image: url('../assets/icons/triangle-black.svg');
+      background-size: 30%;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      cursor: pointer;
+      transition: all 0.1s ease-out;
+
+    }
+
+    &:hover::after {
+      background-size: 35%;
+    }
+
+    &.invisible {
+      opacity: 0;
+      background-image: none !important;
+
+      &::after {
+        background-image: url('../assets/icons/pause-black.svg');
+      }
+
+      &:hover {
+        opacity: 1;
+        background-color: rgba(234, 234, 234, 0.3);
+      }
+    }
+
+  }
 }
 </style>
 
