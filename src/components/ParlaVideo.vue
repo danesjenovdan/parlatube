@@ -2,7 +2,7 @@
     <div
       id="video"
       @click="togglePlaying"
-      :class="{hoverable: !embedControls, play: !videoPlaying}"
+      :class="{hoverable: (!embedControls && (($route.name !== 'Home') && ($route.name !== 'Soocenje'))), play: !videoPlaying}"
     >
       <div id="player"></div>
       <drawing v-if="showDrawing" :disableEditing="disableEditing"></drawing>
