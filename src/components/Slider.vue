@@ -13,6 +13,7 @@
           class="ruler"
           v-bind:style="{width: `${(duration * localStepSize)}px`}"
           @mousedown="rulerDown"
+          @mousemove="mouseMarker"
           ref="ruler"
         >
           <div
@@ -38,6 +39,10 @@
           <div
             class="marker time-marker"
             :style="{left: `${localTimeMarkerPosition}px`}"
+          ></div>
+          <div
+            class="marker time-marker mouse-marker"
+            :style="{left: `${mouseMarkerPosition}px`}"
           ></div>
 
           <div
@@ -141,6 +146,7 @@ export default {
       processedCurrentTime: '00:00',
       processedStartTime: '00:00',
       processedEndTime: '00:00',
+      mouseMarkerPosition: 0,
     };
   },
 
@@ -376,6 +382,12 @@ export default {
     },
 
     padZeroes: text => (text.length < 2 ? `0${text}` : text),
+
+    mouseMarker(event) {
+      const whereToGo = ((event.clientX + this.rulerOffset) - 5 -
+        this.$refs.viewport.getBoundingClientRect().left); // / this.localStepSize;
+      this.mouseMarkerPosition = whereToGo;
+    },
   },
 
   created() {
@@ -500,11 +512,17 @@ export default {
           border-left: 6px solid $red;
 
           margin-left: -6px;
+          z-index: 3;
         }
         &.end-marker {
           left: 100%;
           border-left: none;
           border-right: 6px solid $red;
+        }
+
+        &.mouse-marker {
+          opacity: 0.7;
+          width: 1px;
         }
       }
     }
