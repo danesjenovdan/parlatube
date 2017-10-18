@@ -5,9 +5,9 @@
         <div class="video-container">
           <parla-video :showDrawing="editing" :showControls="!editing"></parla-video>
         </div>
-        <!-- <div class="transcripts-container">
+        <div class="transcripts-container" v-if="$route.params.videoId === '1'">
           <transcripts></transcripts>
-        </div> -->
+        </div>
       </div>
       <div
         v-if="(!editing && !isMobile)"
@@ -46,6 +46,7 @@ import ParlaVideo from 'components/ParlaVideo';
 import Editor from 'components/Editor';
 import Snippets from 'components/Snippets';
 import LatestSnippets from 'components/LatestSnippets';
+import Transcripts from 'components/Transcripts';
 
 export default {
   name: 'Home',
@@ -63,6 +64,7 @@ export default {
     Editor,
     Snippets,
     LatestSnippets,
+    Transcripts,
   },
 
   methods: {
@@ -123,9 +125,9 @@ export default {
 
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eaeaea+0,eaeaea+50,ffffff+51,ffffff+100 */
   background: #eaeaea; /* Old browsers */
-  background: -moz-linear-gradient(top, #eaeaea 0%, #eaeaea 17%, #ffffff 17%, #ffffff 100%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(top, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to bottom, #eaeaea 0%,#eaeaea 17%,#ffffff 17%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: -moz-linear-gradient(top, #eaeaea 0, #eaeaea 150px, #ffffff 150px, #ffffff 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #eaeaea 0,#eaeaea 150px,#ffffff 150px,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #eaeaea 0,#eaeaea 150px,#ffffff 150px,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 
   // .intro {
@@ -164,15 +166,26 @@ export default {
 
   .video-and-transcripts-container {
     overflow: hidden;
+    display: flex;
+    flex-wrap: nowrap;
+
+    @include respond-to(mobile) {
+      flex-wrap: wrap;
+    }
 
     .video-container {
       overflow: hidden;
+      flex: 1 1 100%;
     }
 
     .transcripts-container {
       display: flex;
       flex: 1 2 100%;
       overflow: hidden;
+
+      // @include respond-to(mobile) {
+      //   height: 300px;
+      // }
     }
   }
 

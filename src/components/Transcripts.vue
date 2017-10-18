@@ -1,5 +1,8 @@
 <template>
-  <div id="transcripts">
+  <div
+    id="transcripts"
+    :style="{ height: `${videoHeight}px` }"
+  >
     <div class="input-container">
       <input
         type="text"
@@ -52,12 +55,14 @@ export default {
       scrollTranscripts: true,
       searchTerm: '',
       numberOfResults: 0,
+      videoHeight: 359,
     };
   },
 
   computed: {
     ...mapState({
       currentTime: state => state.video.currentTime,
+      videoLoadedAndPlaying: state => state.video.loadedAndPlaying,
     }),
     theSpeech() {
       const filteredSpeeches = this.transcripts.filter(speech =>
@@ -74,6 +79,9 @@ export default {
   methods: {
     scrollTo(timestamp) {
       this.$store.commit('video/UPDATE_SEEK_TO', Math.ceil(timestamp / 1000));
+      this.$nextTick(() => {
+        this.searchTerm = '';
+      });
     },
     scrollToSpeech(topPos) {
       if (this.scrollTranscripts) {
@@ -95,7 +103,7 @@ export default {
             content: speech.highlight,
             end_time_stamp: speech.timestamp_start,
             start_time_stamp: speech.timestamp_start,
-            image_url: `http://speeches.knedl.si${speech.speaker_url}`,
+            image_url: `http://speeches.soocenje.24ur.com${speech.speaker_url}`,
             id: speech.id,
             name: speech.speaker_name,
             expanded: false,
@@ -117,7 +125,8 @@ export default {
         newTranscripts[theIndex].content = speech.highlight;
         newTranscripts[theIndex].expanded = false;
       } else {
-        newTranscripts[theIndex].content = speech.content_t;
+        const highlights = /<em>(.*?)<\/em>/g.exec(speech.highlight);
+        newTranscripts[theIndex].content = speech.content_t.replace(` ${highlights[1]}`, ` ${highlights[0]}`);
         newTranscripts[theIndex].expanded = true;
       }
       this.transcripts = newTranscripts;
@@ -137,6 +146,14 @@ export default {
         (newCurrentTime < this.theSpeech.end_time_stamp / 1000)) {
         const topPos = this.$refs[`speech${this.theSpeech.id}`][0].getBoundingClientRect().top - this.$refs.speechesContainer.getBoundingClientRect().top;
         this.scrollToSpeech(topPos);
+      }
+    },
+
+    videoLoadedAndPlaying(newVideoLoadedAndPlaying) {
+      const newHeight = this.$parent.$children.filter(child => child.$el.id === 'video')[0].$el.getBoundingClientRect().height - 10;
+      if (newVideoLoadedAndPlaying) {
+        this.videoHeight = newHeight;
+        console.log(newHeight);
       }
     },
 
@@ -162,15 +179,12 @@ export default {
           highlight: '',
           end_time_stamp: speech.end_time_stamp,
           start_time_stamp: speech.start_time_stamp,
-          image_url: `http://speeches.soocenje.24ur.com${speech.image_url}`,
+          image_url: `${speech.image_url}`,
           id: speech.id,
           name: speech.name,
         }));
       this.allSpeeches = this.transcripts;
     });
-  },
-
-  mounted() {
   },
 };
 </script>
