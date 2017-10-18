@@ -2,7 +2,7 @@
     <div
       id="video"
       @click="togglePlaying"
-      :class="{hoverable: (!embedControls && (($route.name !== 'Home') && ($route.name !== 'Soocenje'))), play: !videoPlaying}"
+      :class="{hoverable: (!embedControls && !localIsMobile && videoLoadedAndPlaying && (($route.name !== 'Home') && ($route.name !== 'Soocenje'))), play: !videoPlaying}"
     >
       <div id="player"></div>
       <drawing v-if="showDrawing" :disableEditing="disableEditing"></drawing>
@@ -77,6 +77,7 @@ export default {
       oldCurrentTime: 0,
       player: null,
       loadedAndPlayingCounter: 0,
+      localIsMobile: false,
     };
   },
 
@@ -175,6 +176,7 @@ export default {
       });
     } else {
       this.player.cueVideoById(this.videoId);
+      this.localIsMobile = true;
     }
     this.timeCheckerId = setInterval(() => {
       // update player playing state
@@ -192,7 +194,7 @@ export default {
                   ((this.$route.name === 'Home') || (this.$route.name === 'Soocenje'))) {
                   this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
                   if (!this.muted) {
-                    this.player.unMute();
+                    this.player.mute(); // TODO unMute
                   } else {
                     this.player.mute();
                   }
@@ -201,7 +203,10 @@ export default {
             }
           } else if (playerState === 3) {
             this.loadedAndPlayingCounter = 0;
-            this.$store.commit('video/UPDATE_PLAYING', true);
+            // TODO perhaps a bad idea
+            // this.$store.commit('video/UPDATE_PLAYING', true);
+          } else if (playerState === 2) {
+            this.$store.commit('video/UPDATE_PLAYING', false);
           } else {
             this.$store.commit('video/UPDATE_PLAYING', false);
             this.loadedAndPlayingCounter = 0;
@@ -302,14 +307,15 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: $gray;
+    // background-color: $gray;
     z-index: 3;
 
+    background-color: rgba(234, 234, 234, 0.3);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 
-    transition: all 0.2s ease-in;
+    transition: opacity 0.2s ease-in;
 
     &::after {
       content: '';
@@ -326,7 +332,6 @@ export default {
 
       cursor: pointer;
       transition: all 0.1s ease-out;
-
     }
 
     &:hover::after {
@@ -342,8 +347,8 @@ export default {
       }
 
       &:hover {
+        // background-color: rgba(234, 234, 234, 0.3);
         opacity: 1;
-        background-color: rgba(234, 234, 234, 0.3);
       }
     }
 
