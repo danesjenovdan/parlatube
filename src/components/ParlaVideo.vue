@@ -194,7 +194,7 @@ export default {
                   ((this.$route.name === 'Home') || (this.$route.name === 'Soocenje'))) {
                   this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
                   if (!this.muted) {
-                    this.player.mute(); // TODO unMute
+                    this.player.unMute();
                   } else {
                     this.player.mute();
                   }

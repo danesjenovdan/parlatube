@@ -8,8 +8,12 @@
     </div>
     <div class="container">
       <share></share>
-      <div class="conversion">Odreži zanimiv del videa in ga deli s prijatelji!</div>
+      <div
+        v-if="!localIsMobile"
+        class="conversion"
+      >Odreži zanimiv del videa in ga deli s prijatelji!</div>
       <router-link
+        v-if="!localIsMobile"
         :to="{ name: 'Home', params: { 'editing': true }}"
         class="conversion-button"
       ><span class="cutme"></span>PRIPRAVI IZSEK</router-link>
@@ -29,6 +33,7 @@
 <script>
 /* globals FB */
 
+import isMobile from 'ismobilejs';
 import ParlaVideo from 'components/ParlaVideo';
 import Share from 'components/Share';
 import Snippets from 'components/Snippets';
@@ -40,6 +45,7 @@ export default {
     return {
       videoId: '',
       title: '',
+      localIsMobile: false,
     };
   },
 
@@ -54,6 +60,10 @@ export default {
   },
 
   mounted() {
+    if (isMobile.any) {
+      this.localIsMobile = true;
+    }
+
     // on mount get data from API and set up
     this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${this.$route.params.snippetId}`, {
       emulateJSON: true,
@@ -216,8 +226,8 @@ export default {
   }
 
   .feed-container {
-    display: flex;
-    flex: 0 0 738px;
+    display: block;
+    flex: 0 1 738px;
     position: relative;
     margin: auto;
     margin-top: 84px;
