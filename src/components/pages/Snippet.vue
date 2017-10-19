@@ -80,9 +80,11 @@ export default {
       // update drawing
       const processedExtras = JSON.parse(snippetSuccess.data.extras.replace(/&#34;/g, '"').replace(/&#39;/g, '\''));
       console.log('processedExtras: ', processedExtras);
+      console.log(snippetSuccess.data);
       this.$store.commit('drawing/UPDATE_STATE', processedExtras);
       this.title = snippetSuccess.data.name.replace(/&#34;/g, '"').replace(/&#39;/g, '\'');
       this.isMuted = snippetSuccess.data.muted === '1';
+      this.$store.commit('video/UPDATE_IS_MUTED', this.isMuted);
 
       this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${snippetSuccess.data.video_id}`, {
         emulateJSON: true,

@@ -181,6 +181,8 @@ export default {
           muted: this.isMuted ? 1 : 0,
         };
 
+        console.log(data);
+
         this.$http.post('http://snippet.soocenje.24ur.com/setSnippet', data, {
           emulateJSON: true,
         }).then((response) => {
