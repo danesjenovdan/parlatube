@@ -363,8 +363,8 @@ export default {
 </style>
 
 <style lang="scss">
-#text.active,
-.emoji.active {
+#text.active.editable,
+.emoji.active.editable {
   .handle {
     display: block !important;
   }
