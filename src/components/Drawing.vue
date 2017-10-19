@@ -32,7 +32,7 @@
       :id="emoji.id"
       :draggable="!disableEditing"
       :resizable="!disableEditing"
-      :class="['emoji', { editable: emojiEditable }]"
+      :class="['emoji', { editable: emojiEditable },]"
     >
       <div
         class="emoji-image"
@@ -300,30 +300,6 @@ export default {
     &.display {
       display: block;
     }
-
-    // &.mobile::after {
-    //   // &:hover .playlist-img::after,
-    //   // &:hover .snippet-img::after {
-    //   //   opacity: 0.7;
-    //   // }
-    //   content: '';
-    //   display: block;
-    //   position: absolute;
-    //   top: 0;
-    //   right: 0;
-    //   bottom: 0;
-    //   left: 0;
-    //   background: rgba(188, 42, 42, 1);
-    //   opacity: 1;
-    //   background-image: url('../assets/icons/play-snippet.svg');
-    //   background-position: center;
-    //   background-repeat: no-repeat;
-    //   background-size: 30%;
-    //   transition: all 0.2s ease-out;
-    // }
-    // &.mobile:active::after {
-    //   opacity: 0.7;
-    // }
   }
 
   #text {
@@ -389,9 +365,9 @@ export default {
 <style lang="scss">
 #text.active,
 .emoji.active {
-  // .handle {
-  //   display: block !important;
-  // }
+  .handle {
+    display: block !important;
+  }
   .emoji-trash {
     display: block !important;
   }
