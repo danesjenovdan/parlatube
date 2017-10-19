@@ -1,6 +1,6 @@
 <template>
   <div id="drawing-container" :class="{invisible: mobileNeedsClick}"> <!-- V-RESIZE -->
-    <div id="drawing-overlay" :class="{visible: !videoLoadedAndPlaying}"></div>
+    <div id="drawing-overlay" :class="{visible: !videoLoadedAndPlaying, display: disableEditing}" @click="togglePlaying"></div>
     <vue-draggable-resizable
       v-if="(drawingText !== '')"
       :x="10"
@@ -83,6 +83,9 @@ export default {
   },
 
   methods: {
+    togglePlaying() {
+      this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+    },
     onTextDragStop(event) {
       this.$store.commit('drawing/UPDATE_TEXT_X', event.left);
       this.$store.commit('drawing/UPDATE_TEXT_Y', event.top);
@@ -284,12 +287,17 @@ export default {
     background-position: center;
     background-size: 25%;
     display: none;
+    opacity: 0;
 
     &::after {
       opacity: 0;
     }
 
     &.visible {
+      opacity: 1;
+    }
+
+    &.display {
       display: block;
     }
 
@@ -379,10 +387,11 @@ export default {
 </style>
 
 <style lang="scss">
-#text.editable, .emoji.editable {
-  .handle {
-    display: block !important;
-  }
+#text.active,
+.emoji.active {
+  // .handle {
+  //   display: block !important;
+  // }
   .emoji-trash {
     display: block !important;
   }

@@ -1,8 +1,7 @@
 <template>
     <div
       id="video"
-      @click="togglePlaying"
-      :class="{hoverable: (!embedControls && !localIsMobile && videoLoadedAndPlaying && (($route.name !== 'Home') && ($route.name !== 'Soocenje'))), play: !videoPlaying}"
+      :class="{play: !videoPlaying}"
     >
       <div id="player"></div>
       <drawing v-if="showDrawing" :disableEditing="disableEditing"></drawing>
@@ -11,7 +10,6 @@
         id="embed-controls"
         :style="{'background-image': `url('${embedBackgroundImageUrl}')`}"
         @click.stop="playVideo"
-        :class="{invisible: videoPlaying}"
       ></div>
     </div>
 </template>
@@ -87,15 +85,8 @@ export default {
     },
 
     playVideo() {
-      if (this.videoPlaying) {
-        this.player.pauseVideo();
-      } else {
-        this.player.playVideo();
-      }
-    },
-
-    togglePlaying() {
-      this.$store.commit('video/TOGGLE_SHOULD_I_PAUSE');
+      this.player.playVideo();
+      this.embedControls = false;
     },
   },
 
@@ -275,33 +266,6 @@ export default {
   padding-bottom: 56.25%; /* 16:9 */
   height: 0;
 
-  &.hoverable {
-    &::after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background-size: 30%;
-      background-position: center;
-      background-repeat: no-repeat;
-      transition: all 0.1s ease-out;
-      cursor: pointer;
-
-      z-index: 3;
-    }
-
-    &:hover::after {
-      background-image: url('../assets/icons/pause-black.svg');
-      background-color: rgba(234, 234, 234, 0.3);
-    }
-    &.play:hover::after {
-      background-image: url('../assets/icons/triangle-black.svg');
-    }
-  }
-
   #embed-controls {
     position: absolute;
     top: 0;
@@ -340,17 +304,7 @@ export default {
     }
 
     &.invisible {
-      opacity: 0;
-      background-image: none !important;
-
-      &::after {
-        background-image: url('../assets/icons/pause-black.svg');
-      }
-
-      &:hover {
-        // background-color: rgba(234, 234, 234, 0.3);
-        opacity: 1;
-      }
+      display: none;
     }
 
   }
