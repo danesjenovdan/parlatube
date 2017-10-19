@@ -19,7 +19,7 @@ export default {
   name: 'vue-draggable-resizable',
   props: {
     active: {
-      type: Boolean, default: true
+      type: Boolean, default: false
     },
     draggable: {
       type: Boolean, default: true

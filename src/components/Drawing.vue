@@ -32,7 +32,8 @@
       :id="emoji.id"
       :draggable="!disableEditing"
       :resizable="!disableEditing"
-      :class="['emoji', { editable: emojiEditable },]"
+      :class="['emoji', { editable: emojiEditable }]"
+      :active="emojiEditable"
     >
       <div
         class="emoji-image"
@@ -363,8 +364,8 @@ export default {
 </style>
 
 <style lang="scss">
-#text.active.editable,
-.emoji.active.editable {
+#text.active,
+.emoji.active {
   .handle {
     display: block !important;
   }
