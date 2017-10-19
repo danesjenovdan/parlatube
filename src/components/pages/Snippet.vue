@@ -14,7 +14,7 @@
       >Odreži zanimiv del videa in ga deli s prijatelji!</div>
       <router-link
         v-if="!localIsMobile"
-        :to="{ name: 'Home', params: { 'editing': true }}"
+        :to="{ name: 'Soocenje', params: { 'videoId': 3, 'editing': true }}"
         class="conversion-button"
       ><span class="cutme"></span>PRIPRAVI IZSEK</router-link>
     </div>

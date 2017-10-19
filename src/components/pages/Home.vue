@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <div class="container">
+    <div class="container" v-if="live">
       <div class="video-and-transcripts-container">
         <div class="video-container">
           <parla-video :showDrawing="editing" :showControls="!editing"></parla-video>
@@ -24,6 +24,9 @@
         :live="live"
       ></editor>
     </div>
+    <div class="container">
+      <soon></soon>
+    </div>
     <div class="snippets-container">
       <snippets :number-of-snippets="6"></snippets>
     </div>
@@ -45,6 +48,7 @@ import ParlaVideo from 'components/ParlaVideo';
 import Editor from 'components/Editor';
 import Snippets from 'components/Snippets';
 import LatestSnippets from 'components/LatestSnippets';
+import Soon from 'components/Soon';
 
 export default {
   name: 'Home',
@@ -62,6 +66,7 @@ export default {
     Editor,
     Snippets,
     LatestSnippets,
+    Soon,
   },
 
   methods: {
