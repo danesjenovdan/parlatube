@@ -100,6 +100,8 @@ export default {
       this.isMobile = true;
       this.editing = false;
     }
+
+    this.$store.commit('video/UPDATE_IS_MUTED', false);
   },
 };
 </script>
