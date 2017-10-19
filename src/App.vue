@@ -2,7 +2,7 @@
   <div id="parlatube">
     <parlatube-header v-if="!isEmbed"></parlatube-header>
     <cookies v-if="!isEmbed"></cookies>
-    <router-view></router-view>
+    <router-view :key="$route.path"></router-view>
     <parlatube-footer v-if="!isEmbed"></parlatube-footer>
   </div>
 </template>
