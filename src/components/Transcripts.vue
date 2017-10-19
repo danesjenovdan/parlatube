@@ -63,6 +63,7 @@ export default {
     ...mapState({
       currentTime: state => state.video.currentTime,
       videoLoadedAndPlaying: state => state.video.loadedAndPlaying,
+      seekTo: state => state.video.seekTo,
     }),
     theSpeech() {
       const filteredSpeeches = this.transcripts.filter(speech =>
@@ -78,8 +79,10 @@ export default {
 
   methods: {
     scrollTo(timestamp) {
-      this.$store.commit('video/UPDATE_SEEK_TO', Math.ceil(timestamp / 1000));
+      // RESET SEEK TO
+      this.$store.commit('video/UPDATE_SEEK_TO', -1);
       this.$nextTick(() => {
+        this.$store.commit('video/UPDATE_SEEK_TO', (timestamp / 1000));
         this.searchTerm = '';
       });
     },
@@ -160,6 +163,7 @@ export default {
     searchTerm(newSearchTerm) {
       if (newSearchTerm.length > 0) {
         this.searchQuery(newSearchTerm);
+        console.log('ping');
       } else {
         this.transcripts = this.allSpeeches;
         this.scrollTranscripts = true;

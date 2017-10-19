@@ -14,6 +14,7 @@
           v-bind:style="{width: `${(duration * localStepSize)}px`}"
           @mousedown="rulerDown"
           @mousemove="mouseMarker"
+          @mouseleave="mouseMarkerPosition = 0"
           ref="ruler"
         >
           <div

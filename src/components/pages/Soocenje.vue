@@ -22,7 +22,7 @@
         v-if="editing"
         v-on:disableEditing="disableEditing"
         :live="live"
-        :videoId="$route.params.videoId"
+        :videoId="parseInt($route.params.videoId, 10)"
       ></editor>
     </div>
     <div class="snippets-container">

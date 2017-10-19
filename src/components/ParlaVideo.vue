@@ -135,7 +135,8 @@ export default {
     },
 
     seekTo(newSeekTo) {
-      if (newSeekTo !== this.oldSeekTo) {
+      console.log(newSeekTo);
+      if (newSeekTo !== -1) {
         this.$store.commit('video/UPDATE_OLD_SEEK_TO', newSeekTo);
         this.player.seekTo(newSeekTo);
       }
