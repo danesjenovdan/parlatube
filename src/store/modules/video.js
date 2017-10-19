@@ -16,6 +16,7 @@ const state = {
   playing: false,
   shouldIPause: false,
   loadedAndPlaying: false,
+  isMuted: false,
 };
 
 // mutations
@@ -74,6 +75,9 @@ const mutations = {
   },
   UPDATE_LOADED_AND_PLAYING(state, newLoadedAndPlaying) {
     state.loadedAndPlaying = newLoadedAndPlaying;
+  },
+  UPDATE_IS_MUTED(state, newIsMuted) {
+    state.isMuted = newIsMuted;
   },
 };
 

@@ -4,7 +4,7 @@
       <h1>{{ title }}</h1>
     </div>
     <div class="container">
-      <parla-video :disableEditing="true"></parla-video>
+      <parla-video :disableEditing="true" :isMuted="isMuted"></parla-video>
     </div>
     <div class="container">
       <share></share>
@@ -46,6 +46,7 @@ export default {
       videoId: '',
       title: '',
       localIsMobile: false,
+      isMuted: false,
     };
   },
 
@@ -81,6 +82,7 @@ export default {
       console.log('processedExtras: ', processedExtras);
       this.$store.commit('drawing/UPDATE_STATE', processedExtras);
       this.title = snippetSuccess.data.name.replace(/&#34;/g, '"').replace(/&#39;/g, '\'');
+      this.isMuted = snippetSuccess.data.muted === '1';
 
       this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${snippetSuccess.data.video_id}`, {
         emulateJSON: true,

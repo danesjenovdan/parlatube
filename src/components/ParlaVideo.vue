@@ -52,10 +52,6 @@ export default {
       type: Boolean,
       default: true,
     },
-    isMuted: {
-      type: Boolean,
-      default: false,
-    },
     embedControls: {
       type: Boolean,
       default: false,
@@ -101,6 +97,7 @@ export default {
       shouldIPause: state => state.video.shouldIPause,
       videoLoadedAndPlaying: state => state.video.loadedAndPlaying,
       videoPlaying: state => state.video.playing,
+      isMuted: state => state.video.isMuted,
     }),
 
     ...mapGetters({
@@ -114,6 +111,14 @@ export default {
   },
 
   watch: {
+    isMuted(newIsMuted) {
+      if (newIsMuted) {
+        this.player.mute();
+      } else {
+        this.player.unMute();
+      }
+    },
+
     height(newHeight) {
       if (newHeight) {
         this.player.setSize(null, this.height);
@@ -185,7 +190,7 @@ export default {
                 if (((currentTime > this.loopStart) && (currentTime < this.loopEnd)) ||
                   ((this.$route.name === 'Home') || (this.$route.name === 'Soocenje'))) {
                   this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
-                  if (!this.muted) {
+                  if (!this.isMuted) {
                     this.player.unMute();
                   } else {
                     this.player.mute();

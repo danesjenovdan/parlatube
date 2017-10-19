@@ -63,10 +63,10 @@
             </div>
           </div>
         </div>
-        <!-- <div class="row">
+        <div class="row">
           <label for="mute" id="label-mute">Izklopi zvok</label>
-          <input type="checkbox" id="mute" v-model="mute">
-        </div> -->
+          <input type="checkbox" id="mute" v-model="isMuted">
+        </div>
       </div>
     </div>
     <div class="editor-controls-container">
@@ -127,7 +127,7 @@ export default {
         },
       },
       shakeTitle: false,
-      mute: false,
+      isMuted: false,
     };
   },
 
@@ -178,6 +178,7 @@ export default {
           published: 1,
           looping: 1,
           name: this.localTitleText,
+          muted: this.isMuted ? 1 : 0,
         };
 
         this.$http.post('http://snippet.soocenje.24ur.com/setSnippet', data, {
@@ -233,6 +234,9 @@ export default {
     },
     colorPickerProps(newColorPickerProps) {
       this.$store.commit('drawing/UPDATE_COLOR', newColorPickerProps.hex);
+    },
+    isMuted(newIsMuted) {
+      this.$store.commit('video/UPDATE_IS_MUTED', newIsMuted);
     },
   },
 
