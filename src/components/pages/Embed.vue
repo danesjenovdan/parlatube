@@ -1,7 +1,7 @@
 <template>
   <div id="embed">
     <div class="container">
-      <parla-video :disableEditing="true" :embedControls="true" :embedBackgroundImageUrl="`http://static.soocenje.24ur.com/frames/optimised/${snippetVideoId}/out${Math.floor(startTime / 5000)}.jpg`"></parla-video>
+      <parla-video :isMuted="isMuted" :disableEditing="true" :embedControls="true" :embedBackgroundImageUrl="`http://static.soocenje.24ur.com/frames/optimised/${snippetVideoId}/out${Math.floor(startTime / 5000)}.jpg`"></parla-video>
     </div>
   </div>
 </template>
@@ -23,6 +23,7 @@ export default {
       title: '',
       startTime: 0,
       snippetVideoId: 0,
+      isMuted: false,
     };
   },
 
@@ -56,6 +57,9 @@ export default {
       this.title = snippetSuccess.data.name.replace(/&#34;/g, '"').replace(/&#39;/g, '\'');
       this.snippetVideoId = snippetSuccess.data.video_id;
       this.startTime = snippetSuccess.data.start_time;
+      this.isMuted = snippetSuccess.data.muted === '1';
+      this.$store.commit('video/UPDATE_IS_MUTED', this.isMuted);
+
       this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${this.snippetVideoId}`, {
         emulateJSON: true,
       }).then((videoSuccess) => {
