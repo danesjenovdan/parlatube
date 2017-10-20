@@ -50,6 +50,8 @@
 </template>
 
 <script>
+/* global dataLayer */
+
 import isMobile from 'ismobilejs';
 import { mapState } from 'vuex';
 import { Emoji } from 'emoji-mart-vue';

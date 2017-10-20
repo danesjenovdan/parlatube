@@ -7,7 +7,7 @@
 </template>
 
 <script>
-/* globals FB */
+/* globals FB dataLayer */
 
 import ParlaVideo from 'components/ParlaVideo';
 import Share from 'components/Share';
@@ -80,11 +80,11 @@ export default {
     this.$http.get(`http://speeches.soocenje.24ur.com/analytics/collect/${this.$route.params.snippetId}`);
 
     dataLayer.push({
-      'event': 'pageview',
-      'page': {
-        'path': this.$route.path,
-        'title': 'Embed'
-      }
+      event: 'pageview',
+      page: {
+        path: this.$route.path,
+        title: 'Embed',
+      },
     });
   },
 

@@ -104,6 +104,8 @@
 </template>
 
 <script>
+/* global dataLayer */
+
 import { mapState, mapGetters } from 'vuex';
 import resize from 'vue-resize-directive';
 

@@ -40,7 +40,7 @@
 </template>
 
 <script>
-/* globals twttr */
+/* globals twttr dataLayer */
 import isMobile from 'ismobilejs';
 import ParlaVideo from 'components/ParlaVideo';
 import Editor from 'components/Editor';
@@ -111,11 +111,11 @@ export default {
     this.$store.commit('video/UPDATE_IS_MUTED', false);
 
     dataLayer.push({
-      'event': 'pageview',
-      'page': {
-        'path': this.$route.path,
-        'title': 'Soocenje'
-      }
+      event: 'pageview',
+      page: {
+        path: this.$route.path,
+        title: 'Soocenje',
+      },
     });
   },
 };

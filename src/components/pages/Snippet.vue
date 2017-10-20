@@ -35,7 +35,7 @@
 </template>
 
 <script>
-/* globals FB */
+/* globals FB dataLayer */
 
 import isMobile from 'ismobilejs';
 import ParlaVideo from 'components/ParlaVideo';
@@ -115,11 +115,11 @@ export default {
     this.$http.get(`http://speeches.soocenje.24ur.com/analytics/collect/${this.$route.params.snippetId}`);
 
     dataLayer.push({
-      'event': 'pageview',
-      'page': {
-        'path': this.$route.path,
-        'title': 'Snippet'
-      }
+      event: 'pageview',
+      page: {
+        path: this.$route.path,
+        title: 'Snippet',
+      },
     });
   },
 

@@ -6,6 +6,8 @@
 </template>
 
 <script>
+/* global dataLayer */
+
 import Snippets from 'components/Snippets';
 import LatestSnippets from 'components/LatestSnippets';
 
@@ -19,11 +21,11 @@ export default {
 
   mounted() {
     dataLayer.push({
-      'event': 'pageview',
-      'page': {
-        'path': this.$route.path,
-        'title': 'Collections'
-      }
+      event: 'pageview',
+      page: {
+        path: this.$route.path,
+        title: 'Collections',
+      },
     });
   },
 };

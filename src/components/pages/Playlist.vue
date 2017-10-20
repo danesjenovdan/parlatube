@@ -34,6 +34,8 @@
 </template>
 
 <script>
+/* global dataLayer */
+
 import ParlaVideo from 'components/ParlaVideo';
 import { mapState } from 'vuex';
 
@@ -148,11 +150,11 @@ export default {
     });
 
     dataLayer.push({
-      'event': 'pageview',
-      'page': {
-        'path': this.$route.path,
-        'title': 'Playlist'
-      }
+      event: 'pageview',
+      page: {
+        path: this.$route.path,
+        title: 'Playlist',
+      },
     });
   },
 

@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <div class="container" v-if="live">
+    <div class="container">
       <div class="video-and-transcripts-container">
         <div class="video-container">
           <parla-video :showDrawing="editing" :showControls="!editing"></parla-video>
@@ -24,9 +24,6 @@
         :live="live"
       ></editor>
     </div>
-    <div class="container">
-      <soon></soon>
-    </div>
     <div class="snippets-container">
       <snippets :number-of-snippets="6" :background-color="'#eaeaea'"></snippets>
     </div>
@@ -42,7 +39,7 @@
 </template>
 
 <script>
-/* globals twttr */
+/* globals twttr dataLayer */
 import isMobile from 'ismobilejs';
 import ParlaVideo from 'components/ParlaVideo';
 import Editor from 'components/Editor';
@@ -83,7 +80,7 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', 'ZIluspYU_Pw');
+    this.$store.commit('video/UPDATE_VIDEOID', '1UZOSLea_9c');
 
     if (this.$route.params.editing) {
       this.editing = this.$route.params.editing;
@@ -109,11 +106,11 @@ export default {
     this.$store.commit('video/UPDATE_IS_MUTED', false);
 
     dataLayer.push({
-      'event': 'pageview',
-      'page': {
-        'path': this.$route.path,
-        'title': 'Home'
-      }
+      event: 'pageview',
+      page: {
+        path: this.$route.path,
+        title: 'Home',
+      },
     });
   },
 };
