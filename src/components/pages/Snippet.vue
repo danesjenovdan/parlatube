@@ -6,6 +6,10 @@
     <div class="container">
       <parla-video :disableEditing="true" :isMuted="isMuted"></parla-video>
     </div>
+    <div class="container overflowy">
+      <router-link :to="{name: 'Snippet', params: {snippetId: `${parseInt($route.params.snippetId, 10) - 1}`}}" class="arrow left"></router-link>
+      <router-link :to="{name: 'Snippet', params: {snippetId: `${parseInt($route.params.snippetId, 10) + 1}`}}" class="arrow right"></router-link>
+    </div>
     <div class="container">
       <share></share>
       <div
@@ -69,32 +73,40 @@ export default {
     this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${this.$route.params.snippetId}`, {
       emulateJSON: true,
     }).then((snippetSuccess) => {
-      // set video to loop and set start and end times
-      this.$store.commit('video/UPDATE_LOOP_START', (snippetSuccess.data.start_time / 1000));
-      this.$store.commit('video/UPDATE_LOOP_END', (snippetSuccess.data.end_time / 1000));
-      this.$store.commit('video/TURN_LOOPING_ON');
+      console.log(snippetSuccess.data.id);
+      if (snippetSuccess.data.id === 0) {
+        alert('ping');
+        // this.$nextTick(() => {
+        this.$router.push({ name: 'Collections' });
+        // });
+      } else {
+        // set video to loop and set start and end times
+        this.$store.commit('video/UPDATE_LOOP_START', (snippetSuccess.data.start_time / 1000));
+        this.$store.commit('video/UPDATE_LOOP_END', (snippetSuccess.data.end_time / 1000));
+        this.$store.commit('video/TURN_LOOPING_ON');
 
-      // tell video where to seek to TODO refactor maybe
-      this.$store.commit('video/UPDATE_SEEK_TO', (snippetSuccess.data.start_time / 1000));
+        // tell video where to seek to TODO refactor maybe
+        this.$store.commit('video/UPDATE_SEEK_TO', (snippetSuccess.data.start_time / 1000));
 
-      // update drawing
-      const processedExtras = JSON.parse(snippetSuccess.data.extras.replace(/&#34;/g, '"').replace(/&#39;/g, '\''));
-      console.log('processedExtras: ', processedExtras);
-      console.log(snippetSuccess.data);
-      this.$store.commit('drawing/UPDATE_STATE', processedExtras);
-      this.title = snippetSuccess.data.name.replace(/&#34;/g, '"').replace(/&#39;/g, '\'');
-      this.isMuted = snippetSuccess.data.muted === '1';
-      this.$store.commit('video/UPDATE_IS_MUTED', this.isMuted);
+        // update drawing
+        const processedExtras = JSON.parse(snippetSuccess.data.extras.replace(/&#34;/g, '"').replace(/&#39;/g, '\''));
+        console.log('processedExtras: ', processedExtras);
+        console.log(snippetSuccess.data);
+        this.$store.commit('drawing/UPDATE_STATE', processedExtras);
+        this.title = snippetSuccess.data.name.replace(/&#34;/g, '"').replace(/&#39;/g, '\'');
+        this.isMuted = snippetSuccess.data.muted === '1';
+        this.$store.commit('video/UPDATE_IS_MUTED', this.isMuted);
 
-      this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${snippetSuccess.data.video_id}`, {
-        emulateJSON: true,
-      }).then((videoSuccess) => {
-        // set video ID (locally and in store)
-        this.videoId = videoSuccess.data.videoid;
-        this.$store.commit('video/UPDATE_VIDEOID', this.videoId);
-      }, () => {
-        // an error occured when trying to get video info from server
-      });
+        this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${snippetSuccess.data.video_id}`, {
+          emulateJSON: true,
+        }).then((videoSuccess) => {
+          // set video ID (locally and in store)
+          this.videoId = videoSuccess.data.videoid;
+          this.$store.commit('video/UPDATE_VIDEOID', this.videoId);
+        }, () => {
+          // an error occured when trying to get video info from server
+        });
+      }
     }, () => {
       // an error occured when trying to get snippet info from server
     });
@@ -125,6 +137,59 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../styles/colors';
+@import '../../styles/scaffolding';
+
+.overflowy {
+  overflow: visible;
+  position: relative;
+
+  .arrow {
+    width: 105px;
+    height: 77px;
+    position: absolute;
+    top: -300px;
+    left: -100px;
+    z-index: 5;
+    cursor: pointer;
+    transition: transform 0.2s ease-out;
+    display: block;
+
+    background-image: url('../../assets/puscica.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: scale(0.6);
+
+    &:hover {
+      transform: scale(0.7);
+    }
+
+    &.right {
+      right: -100px;
+      left: auto;
+      transform: scale(-0.6);
+
+      &:hover {
+        transform: scale(-0.7);
+      }
+    }
+  }
+  @include respond-to(mobile-arrows) {
+    overflow: hidden;
+    height: 80px;
+    margin-bottom: -20px;
+
+    .arrow {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      &.right {
+        right: 0;
+      }
+    }
+  }
+}
 
 #snippet {
   display: flex;
@@ -132,6 +197,7 @@ export default {
   flex-wrap: wrap;
   overflow: hidden;
   justify-content: center;
+  position: relative;
 
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eaeaea+0,eaeaea+50,ffffff+51,ffffff+100 */
   background: #eaeaea; /* Old browsers */

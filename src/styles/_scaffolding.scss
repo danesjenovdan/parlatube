@@ -8,7 +8,8 @@ $breakpoints: (
   parlatube-limbo: "(min-width: #{768px}) and (max-width: #{1014px})",
   limbo: "(min-width: #{$breakpoint}) and (max-width: #{991px})",
   mobile: "(max-width: #{$breakpoint - 1px})",
-  desktop: "(min-width: #{$breakpoint})"
+  desktop: "(min-width: #{$breakpoint})",
+  mobile-arrows: "(max-width: #{1200px})"
 );
 
 @mixin respond-to($breakpoint) {
