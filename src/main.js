@@ -3,6 +3,8 @@
 import Vue from 'vue';
 import vueResource from 'vue-resource';
 import VueCookies from 'vue-cookies';
+import VueGtm from 'vue-gtm';
+
 import App from '@/App';
 import router from '@/router';
 import store from '@/store';
@@ -11,6 +13,10 @@ Vue.config.productionTip = false;
 
 Vue.use(vueResource);
 Vue.use(VueCookies);
+Vue.use(VueGtm, {
+  debug: true,
+  vueRouter: router,
+});
 
 /* eslint-disable no-new */
 new Vue({

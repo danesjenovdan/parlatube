@@ -87,6 +87,8 @@
 </template>
 
 <script>
+/* global dataLayer */
+
 import 'element-ui/lib/theme-default/index.css';
 import { mapGetters } from 'vuex';
 import { Compact } from 'vue-color';
@@ -239,6 +241,20 @@ export default {
     },
     isMuted(newIsMuted) {
       this.$store.commit('video/UPDATE_IS_MUTED', newIsMuted);
+      // this.$gtm.trackEvent({
+      //   category: 'create_snippet',
+      //   action: 'sound',
+      //   label: 'mute',
+      //   value: newIsMuted ? 1 : 0,
+      // });
+      // sendGa('create_snipet', 'sound', 'mute');
+
+      dataLayer.push({
+        event: 'GaEvent',
+        eventCategory: 'create_snipet',
+        eventAction: 'sound',
+        eventLabel: 'mute',
+      });
     },
   },
 
