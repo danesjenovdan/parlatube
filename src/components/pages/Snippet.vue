@@ -7,8 +7,8 @@
       <parla-video :disableEditing="true" :isMuted="isMuted"></parla-video>
     </div>
     <div class="container overflowy">
-      <router-link :to="{name: 'Snippet', params: {snippetId: `${parseInt($route.params.snippetId, 10) - 1}`}}" class="arrow left"></router-link>
-      <router-link :to="{name: 'Snippet', params: {snippetId: `${parseInt($route.params.snippetId, 10) + 1}`}}" class="arrow right"></router-link>
+      <router-link :to="{name: 'Snippet', params: {snippetId: `${parseInt($route.params.snippetId, 10) - 1}`}, meta: { scrollTop: 200 }}" class="arrow left"></router-link>
+      <router-link :to="{name: 'Snippet', params: {snippetId: `${parseInt($route.params.snippetId, 10) + 1}`}, meta: { scrollTop: 200 }}" class="arrow right"></router-link>
     </div>
     <div class="container">
       <share></share>
@@ -189,9 +189,8 @@ export default {
 }
 
 #snippet {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
+  display: block;
+  width: 100%;
   overflow: hidden;
   justify-content: center;
   position: relative;
@@ -293,8 +292,8 @@ export default {
   }
 
   .feed-container {
-    display: block;
-    flex: 0 1 738px;
+    width: 100%;
+    max-width: 538px;
     position: relative;
     margin: auto;
     margin-top: 84px;

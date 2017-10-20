@@ -17,7 +17,15 @@ export default new Router({
   linkExactActiveClass: 'active',
   mode: 'history',
 
-  scrollBehavior() {
+  scrollBehavior(to) {
+    // check if any matched route config has meta that requires scrolling to top
+    if (to.matched.some(m => m.meta.scrollTop)) {
+      return {
+        x: to.matched.some(m => m.meta.scrollTop),
+        y: 0,
+      };
+    }
+
     return {
       x: 0,
       y: 0,
