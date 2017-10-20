@@ -75,10 +75,7 @@ export default {
     }).then((snippetSuccess) => {
       console.log(snippetSuccess.data.id);
       if (snippetSuccess.data.id === 0) {
-        alert('ping');
-        // this.$nextTick(() => {
         this.$router.push({ name: 'Collections' });
-        // });
       } else {
         // set video to loop and set start and end times
         this.$store.commit('video/UPDATE_LOOP_START', (snippetSuccess.data.start_time / 1000));
