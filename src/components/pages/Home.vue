@@ -107,6 +107,14 @@ export default {
     }
 
     this.$store.commit('video/UPDATE_IS_MUTED', false);
+
+    dataLayer.push({
+      'event': 'pageview',
+      'page': {
+        'path': this.$route.path,
+        'title': 'Home'
+      }
+    });
   },
 };
 </script>

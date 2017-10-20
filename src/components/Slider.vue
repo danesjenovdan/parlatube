@@ -329,6 +329,12 @@ export default {
 
     zoomIn() {
       this.localStepSize = this.localStepSize + 10;
+      dataLayer.push({
+        event: 'GaEvent',
+        eventCategory: 'create_snipet',
+        eventAction: 'zoom',
+        eventLabel: 'in',
+      });
     },
 
     zoomOut() {
@@ -337,6 +343,12 @@ export default {
       } else {
         this.localStepSize = this.baseLocalStepSize;
       }
+      dataLayer.push({
+        event: 'GaEvent',
+        eventCategory: 'create_snipet',
+        eventAction: 'zoom',
+        eventLabel: 'out',
+      });
     },
 
     seekHere(event) {

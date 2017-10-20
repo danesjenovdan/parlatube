@@ -113,6 +113,14 @@ export default {
     }
 
     this.$http.get(`http://speeches.soocenje.24ur.com/analytics/collect/${this.$route.params.snippetId}`);
+
+    dataLayer.push({
+      'event': 'pageview',
+      'page': {
+        'path': this.$route.path,
+        'title': 'Snippet'
+      }
+    });
   },
 
   created() {

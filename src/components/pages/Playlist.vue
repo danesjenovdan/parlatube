@@ -146,6 +146,14 @@ export default {
     }, () => {
       // an error occured when trying to get snippet info from server
     });
+
+    dataLayer.push({
+      'event': 'pageview',
+      'page': {
+        'path': this.$route.path,
+        'title': 'Playlist'
+      }
+    });
   },
 
   created() {

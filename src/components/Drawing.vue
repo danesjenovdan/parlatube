@@ -148,6 +148,12 @@ export default {
 
     removeEmoji(emojiId) {
       this.$store.commit('drawing/DELETE_EMOJI', emojiId);
+      dataLayer.push({
+        event: 'GaEvent',
+        eventCategory: 'create_snipet',
+        eventAction: 'emoji',
+        eventLabel: 'delete',
+      });
     },
 
     manipulateSizes() {

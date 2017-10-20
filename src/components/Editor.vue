@@ -197,6 +197,12 @@ export default {
 
     showColorPicker() {
       this.colorPickerVisible = !this.colorPickerVisible;
+      dataLayer.push({
+        event: 'GaEvent',
+        eventCategory: 'create_snipet',
+        eventAction: 'color',
+        eventLabel: 'change',
+      });
     },
 
     resetState() {
@@ -221,6 +227,13 @@ export default {
         id: `emoji${this.getRandomString(10, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')}`,
       };
       this.$store.commit('drawing/ADD_EMOJI', newEmoji);
+
+      dataLayer.push({
+        event: 'GaEvent',
+        eventCategory: 'create_snipet',
+        eventAction: 'emoji',
+        eventLabel: 'add',
+      });
     },
 
     updateLocalFontSize(newLocalFontSize) {
@@ -232,22 +245,36 @@ export default {
   watch: {
     localDrawingText(newLocalDrawingText) {
       this.$store.commit('drawing/UPDATE_TEXT', newLocalDrawingText);
+      dataLayer.push({
+        event: 'GaEvent',
+        eventCategory: 'create_snipet',
+        eventAction: 'text',
+        eventLabel: 'change',
+      });
+
+      if (newLocalDrawingText === '') {
+        dataLayer.push({
+          event: 'GaEvent',
+          eventCategory: 'create_snipet',
+          eventAction: 'text',
+          eventLabel: 'delete',
+        });
+      }
     },
     localFontSize(newLocalFontSize) {
       this.$store.commit('drawing/UPDATE_FONT_SIZE', newLocalFontSize);
+      dataLayer.push({
+        event: 'GaEvent',
+        eventCategory: 'create_snipet',
+        eventAction: 'fontsize',
+        eventLabel: 'change',
+      });
     },
     colorPickerProps(newColorPickerProps) {
       this.$store.commit('drawing/UPDATE_COLOR', newColorPickerProps.hex);
     },
     isMuted(newIsMuted) {
       this.$store.commit('video/UPDATE_IS_MUTED', newIsMuted);
-      // this.$gtm.trackEvent({
-      //   category: 'create_snippet',
-      //   action: 'sound',
-      //   label: 'mute',
-      //   value: newIsMuted ? 1 : 0,
-      // });
-      // sendGa('create_snipet', 'sound', 'mute');
 
       dataLayer.push({
         event: 'GaEvent',

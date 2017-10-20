@@ -16,6 +16,16 @@ export default {
     Snippets,
     LatestSnippets,
   },
+
+  mounted() {
+    dataLayer.push({
+      'event': 'pageview',
+      'page': {
+        'path': this.$route.path,
+        'title': 'Collections'
+      }
+    });
+  },
 };
 </script>
 
