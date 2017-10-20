@@ -69,13 +69,10 @@ export default {
       this.snippets = localSnippets.sort((a, b) => b.id - a.id)
         .splice(0, this.numberOfSnippets)
         .map((element) => {
+          console.log(element);
           const newElement = JSON.parse(JSON.stringify(element));
           newElement.name = element.name.replace(/&#39;/g, '\'');
-          if (element.video_id === '4') {
-            newElement.newImageUrl = 'http://static.soocenje.24ur.com/snippet-image.png';
-          } else {
-            newElement.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${element.video_id}/out${Math.floor((element.start_time + ((element.end_time - element.start_time) / 2)) / 5000)}.jpg`;
-          }
+          newElement.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${element.video_id}/out${Math.floor((parseInt(element.start_time, 10) + ((parseInt(element.end_time, 10) - parseInt(element.start_time, 10)) / 2)) / 5000)}.jpg`;
           return newElement;
         });
     }, () => {
@@ -220,7 +217,7 @@ h1 {
 
     &.clean {
       filter: none;
-      
+
       &::before {
         display: none;
       }
