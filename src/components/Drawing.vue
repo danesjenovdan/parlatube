@@ -4,7 +4,7 @@
     <vue-draggable-resizable
       v-if="(drawingText !== '')"
       :x="10"
-      :y="300"
+      :y="350"
       :w="620"
       :h="50"
       @dragstop="onTextDragStop"
@@ -16,6 +16,7 @@
       :resizable="!disableEditing"
       :style="{'font-size': `${fontSize}px`, color: color}"
       ref="text"
+      :active="textEditable"
     >
       {{ drawingText }}
     </vue-draggable-resizable>
