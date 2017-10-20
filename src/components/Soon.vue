@@ -27,24 +27,24 @@ export default {
       const time = eventTime - currentTime;
       const duration = moment.duration(time);
 
-      let hourPrefix = 'ur';
-      if (duration.hours() === 1) {
-        hourPrefix = 'uro';
-      } else if (duration.hours() === 2) {
-        hourPrefix = 'uri';
-      } else if ((duration.hours() === 3) || (duration.hours() === 4)) {
-        hourPrefix = 'ure';
-      }
+      // let hourPrefix = 'ur';
+      // if ((duration.hours() - 2) === 1) {
+      //   hourPrefix = 'uro';
+      // } else if ((duration.hours() - 2) === 2) {
+      //   hourPrefix = 'uri';
+      // } else if (((duration.hours() - 2) === 3) || (duration.hours() === 4)) {
+      //   hourPrefix = 'ure';
+      // }
 
       let minutePrefix = 'minut';
       if (duration.minutes() === 1) {
         minutePrefix = 'minuto';
-      } else if (duration.hours() === 2) {
+      } else if (duration.minutes() === 2) {
         minutePrefix = 'minuti';
-      } else if ((duration.hours() === 3) || (duration.hours() === 4)) {
+      } else if ((duration.minutes() === 3) || (duration.hours() === 4)) {
         minutePrefix = 'minute';
       }
-      return `čez ${(duration.days() > 0) ? '1 dan, ' : ''} ${duration.hours()} ${hourPrefix} in ${duration.minutes() + 1} ${minutePrefix}`;
+      return `čez ${duration.minutes() + 1} ${minutePrefix}`;
     },
   },
 
