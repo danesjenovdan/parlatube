@@ -71,7 +71,11 @@ export default {
         .map((element) => {
           const newElement = JSON.parse(JSON.stringify(element));
           newElement.name = element.name.replace(/&#39;/g, '\'');
-          newElement.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${element.video_id}/out${Math.floor(element.start_time / 5000)}.jpg`;
+          if (element.video_id === '4') {
+            newElement.newImageUrl = 'http://static.soocenje.24ur.com/snippet-image.png';
+          } else {
+            newElement.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${element.video_id}/out${Math.floor(element.start_time / 5000)}.jpg`;
+          }
           return newElement;
         });
     }, () => {
