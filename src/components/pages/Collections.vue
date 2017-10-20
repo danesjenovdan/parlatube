@@ -1,22 +1,19 @@
 <template>
   <div id="collections">
-    <latest-snippets :background-color="'#eaeaea'" :number-of-snippets="12"></latest-snippets>
-    <snippets></snippets>
+    <all-snippets></all-snippets>
   </div>  
 </template>
 
 <script>
 /* global dataLayer */
 
-import Snippets from 'components/Snippets';
-import LatestSnippets from 'components/LatestSnippets';
+import AllSnippets from 'components/AllSnippets';
 
 export default {
   name: 'Collections',
 
   components: {
-    Snippets,
-    LatestSnippets,
+    AllSnippets,
   },
 
   mounted() {
