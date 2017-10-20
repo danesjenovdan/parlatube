@@ -7,7 +7,12 @@
       </router-link>
       <div id="partners">
         <a target="_blank" href="http://24ur.com"><img id="pop" src="http://m.24ur.com/img/logo.png"></a>
-        <a target="_blank" href="http://danesjenovdan.si/"><img id="djnd" src="../assets/djnd.png"></a>
+        <div class="hover-container">
+          <a target="_blank" href="http://danesjenovdan.si/"><img id="djnd" src="../assets/djnd.png"></a>
+          <div class="hoverthing">
+            <div class="hoverelements"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="container" id="navbar-container">
@@ -97,6 +102,27 @@ export default {
     height: 58px;
     top: 0;
     right: 0;
+
+    .hover-container {
+      display: inline-block;
+      
+      .hoverthing {
+        display: none;
+        position: absolute;
+        bottom: -35px;
+        right: 0;
+        width: 100px;
+        height: 35px;
+        background: $white;
+        border: 3px solid $gray;
+      }
+    }
+
+    .hover-container:hover {
+      .hoverthing {
+        display: block;
+      }
+    }
 
     img {
       margin: 16px;
