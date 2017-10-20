@@ -61,13 +61,13 @@ export default {
   display: block;
   flex: 0 0 100%;
   flex-wrap: wrap;
-  background: $gray;
+  background: $slightly-darker-gray;
   overflow: hidden;
   padding-top: 150px;
   padding-bottom: 170px;
 
   .soon {
-    background: $gray;
+    background: $slightly-darker-gray;
     overflow: hidden;
     margin: auto;
     display: block;

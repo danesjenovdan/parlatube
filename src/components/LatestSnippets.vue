@@ -1,8 +1,14 @@
 <template>
-  <div :class="['snippets-container-container', {empty: (snippets.length === 0)}]">
+  <div
+    :class="['snippets-container-container', {empty: (snippets.length === 0)}]"
+    :style="{'background-color': backgroundColor}"
+  >
     <div class="container">
-      <h1>Zadnji izseki</h1>
-      <div :class="['snippets', {empty: (snippets.length === 0)}]">
+      <router-link class="title-link" :to="{name: 'Collections'}"><h1>Zadnji izseki</h1></router-link>
+      <div
+        :class="['snippets', {empty: (snippets.length === 0)}]"
+        :style="{'background-color': backgroundColor}"
+      >
         <router-link
           :to="{name: 'Home', params: {editing: true}}"
           class="snippets-empty"
@@ -33,6 +39,10 @@ export default {
       type: Number,
       default: 6,
     },
+    backgroundColor: {
+      type: String,
+      default: '#ffffff',
+    },
   },
 
   data() {
@@ -49,7 +59,7 @@ export default {
   },
 
   mounted() {
-    this.$http.get('http://snippet.soocenje.24ur.com/getSnippets', { emulateJSON: true }).then((latestSuccess) => {
+    this.$http.get('http://snippet.soocenje.24ur.com/getSnippetsLast', { emulateJSON: true }).then((latestSuccess) => {
       console.log(latestSuccess);
       const localSnippets = [];
       Object.keys(latestSuccess.data).forEach((key) => {
@@ -75,6 +85,14 @@ export default {
 @import '../styles/colors';
 @import '../styles/scaffolding';
 
+.title-link {
+  text-decoration: none;
+  color: black;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 h1 {
   display: block;
   width: 100%;
@@ -83,6 +101,7 @@ h1 {
   font-family: 'Poppins', sans-serif;
   font-size: 30px;
   font-weight: 700;
+  color: $black;
 }
 
 .snippets {

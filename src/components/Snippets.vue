@@ -1,8 +1,14 @@
 <template>
-  <div :class="['snippets-container-container', {empty: (snippets.length === 0)}]">
+  <div
+    :class="['snippets-container-container', {empty: (snippets.length === 0)}]"
+    :style="{'background-color': backgroundColor}"
+  >
     <div class="container">
-      <h1>Najbolj gledani izseki</h1>
-      <div :class="['snippets', {empty: (snippets.length === 0)}]">
+      <router-link class="title-link" :to="{name: 'Collections'}"><h1>Najbolj gledani izseki</h1></router-link>
+      <div
+        :class="['snippets', {empty: (snippets.length === 0)}]"
+        :style="{'background-color': backgroundColor}"
+      >
         <router-link
           :to="{name: 'Home', params: {editing: true}}"
           class="snippets-empty"
@@ -32,6 +38,10 @@ export default {
     numberOfSnippets: {
       type: Number,
       default: 200,
+    },
+    backgroundColor: {
+      type: String,
+      default: '#ffffff',
     },
   },
 
@@ -78,6 +88,14 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/colors';
 @import '../styles/scaffolding';
+
+.title-link {
+  text-decoration: none;
+  color: black;
+  &:hover {
+    text-decoration: underline;
+  }
+}
 
 h1 {
   display: block;

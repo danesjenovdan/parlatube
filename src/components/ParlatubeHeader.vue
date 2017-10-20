@@ -9,9 +9,9 @@
         <a target="_blank" href="http://24ur.com"><img id="pop" src="http://m.24ur.com/img/logo.png"></a>
         <div class="hover-container">
           <a target="_blank" href="http://danesjenovdan.si/"><img id="djnd" src="../assets/djnd.png"></a>
-          <div class="hoverthing">
+          <!-- <div class="hoverthing">
             <div class="hoverelements"></div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

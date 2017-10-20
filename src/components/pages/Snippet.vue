@@ -22,7 +22,7 @@
       <div class="fb-comments" :data-href="`http://soocenje.24ur.com/playlist/${$route.params.snippetId}`" data-numposts="20" data-width="100%"></div>
     </div>
     <div class="snippets-container">
-      <snippets :number-of-snippets="6"></snippets>
+      <snippets :number-of-snippets="6" :background-color="'#eaeaea'"></snippets>
     </div>
     <div class="snippets-container white">
       <latest-snippets :number-of-snippets="6"></latest-snippets>

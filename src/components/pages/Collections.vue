@@ -19,7 +19,7 @@
         </a>
       </div>
     </div>
-    <latest-snippets></latest-snippets>
+    <latest-snippets :background-color="'#eaeaea'"></latest-snippets>
     <snippets></snippets>
   </div>  
 </template>
