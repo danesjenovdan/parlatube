@@ -7,8 +7,9 @@
       <div class="sorter">
         <p>Razvrsti glede na</p>
         <div class="sorter-container">
-          <div :class="['sort-button', {active: !score}]" @click="score = false">čas objave</div>
-          <div :class="['sort-button', {active: score}]" @click="score = true">št. ogledov</div>
+          <div :class="['sort-button', {active: (!score && !onlyLast)}]" @click="score = false">čas objave</div>
+          <div :class="['sort-button', {active: (score && !onlyLast)}]" @click="score = true">št. ogledov</div>
+          <!-- <div :class="['sort-button', {active: onlyLast}]" @click="score = true">št. ogledov (samo zadnje soočenje)</div> -->
         </div>
       </div>
       <div
@@ -55,19 +56,27 @@ export default {
     return {
       snippets: [],
       score: false,
+      onlyLast: false,
     };
   },
 
   computed: {
     scoreSnippets() {
       return this.snippets.sort((a, b) => parseInt(b.score, 10) - parseInt(a.score, 10))
-        .filter(snippet => snippet.published === '1');
+        .filter(snippet => snippet.published === '1').filter(snippet => snippet.video_id !== '4');
+    },
+    scoreSnippetsOnlyLast() {
+      return this.snippets.sort((a, b) => parseInt(b.score, 10) - parseInt(a.score, 10))
+        .filter(snippet => snippet.published === '1').filter(snippet => snippet.video_id === '4');
     },
     timeStampSnippets() {
       return this.snippets.sort((a, b) => parseInt(b.id, 10) - parseInt(a.id, 10))
-        .filter(snippet => snippet.published === '1');
+        .filter(snippet => snippet.published === '1').filter(snippet => snippet.video_id !== '4');
     },
     orderedSnippets() {
+      if (this.onlyLast) {
+        return this.scoreSnippetsOnlyLast;
+      }
       return this.score === true ? this.scoreSnippets : this.timeStampSnippets;
     },
   },
