@@ -63,7 +63,7 @@ export default {
   computed: {
     scoreSnippets() {
       return this.snippets.sort((a, b) => parseInt(b.score, 10) - parseInt(a.score, 10))
-        .filter(snippet => snippet.published === '1').filter(snippet => snippet.video_id !== '4');
+        .filter(snippet => snippet.published === '1'); // .filter(snippet => snippet.video_id !== '4');
     },
     scoreSnippetsOnlyLast() {
       return this.snippets.sort((a, b) => parseInt(b.score, 10) - parseInt(a.score, 10))
@@ -71,7 +71,7 @@ export default {
     },
     timeStampSnippets() {
       return this.snippets.sort((a, b) => parseInt(b.id, 10) - parseInt(a.id, 10))
-        .filter(snippet => snippet.published === '1').filter(snippet => snippet.video_id !== '4');
+        .filter(snippet => snippet.published === '1'); // .filter(snippet => snippet.video_id !== '4');
     },
     orderedSnippets() {
       if (this.onlyLast) {
