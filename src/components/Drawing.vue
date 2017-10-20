@@ -4,7 +4,7 @@
     <vue-draggable-resizable
       v-if="(drawingText !== '')"
       :x="10"
-      :y="350"
+      :y="300"
       :w="620"
       :h="50"
       @dragstop="onTextDragStop"
