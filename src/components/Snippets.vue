@@ -68,6 +68,7 @@ export default {
         }).then((snippetSuccess) => {
           const newSnippet = snippetSuccess.data;
           newSnippet.score = snippet.counter;
+          newSnippet.name = snippet.name.replace(/&#39;/g, '\'');
           newSnippet.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${newSnippet.video_id}/out${Math.floor(newSnippet.start_time / 5000)}.jpg`;
           console.log(newSnippet);
           delete newSnippet.extras;

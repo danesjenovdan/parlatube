@@ -27,7 +27,7 @@
           :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
         >
           <div
-            class="snippet-img"
+            :class="['snippet-img', {clean: snippet.video_id === '4'}]"
             :style="{'background-image': `url('${snippet.newImageUrl}')`}"
           ></div>
           <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
@@ -91,11 +91,12 @@ export default {
         }).then((snippetSuccess) => {
           const newSnippet = snippetSuccess.data;
           newSnippet.score = snippet.counter;
-          if (newSnippet.video_id === '4') {
-            newSnippet.newImageUrl = 'http://static.soocenje.24ur.com/snippet-image.png';
-          } else {
-            newSnippet.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${newSnippet.video_id}/out${Math.floor(newSnippet.start_time / 5000)}.jpg`;
-          }
+          // if (newSnippet.video_id === '4') {
+          //   newSnippet.newImageUrl = 'http://static.soocenje.24ur.com/snippet-image.png';
+          // } else {
+          newSnippet.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${newSnippet.video_id}/out${Math.floor((newSnippet.start_time + ((newSnippet.end_time - newSnippet.start_time) / 2)) / 5000)}.jpg`;
+          // }
+          newSnippet.name = snippetSuccess.data.name.replace(/&#39;/g, '\'');
           console.log(newSnippet);
           delete newSnippet.extras;
           localSnippets.push(newSnippet);
@@ -303,6 +304,14 @@ export default {
       background-repeat: no-repeat;
       background-size: 59px 59px;
       transition: all 0.2s ease-out;
+    }
+
+    &.clean {
+      filter: none;
+      
+      &::before {
+        display: none;
+      }
     }
   }
 
