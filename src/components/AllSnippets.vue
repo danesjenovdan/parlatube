@@ -7,9 +7,9 @@
       <div class="sorter">
         <p>Razvrsti glede na</p>
         <div class="sorter-container">
-          <div :class="['sort-button', {active: (!score && !onlyLast)}]" @click="score = false">čas objave</div>
-          <div :class="['sort-button', {active: (score && !onlyLast)}]" @click="score = true">št. ogledov</div>
-          <!-- <div :class="['sort-button', {active: onlyLast}]" @click="score = true">št. ogledov (samo zadnje soočenje)</div> -->
+          <div :class="['sort-button', {active: (!score && !onlyLast)}]" @click="score = false; onlyLast = false">čas objave</div>
+          <div :class="['sort-button', {active: (score && !onlyLast)}]" @click="score = true; onlyLast = false">št. ogledov</div>
+          <div :class="['sort-button', {active: onlyLast}]" @click="onlyLast = true">samo zadnje soočenje</div>
         </div>
       </div>
       <div
@@ -145,6 +145,9 @@ export default {
   display: block;
 
   margin-bottom: 20px;
+
+  overflow: hidden;
+  max-width: 100%;
 
   .sorter-container {
     display: inline-block;
