@@ -22,11 +22,11 @@
           class="navbar-option"
         >ZADNJE SOOČENJE</router-link>
         <router-link
-          :to="{name: 'Soocenje', params: {videoId: 3}}"
+          :to="{name: 'Soocenje', params: {videoId: '3'}}"
           class="navbar-option"
         >2. SOOČENJE</router-link>
         <router-link
-          :to="{name: 'Soocenje', params: {videoId: 1}}"
+          :to="{name: 'Soocenje', params: {videoId: '1'}}"
           class="navbar-option"
         >1. SOOČENJE</router-link>
         <router-link
