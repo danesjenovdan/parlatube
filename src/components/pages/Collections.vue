@@ -1,6 +1,6 @@
 <template>
   <div id="collections">
-    <latest-snippets :background-color="'#eaeaea'"></latest-snippets>
+    <latest-snippets :background-color="'#eaeaea'" :number-of-snippets="12"></latest-snippets>
     <snippets></snippets>
   </div>  
 </template>
