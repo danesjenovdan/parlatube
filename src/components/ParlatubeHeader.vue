@@ -20,7 +20,7 @@
         <router-link
           :to="{name: 'Home'}"
           class="navbar-option"
-        >ZADNJE SOOČENJE</router-link>
+        >3. SOOČENJE</router-link>
         <router-link
           :to="{name: 'Soocenje', params: {videoId: '3'}}"
           class="navbar-option"
