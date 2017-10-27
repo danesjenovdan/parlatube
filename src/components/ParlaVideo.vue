@@ -188,7 +188,8 @@ export default {
             if ((this.loadedAndPlayingCounter === 3)) {
               this.player.getCurrentTime().then((currentTime) => {
                 if (((currentTime > this.loopStart) && (currentTime < this.loopEnd)) ||
-                  ((this.$route.name === 'Home') || (this.$route.name === 'Soocenje'))) {
+                  ((this.$route.name === 'Home') || (this.$route.name === 'Soocenje') ||
+                  (this.$route.name === 'Playlist'))) {
                   this.$store.commit('video/UPDATE_LOADED_AND_PLAYING', true);
                   if (!this.isMuted) {
                     this.player.unMute();

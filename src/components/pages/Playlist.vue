@@ -13,7 +13,7 @@
               @click="updateSnippet(playlist.indexOf(snippet))"
             >
               <div class="snippet-title">{{ snippet.title || 'Brez naslova' }}</div>
-              <a class="snippet-outlink" target="_blank" :href="`http://soocenje.24ur.com/#/snippet/${snippet.id}`"></a>
+              <a class="snippet-outlink" target="_blank" :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"></a>
             </div>
           </div>
         </div>
@@ -37,6 +37,7 @@
 /* global dataLayer */
 
 import ParlaVideo from 'components/ParlaVideo';
+import Share from 'components/Share';
 import { mapState } from 'vuex';
 
 export default {
@@ -44,6 +45,7 @@ export default {
 
   components: {
     ParlaVideo,
+    Share,
   },
 
   data() {
@@ -97,19 +99,24 @@ export default {
         // set video ID (in store)
         this.$store.commit('video/UPDATE_VIDEOID', videoSuccess.data.videoid);
 
+
+        // set video to loop and set start and end times
+        this.$store.commit('video/UPDATE_LOOP_START', (this.playlist[this.currentSnippet].start_time / 1000));
+        this.$store.commit('video/UPDATE_LOOP_END', (this.playlist[this.currentSnippet].end_time / 1000));
+        this.$store.commit('video/TURN_LOOPING_ON');
+
         // seek to place in new video
         this.$store.commit('video/UPDATE_SEEK_TO', this.playlist[this.currentSnippet].start_time / 1000);
 
+        // update drawing
+        const processedExtras = JSON.parse(this.playlist[this.currentSnippet].extras.replace(/&#34;/g, '"').replace(/&#39;/g, '\''));
+        this.$store.commit('drawing/UPDATE_STATE', processedExtras);
+        this.title = this.playlist[this.currentSnippet].name.replace(/&#34;/g, '"').replace(/&#39;/g, '\'');
+        this.isMuted = this.playlist[this.currentSnippet].muted === '1';
+        this.$store.commit('video/UPDATE_IS_MUTED', this.isMuted);
+
         // tell video to play
         this.$store.commit('video/PLAY_VIDEO');
-
-        // update drawing
-        if (this.playlist[this.currentSnippet].extras.length > 0) {
-          const processedExtras = JSON.parse(this.playlist[this.currentSnippet].extras.replace(/&#34;/g, '"'));
-          this.$store.commit('drawing/UPDATE_STATE', processedExtras);
-        } else {
-          this.$store.commit('drawing/UPDATE_STATE', {});
-        }
       }, () => {
         // an error occured with getting the video
       });
@@ -130,13 +137,15 @@ export default {
       // set snippets
       this.snippets = playlistSuccess.data.snippets;
 
+      // tell video where to seek to TODO refactor maybe
+      this.$store.commit('video/UPDATE_SEEK_TO', (this.playlist[this.currentSnippet].start_time / 1000));
+
       // update drawing
-      if (this.playlist[this.currentSnippet].extras.length > 0) {
-        const processedExtras = JSON.parse(this.playlist[this.currentSnippet].extras.replace(/&#34;/g, '"'));
-        this.$store.commit('drawing/UPDATE_STATE', processedExtras);
-      } else {
-        this.$store.commit('drawing/UPDATE_STATE', {});
-      }
+      const processedExtras = JSON.parse(this.playlist[this.currentSnippet].extras.replace(/&#34;/g, '"').replace(/&#39;/g, '\''));
+      this.$store.commit('drawing/UPDATE_STATE', processedExtras);
+      this.title = this.playlist[this.currentSnippet].name.replace(/&#34;/g, '"').replace(/&#39;/g, '\'');
+      this.isMuted = this.playlist[this.currentSnippet].muted === '1';
+      this.$store.commit('video/UPDATE_IS_MUTED', this.isMuted);
 
       // set first snippet
       this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${this.playlist[this.currentSnippet].video_id}`, { emulateJSON: true }).then((videoSuccess) => {
