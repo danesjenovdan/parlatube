@@ -27,7 +27,7 @@
           :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
         >
           <div
-            :class="['snippet-img', {clean: snippet.video_id === '4'}]"
+            :class="['snippet-img', 'clean']"
             :style="{'background-image': `url('${snippet.newImageUrl}')`}"
           ></div>
           <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
