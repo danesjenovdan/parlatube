@@ -18,7 +18,15 @@
     <div class="container" id="navbar-container">
       <div id="navbar">
         <router-link
+          :to="{name: 'Collections'}"
+          class="navbar-option"
+        >IZSEKI</router-link>
+        <router-link
           :to="{name: 'Home'}"
+          class="navbar-option"
+        >4. SOOČENJE</router-link>
+        <router-link
+          :to="{name: 'Soocenje', params: {videoId: '4'}}"
           class="navbar-option"
         >3. SOOČENJE</router-link>
         <router-link
@@ -29,10 +37,6 @@
           :to="{name: 'Soocenje', params: {videoId: '1'}}"
           class="navbar-option"
         >1. SOOČENJE</router-link>
-        <router-link
-          :to="{name: 'Collections'}"
-          class="navbar-option"
-        >IZSEKI</router-link>
       </div>
     </div>
   </div>
