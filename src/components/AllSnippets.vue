@@ -9,7 +9,7 @@
         <div class="sorter-container">
           <div :class="['sort-button', {active: (!score && !onlyLast)}]" @click="score = false; onlyLast = false">čas objave</div>
           <div :class="['sort-button', {active: (score && !onlyLast)}]" @click="score = true; onlyLast = false">št. ogledov</div>
-          <div :class="['sort-button', {active: onlyLast}]" @click="onlyLast = true">samo zadnje soočenje</div>
+          <!-- <div :class="['sort-button', {active: onlyLast}]" @click="onlyLast = true">samo zadnje soočenje</div> -->
         </div>
       </div>
       <div
@@ -99,7 +99,9 @@ export default {
           newSnippet.name = snippetSuccess.data.name.replace(/&#39;/g, '\'');
           console.log(newSnippet);
           delete newSnippet.extras;
-          localSnippets.push(newSnippet);
+          if (newSnippet.published === '1') {
+            localSnippets.push(newSnippet);
+          }
         }, () => {
           // an error occured when trying to get snippet info from server
         });

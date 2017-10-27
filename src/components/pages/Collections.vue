@@ -1,6 +1,6 @@
 <template>
   <div id="collections">
-    <all-snippets></all-snippets>
+    <all-snippets :number-of-snippets="500"></all-snippets>
   </div>  
 </template>
 
