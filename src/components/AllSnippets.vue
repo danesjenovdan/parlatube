@@ -96,7 +96,7 @@ export default {
           // } else {
           newSnippet.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${newSnippet.video_id}/out${Math.floor((newSnippet.start_time + ((newSnippet.end_time - newSnippet.start_time) / 2)) / 5000)}.jpg`;
           // }
-          newSnippet.name = snippetSuccess.data.name.replace(/&#39;/g, '\'');
+          newSnippet.name = snippetSuccess.data.name.replace(/&#39;/g, '\'').replace(/&#34;/g, '"');
           console.log(newSnippet);
           delete newSnippet.extras;
           if (newSnippet.published === '1') {

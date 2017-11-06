@@ -22,7 +22,7 @@
         v-if="editing"
         v-on:disableEditing="disableEditing"
         :live="live"
-        :videoId="5"
+        :videoId="6"
       ></editor>
     </div>
     <div class="snippets-container">
@@ -81,7 +81,7 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$store.commit('video/UPDATE_VIDEOID', '3qou4dbb-n4');
+    this.$store.commit('video/UPDATE_VIDEOID', 'nnnb-xLwNO8');
 
     if (this.$route.params.editing) {
       this.editing = this.$route.params.editing;

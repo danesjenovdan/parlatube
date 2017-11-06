@@ -71,7 +71,7 @@ export default {
         .map((element) => {
           console.log(element);
           const newElement = JSON.parse(JSON.stringify(element));
-          newElement.name = element.name.replace(/&#39;/g, '\'');
+          newElement.name = element.name.replace(/&#39;/g, '\'').replace(/&#34;/g, '"');
           newElement.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${element.video_id}/out${Math.floor((parseInt(element.start_time, 10) + ((parseInt(element.end_time, 10) - parseInt(element.start_time, 10)) / 2)) / 5000)}.jpg`;
           return newElement;
         });

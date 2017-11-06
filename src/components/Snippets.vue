@@ -20,7 +20,7 @@
           :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
         >
           <div
-            class="snippet-img"
+            class="snippet-img clean"
             :style="{'background-image': `url('${snippet.newImageUrl}`}"
           ></div>
           <div class="snippet-title">{{ snippet.name || 'Brez naslova' }}</div>
@@ -54,12 +54,12 @@ export default {
   computed: {
     orderedSnippets() {
       return this.snippets.sort((a, b) => parseInt(b.score, 10) - parseInt(a.score, 10))
-        .filter(snippet => snippet.published === '1');
+        .filter(snippet => snippet.published === '1').slice(0, this.numberOfSnippets);
     },
   },
 
   mounted() {
-    this.$http.get(`http://speeches.soocenje.24ur.com/analytics/top/${this.numberOfSnippets}`, { emulateJSON: true }).then((topSuccess) => {
+    this.$http.get('http://speeches.soocenje.24ur.com/analytics/top/10', { emulateJSON: true }).then((topSuccess) => {
       console.log(topSuccess);
       const localSnippets = [];
       topSuccess.data.counters.forEach((snippet) => {
@@ -68,7 +68,7 @@ export default {
         }).then((snippetSuccess) => {
           const newSnippet = snippetSuccess.data;
           newSnippet.score = snippet.counter;
-          newSnippet.name = snippetSuccess.data.name.replace(/&#39;/g, '\'');
+          newSnippet.name = snippetSuccess.data.name.replace(/&#39;/g, '\'').replace(/&#34;/g, '"');
           newSnippet.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${newSnippet.video_id}/out${Math.floor(newSnippet.start_time / 5000)}.jpg`;
           console.log(newSnippet);
           delete newSnippet.extras;
@@ -216,6 +216,14 @@ h1 {
       background-repeat: no-repeat;
       background-size: 59px 59px;
       transition: all 0.2s ease-out;
+    }
+
+    &.clean {
+      filter: none;
+      
+      &::before {
+        display: none;
+      }
     }
   }
 
