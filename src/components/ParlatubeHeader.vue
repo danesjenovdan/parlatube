@@ -25,6 +25,11 @@
         <router-link
           :to="{name: 'Home'}"
           class="navbar-option"
+        >6. SOOČENJE</router-link>
+
+        <router-link
+          :to="{ name: 'Soocenje', params: {videoId: '6'}}"
+          class="navbar-option"
         >5. SOOČENJE</router-link>
         
         <router-link
