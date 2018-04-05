@@ -25,32 +25,7 @@
         <router-link
           :to="{name: 'Home'}"
           class="navbar-option"
-        >6. SOOČENJE</router-link>
-
-        <router-link
-          :to="{ name: 'Soocenje', params: {videoId: '6'}}"
-          class="navbar-option"
-        >5. SOOČENJE</router-link>
-        
-        <router-link
-          :to="{name: 'Soocenje', params: {videoId: '5'}}"
-          class="navbar-option"
-        >4. SOOČENJE</router-link>
-        
-        <router-link
-          :to="{name: 'Soocenje', params: {videoId: '4'}}"
-          class="navbar-option"
-        >3. SOOČENJE</router-link>
-        
-        <router-link
-          :to="{name: 'Soocenje', params: {videoId: '3'}}"
-          class="navbar-option"
-        >2. SOOČENJE</router-link>
-        
-        <router-link
-          :to="{name: 'Soocenje', params: {videoId: '1'}}"
-          class="navbar-option"
-        >1. SOOČENJE</router-link>
+        >ZADNJE SOOČENJE</router-link>
       </div>
     </div>
   </div>

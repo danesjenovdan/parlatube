@@ -23,7 +23,7 @@
       <share></share>
       <div class="conversion">Odreži zanimiv del videa in ga deli s prijatelji!</div>
       <router-link
-        :to="{ name: 'Soocenje', params: { 'videoId': 3, 'editing': true }}"
+        :to="{ name: 'Home', params: {'editing': true }}"
         class="conversion-button"
       ><span class="cutme"></span>PRIPRAVI IZSEK</router-link>
     </div>
