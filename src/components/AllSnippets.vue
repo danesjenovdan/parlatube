@@ -86,7 +86,7 @@ export default {
       console.log(topSuccess);
       const localSnippets = [];
       topSuccess.data.counters.forEach((snippet) => {
-        this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${snippet.key}`, {
+        this.$http.get(`http://snippet.knedl.si/getSnippet?id=${snippet.key}`, {
           emulateJSON: true,
         }).then((snippetSuccess) => {
           const newSnippet = snippetSuccess.data;
@@ -111,7 +111,7 @@ export default {
     }, () => {
       // an error occured
     });
-    // this.$http.get('http://snippet.soocenje.24ur.com/getSnippets', { emulateJSON: true }).then((latestSuccess) => {
+    // this.$http.get('http://snippet.knedl.si/getSnippets', { emulateJSON: true }).then((latestSuccess) => {
     //   console.log(latestSuccess);
     //   const localSnippets = [];
     //   Object.keys(latestSuccess.data).forEach((key) => {

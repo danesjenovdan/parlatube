@@ -39,7 +39,7 @@ export default {
 
   mounted() {
     // on mount get data from API and set up
-    this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${this.$route.params.snippetId}`, {
+    this.$http.get(`http://snippet.knedl.si/getSnippet?id=${this.$route.params.snippetId}`, {
       emulateJSON: true,
     }).then((snippetSuccess) => {
       // set video to loop and set start and end times
@@ -60,7 +60,7 @@ export default {
       this.isMuted = snippetSuccess.data.muted === '1';
       this.$store.commit('video/UPDATE_IS_MUTED', this.isMuted);
 
-      this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${this.snippetVideoId}`, {
+      this.$http.get(`http://snippet.knedl.si/getVideo?id=${this.snippetVideoId}`, {
         emulateJSON: true,
       }).then((videoSuccess) => {
         // set video ID (locally and in store)

@@ -185,7 +185,7 @@ export default {
 
         console.log(data);
 
-        this.$http.post('http://snippet.soocenje.24ur.com/setSnippet', data, {
+        this.$http.post('http://snippet.knedl.si/setSnippet', data, {
           emulateJSON: true,
         }).then((response) => {
           this.$router.push({ path: `/snippet/${response.data.id}` });

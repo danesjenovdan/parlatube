@@ -70,7 +70,7 @@ export default {
     }
 
     // on mount get data from API and set up
-    this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${this.$route.params.snippetId}`, {
+    this.$http.get(`http://snippet.knedl.si/getSnippet?id=${this.$route.params.snippetId}`, {
       emulateJSON: true,
     }).then((snippetSuccess) => {
       console.log(snippetSuccess.data.id);
@@ -94,7 +94,7 @@ export default {
         this.isMuted = snippetSuccess.data.muted === '1';
         this.$store.commit('video/UPDATE_IS_MUTED', this.isMuted);
 
-        this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${snippetSuccess.data.video_id}`, {
+        this.$http.get(`http://snippet.knedl.si/getVideo?id=${snippetSuccess.data.video_id}`, {
           emulateJSON: true,
         }).then((videoSuccess) => {
           // set video ID (locally and in store)

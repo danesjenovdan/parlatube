@@ -63,7 +63,7 @@ export default {
       console.log(topSuccess);
       const localSnippets = [];
       topSuccess.data.counters.forEach((snippet) => {
-        this.$http.get(`http://snippet.soocenje.24ur.com/getSnippet?id=${snippet.key}`, {
+        this.$http.get(`http://snippet.knedl.si/getSnippet?id=${snippet.key}`, {
           emulateJSON: true,
         }).then((snippetSuccess) => {
           const newSnippet = snippetSuccess.data;

@@ -81,7 +81,7 @@ export default {
     this.$store.commit('editor/RESET_STATE');
     this.$store.commit('video/RESET_STATE');
     this.$store.commit('drawing/RESET_STATE');
-    this.$http.get(`http://snippet.soocenje.24ur.com/getVideo?id=${this.$route.params.videoId}`, {
+    this.$http.get(`http://snippet.knedl.si/getVideo?id=${this.$route.params.videoId}`, {
       emulateJSON: true,
     }).then((videoSuccess) => {
       this.$store.commit('video/UPDATE_VIDEOID', videoSuccess.data.videoid);

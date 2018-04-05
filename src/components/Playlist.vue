@@ -31,7 +31,7 @@ export default {
   },
 
   mounted() {
-    this.$http.get('http://snippet.soocenje.24ur.com/getPlaylists', { emulateJSON: true }).then((playlistsSuccess) => {
+    this.$http.get('http://snippet.knedl.si/getPlaylists', { emulateJSON: true }).then((playlistsSuccess) => {
       console.log(playlistsSuccess);
       this.playlists = playlistsSuccess.data;
     }, () => {

@@ -59,7 +59,7 @@ export default {
   },
 
   mounted() {
-    this.$http.get('http://snippet.soocenje.24ur.com/getSnippetsLast', { emulateJSON: true }).then((latestSuccess) => {
+    this.$http.get('http://snippet.knedl.si/getSnippetsLast', { emulateJSON: true }).then((latestSuccess) => {
       console.log(latestSuccess);
       const localSnippets = [];
       Object.keys(latestSuccess.data).forEach((key) => {
