@@ -22,7 +22,7 @@
         v-if="editing"
         v-on:disableEditing="disableEditing"
         :live="live"
-        :videoId="7"
+        :videoId="2"
       ></editor>
     </div>
     <div class="snippets-container">
