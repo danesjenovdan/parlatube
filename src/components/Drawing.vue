@@ -38,7 +38,7 @@
     >
       <div
         class="emoji-image"
-        :style="{'background-image': `url('http://static.soocenje.24ur.com/emojis/${emoji.emoji}.png')`}"
+        :style="{'background-image': `url('http://parlatube.knedl.si/static/emojis/${emoji.emoji}.png')`}"
       >
       <div
         class="emoji-trash"
