@@ -13,7 +13,7 @@
               @click="updateSnippet(playlist.indexOf(snippet))"
             >
               <div class="snippet-title">{{ snippet.title || 'Brez naslova' }}</div>
-              <a class="snippet-outlink" target="_blank" :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"></a>
+              <a class="snippet-outlink" target="_blank" :href="`http://parlatube.knedl.si/snippet/${snippet.id}`"></a>
             </div>
           </div>
         </div>
@@ -28,7 +28,7 @@
       ><span class="cutme"></span>PRIPRAVI IZSEK</router-link>
     </div>
     <div class="feed-container">
-      <div class="fb-comments" :data-href="`http://soocenje.24ur.com/playlist/${$route.params.playlistId}`" data-numposts="20" data-width="100%"></div>
+      <div class="fb-comments" :data-href="`http://parlatube.knedl.si/playlist/${$route.params.playlistId}`" data-numposts="20" data-width="100%"></div>
     </div>
   </div>
 </template>

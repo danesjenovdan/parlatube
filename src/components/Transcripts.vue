@@ -95,7 +95,7 @@ export default {
       this.scrollTranscripts = false;
       this.$refs.speechesContainer.scrollTop = 0;
 
-      this.$http.get(`http://speeches.soocenje.24ur.com/q/1/${term}`).then((result) => {
+      this.$http.get(`http://speeches.parlatube.knedl.si/q/1/${term}`).then((result) => {
         console.log(result);
         if (result.data.length > 0) {
           this.transcripts = result.data
@@ -106,7 +106,7 @@ export default {
             content: speech.highlight,
             end_time_stamp: speech.timestamp_start,
             start_time_stamp: speech.timestamp_start,
-            image_url: `http://speeches.soocenje.24ur.com${speech.speaker_url}`,
+            image_url: `http://speeches.parlatube.knedl.si${speech.speaker_url}`,
             id: speech.id,
             name: speech.speaker_name,
             expanded: false,
@@ -172,7 +172,7 @@ export default {
   },
 
   created() {
-    this.$http.get('http://speeches.soocenje.24ur.com/getSpeeches/1', {
+    this.$http.get('http://speeches.parlatube.knedl.si/getSpeeches/1', {
       emulateJSON: true,
     }).then((result) => {
       this.transcripts = result.data

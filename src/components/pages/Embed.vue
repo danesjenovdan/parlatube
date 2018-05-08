@@ -1,7 +1,7 @@
 <template>
   <div id="embed">
     <div class="container">
-      <parla-video :isMuted="isMuted" :disableEditing="true" :embedControls="true" :embedBackgroundImageUrl="`http://static.soocenje.24ur.com/frames/optimised/${snippetVideoId}/out${Math.floor(startTime / 5000)}.jpg`"></parla-video>
+      <parla-video :isMuted="isMuted" :disableEditing="true" :embedControls="true" :embedBackgroundImageUrl="`http://static.parlatube.knedl.si/frames/optimised/${snippetVideoId}/out${Math.floor(startTime / 5000)}.jpg`"></parla-video>
     </div>
   </div>
 </template>
@@ -77,7 +77,7 @@ export default {
       FB.XFBML.parse(this.$el);
     }
 
-    this.$http.get(`http://speeches.soocenje.24ur.com/analytics/collect/${this.$route.params.snippetId}`);
+    this.$http.get(`http://speeches.parlatube.knedl.si/analytics/collect/${this.$route.params.snippetId}`);
 
     dataLayer.push({
       event: 'pageview',

@@ -58,7 +58,7 @@ export default {
     },
     embedBackgroundImageUrl: {
       type: String,
-      default: 'http://static.soocenje.24ur.com/og-image.png',
+      default: 'http://static.parlatube.knedl.si/og-image.png',
     },
   },
 

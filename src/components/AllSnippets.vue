@@ -24,7 +24,7 @@
         <a
           v-for="snippet in orderedSnippets"
           class="snippet"
-          :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
+          :href="`http://parlatube.knedl.si/snippet/${snippet.id}`"
         >
           <div
             :class="['snippet-img', 'clean']"
@@ -82,7 +82,7 @@ export default {
   },
 
   mounted() {
-    this.$http.get(`http://speeches.soocenje.24ur.com/analytics/top/${this.numberOfSnippets}`, { emulateJSON: true }).then((topSuccess) => {
+    this.$http.get(`http://speeches.parlatube.knedl.si/analytics/top/${this.numberOfSnippets}`, { emulateJSON: true }).then((topSuccess) => {
       console.log(topSuccess);
       const localSnippets = [];
       topSuccess.data.counters.forEach((snippet) => {
@@ -92,9 +92,9 @@ export default {
           const newSnippet = snippetSuccess.data;
           newSnippet.score = snippet.counter;
           // if (newSnippet.video_id === '4') {
-          //   newSnippet.newImageUrl = 'http://static.soocenje.24ur.com/snippet-image.png';
+          //   newSnippet.newImageUrl = 'http://static.parlatube.knedl.si/snippet-image.png';
           // } else {
-          newSnippet.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${newSnippet.video_id}/out${Math.floor((newSnippet.start_time + ((newSnippet.end_time - newSnippet.start_time) / 2)) / 5000)}.jpg`;
+          newSnippet.newImageUrl = `http://static.parlatube.knedl.si/frames/optimised/${newSnippet.video_id}/out${Math.floor((newSnippet.start_time + ((newSnippet.end_time - newSnippet.start_time) / 2)) / 5000)}.jpg`;
           // }
           newSnippet.name = snippetSuccess.data.name.replace(/&#39;/g, '\'').replace(/&#34;/g, '"');
           console.log(newSnippet);
@@ -124,9 +124,9 @@ export default {
     //       const newElement = JSON.parse(JSON.stringify(element));
     //       newElement.name = element.name.replace(/&#39;/g, '\'');
     //       if (element.video_id === '4') {
-    //         newElement.newImageUrl = 'http://static.soocenje.24ur.com/snippet-image.png';
+    //         newElement.newImageUrl = 'http://static.parlatube.knedl.si/snippet-image.png';
     //       } else {
-    //         newElement.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${element.video_id}/out${Math.floor(element.start_time / 5000)}.jpg`;
+    //         newElement.newImageUrl = `http://static.parlatube.knedl.si/frames/optimised/${element.video_id}/out${Math.floor(element.start_time / 5000)}.jpg`;
     //       }
     //       return newElement;
     //     });

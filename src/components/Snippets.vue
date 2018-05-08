@@ -17,7 +17,7 @@
         <a
           v-for="snippet in orderedSnippets"
           class="snippet"
-          :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
+          :href="`http://parlatube.knedl.si/snippet/${snippet.id}`"
         >
           <div
             class="snippet-img clean"
@@ -59,7 +59,7 @@ export default {
   },
 
   mounted() {
-    this.$http.get('http://speeches.soocenje.24ur.com/analytics/top/10', { emulateJSON: true }).then((topSuccess) => {
+    this.$http.get('http://speeches.parlatube.knedl.si/analytics/top/10', { emulateJSON: true }).then((topSuccess) => {
       console.log(topSuccess);
       const localSnippets = [];
       topSuccess.data.counters.forEach((snippet) => {
@@ -69,7 +69,7 @@ export default {
           const newSnippet = snippetSuccess.data;
           newSnippet.score = snippet.counter;
           newSnippet.name = snippetSuccess.data.name.replace(/&#39;/g, '\'').replace(/&#34;/g, '"');
-          newSnippet.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${newSnippet.video_id}/out${Math.floor(newSnippet.start_time / 5000)}.jpg`;
+          newSnippet.newImageUrl = `http://static.parlatube.knedl.si/frames/optimised/${newSnippet.video_id}/out${Math.floor(newSnippet.start_time / 5000)}.jpg`;
           console.log(newSnippet);
           delete newSnippet.extras;
           localSnippets.push(newSnippet);

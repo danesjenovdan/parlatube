@@ -17,7 +17,7 @@
         <a
           v-for="snippet in orderedSnippets"
           class="snippet"
-          :href="`http://soocenje.24ur.com/snippet/${snippet.id}`"
+          :href="`http://parlatube.knedl.si/snippet/${snippet.id}`"
         >
           <div
             :class="['snippet-img', 'clean']"
@@ -72,7 +72,7 @@ export default {
           console.log(element);
           const newElement = JSON.parse(JSON.stringify(element));
           newElement.name = element.name.replace(/&#39;/g, '\'').replace(/&#34;/g, '"');
-          newElement.newImageUrl = `http://static.soocenje.24ur.com/frames/optimised/${element.video_id}/out${Math.floor((parseInt(element.start_time, 10) + ((parseInt(element.end_time, 10) - parseInt(element.start_time, 10)) / 2)) / 5000)}.jpg`;
+          newElement.newImageUrl = `http://static.parlatube.knedl.si/frames/optimised/${element.video_id}/out${Math.floor((parseInt(element.start_time, 10) + ((parseInt(element.end_time, 10) - parseInt(element.start_time, 10)) / 2)) / 5000)}.jpg`;
           return newElement;
         });
     }, () => {

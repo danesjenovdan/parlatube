@@ -23,7 +23,7 @@
       ><span class="cutme"></span>PRIPRAVI IZSEK</router-link>
     </div>
     <div class="feed-container">
-      <div class="fb-comments" :data-href="`http://soocenje.24ur.com/playlist/${$route.params.snippetId}`" data-numposts="20" data-width="100%"></div>
+      <div class="fb-comments" :data-href="`http://parlatube.knedl.si/playlist/${$route.params.snippetId}`" data-numposts="20" data-width="100%"></div>
     </div>
     <div class="snippets-container">
       <snippets :number-of-snippets="6" :background-color="'#eaeaea'"></snippets>
@@ -112,7 +112,7 @@ export default {
       FB.XFBML.parse(this.$el);
     }
 
-    this.$http.get(`http://speeches.soocenje.24ur.com/analytics/collect/${this.$route.params.snippetId}`);
+    this.$http.get(`http://speeches.parlatube.knedl.si/analytics/collect/${this.$route.params.snippetId}`);
 
     dataLayer.push({
       event: 'pageview',
